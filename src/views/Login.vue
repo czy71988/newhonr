@@ -168,6 +168,7 @@ export default {
       activeName: 'first',
       wangjimima: false,
       dialogwidth: '',
+      // imgUrl: '',
       labelPosition: 'right',
       form1: {
         phone: '',
