@@ -8,6 +8,7 @@
             default-active="1"
             class="el-menu-vertical-demo"
             @open="handleOpen"
+            @select="handleSelect"
             @close="handleClose">
             <el-menu-item index="1">
               <span slot="title">我的信息</span>
@@ -32,6 +33,10 @@
         </el-col>
       </el-row>
     </div>
+
+    <div class="router-view-wrap">
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
@@ -43,6 +48,15 @@ export default {
       type: 'honren',
       personalHonr,
       personalStroe
+    }
+  },
+  methods: {
+    handleSelect (index) {
+      console.log(index)
+      if (index === '1') { this.$router.push({ name: 'personalMyxinxi' }) }
+      if (index === '2') { this.$router.push({ name: 'personalMydingdan' }) }
+      if (index === '3') { this.$router.push({ name: 'hongrenshangchuan' }) }
+      if (index === '4') { this.$router.push({ name: 'personalMymima' }) }
     }
   }
 }
@@ -60,12 +74,12 @@ export default {
       text-align: center !important;
       .el-menu-item {
         min-width: 170px;
-      font-size:16px;
-      font-family:PingFang SC;
-      font-weight:400;
-      // line-height:48px;
-      color:rgba(126,126,126,1);
-      opacity:1;
+      font-size:14px;
+      // font-family:PingFang SC;
+      // font-weight:400;
+      // // line-height:48px;
+      // color:rgba(126,126,126,1);
+      // opacity:1;
       }
     }
     .el-menu-item {
@@ -82,12 +96,15 @@ export default {
       font-size:16px;
       font-family:PingFang SC;
       font-weight:400;
-      // line-height:48px;
+      // line-height:48px;s
       color:rgba(126,126,126,1);
       opacity:1;
       }
       .el-submenu__icon-arrow {
         margin-top: -3px;
+      }
+      .el-menu-item.is-active {
+        color: #E8251D;
       }
   }
 
@@ -101,6 +118,10 @@ export default {
     .horn {
       width: 170px;
       background: #fff;
+      // display: inline-block;
+      float: left;
+      margin-right: 40px;
+      border-top: 2px solid rgba(232,37,29,1);
       .honrn_p {
         text-align: center;
         font-size:20px;
@@ -113,6 +134,13 @@ export default {
       .tac {
         width: 170px;
       }
+    }
+    .router-view-wrap {
+      padding-left: 210px;
+      box-sizing: border-box;
+      // display: inline-block;
+      width: 100%;
+      // width: 960px;
     }
   }
 </style>
