@@ -111,7 +111,7 @@ const request = (config = {}, catchConfig) => {
 function dealCatch (err, config) { // 处理错误信息
   if (typeof config !== 'object') {
     Message({
-      message: err.message,
+      message: err.response.data.data,
       type: 'error',
       duration: 3000
     })
