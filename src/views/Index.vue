@@ -47,9 +47,12 @@
                 <span><router-link  :to="{name:'login'}" class="menu__item">登录</router-link></span>
               </span>
               <span>
+                <router-link :to="{name: 'personalMyxinxi'}"><img src="../assets/new/路径 251@2x.png" alt=""></router-link>
                 <!-- <span>陈志英</span> -->
-                <img src="../assets/new/路径 251@2x.png" alt="">
+
               </span>
+
+              <!-- <router-link class="menu__item" :to="{name: usertype === 'store' ? 'myInf' : 'personalMyxinxi'}" href="">个人中心</router-link> -->
               <span @click="fushow(1)"><img src="../assets/new/路径 65@2x.png" alt=""></span>
               <span @click="fushow(2)"><img src="../assets/new/menu-button@2x.png" alt=""></span>
             </div>

@@ -83,10 +83,10 @@ export default {
   }
 }
 
-.router-link-active {
-  background:rgba(225,32,57,1);
-  height: 100%;
-}
+// .router-link-active {
+//   background:rgba(225,32,57,1);
+//   height: 100%;
+// }
 </style>
 
 <!-- 覆盖elementui css -->
@@ -326,19 +326,19 @@ export default {
   width: 100%;
 }
 
-  .el-menu {
-    padding: 0 50px !important;
-    .el-menu-item {
-      float: left !important;
-      padding: 0 10px !important;
-    }
-    .el-menu--popup {
-    background-color: #fd3069 !important;
-    }
-    .el-submenu.is-active .el-submenu__title {
-      border-bottom-color: #ffffff !important;
-    }
-  }
+  // .el-menu {
+  //   padding: 0 50px !important;
+  //   .el-menu-item {
+  //     float: left !important;
+  //     padding: 0 10px !important;
+  //   }
+  //   .el-menu--popup {
+  //   background-color: #fd3069 !important;
+  //   }
+  //   .el-submenu.is-active .el-submenu__title {
+  //     border-bottom-color: #ffffff !important;
+  //   }
+  // }
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

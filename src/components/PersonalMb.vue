@@ -34,6 +34,7 @@ const storeMenus = [
 const favoriteMenus = [
   { label: '我的信息', value: 'personalInfMb' },
   { label: '我的订单', value: 'personalOrderMb' },
+  { label: '红人数据', value: 'personalOrderMb' },
   { label: '修改密码', value: 'personalUpdatePwdMb' }
 ]
 Object.freeze(storeMenus)

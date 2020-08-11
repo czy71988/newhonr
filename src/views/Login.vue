@@ -38,7 +38,7 @@
                 <el-form-item class="img-code-item" prop="tuxing">
                   <el-input v-model="form1.tuxing" placeholder="请输入图形验证码"></el-input>
                   <div class="img-code-box">
-                    <canvas class="img-code__image" ref="imgCodeCanvas1"></canvas>
+                    <img class="img-code__image" :src="imgUrl">
                     <span class="img-code__btn" @click="generateImgCode">换一张</span>
                   </div>
                 </el-form-item>
@@ -138,8 +138,11 @@
 <script>
 // import { Message } from 'element-ui'
 import { MessageBox } from 'element-ui'
-import { saveUserToLocation, getToken } from '@/utils/auth'
+// import { saveUserToLocation, getToken } from '@/utils/auth'
+import { encryptionPW, getToken, saveUserToLocation } from '@/utils/auth'
+// import { encryptionPW, rememberPW, rememberForCheckUser, getRemembePW, deleteRememberPW } from '@/utils/auth'
 import { login, wangjimima, fetchPhoneCode } from '@/api/user'
+import { LOGIN } from '../api/login'
 import generateImgCode from '@/utils/generate-img-code'
 // import { log } from 'util'
 // window.onresize = function () {
@@ -162,6 +165,7 @@ export default {
       activeName: 'first',
       wangjimima: false,
       dialogwidth: '',
+      imgUrl: '',
       labelPosition: 'right',
       form1: {
         phone: '',
@@ -229,6 +233,15 @@ export default {
   },
   created () {
     this.setDialogWidth()
+    console.log(encryptionPW('hiot'))
+    LOGIN({
+      username: '18810583188',
+      password: 'NrxT3ShLtQoSKozwGyEkCd0zE/FY7PkGidCT4CGS3IaHGR612myYO/0f1tVnj5XhEUui1vXCHTxGUKMSQYiwyQ==',
+      captcha: '898998',
+      type: '1'
+    }).then(data => {
+
+    })
   },
   mounted () {
     this.generateImgCode()
@@ -238,14 +251,16 @@ export default {
       })()
     }
 
-    this.gettuxingyanzhnegma()
+    this.getImg()
   },
   methods: {
     // ======================================================================================
     // 获取图形验证码
-
     getImg () { // 点击验证码
-      this.imgUrl = '/zhcs-omp-bff/public/captchaImage?timestamp=' + new Date()
+      this.imgUrl = 'http://101.133.136.149:8888/zkurtg-red-api/public/captchaImage'
+      // tuxingyanzhengma({}).then(data => {
+      //   console.log(data)
+      // })
     },
     // ======================================================================================
     submitForm (formName) {
