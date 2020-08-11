@@ -23,3 +23,25 @@ export function LOGIN (data, catchConfig) {
   }, catchConfig)
   return req
 }
+
+// 账号密码登录
+export function accountLogin (data, catchConfig) {
+  const req = request({
+    method: 'post',
+    // url: 'goodsStoreAjax/queryAllfen',
+    url: '/zkurtg-red-api/rtg/portalLogin',
+    data
+  }, catchConfig)
+  return req
+}
+
+// 短信验证码登录
+export function CodeLogin (data, catchConfig) {
+  const req = request({
+    method: 'put',
+    // url: 'goodsStoreAjax/queryAllfen',
+    url: '/zkurtg-red-api/rtg/portalLogin',
+    data
+  }, catchConfig)
+  return req
+}

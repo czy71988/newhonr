@@ -1,19 +1,10 @@
-
 import { JSEncrypt } from 'jsencrypt'
 import Cookies from 'js-cookie'
-// import { reverseString } from './index'
-
-const jsePublicKey = 'MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMIFJPPoh5auYAQnhCwFnQOdeZgUEF7n9tbIhImRGmqCguGT64GRrv73SJr4qc+IkkQy3eZrNboSXJOG9yYojzMCAwEAAQ=='
-// const jsePublicKey = 'NrxT3ShLtQoSKozwGyEkCd0zE/FY7PkGidCT4CGS3IaHGR612myYO/0f1tVnj5XhEUui1vXCHTxGUKMSQYiwyQ=='
-
-/**
- * 颠倒字符串
- * @param str
- * @returns {string}
- */
 const reverseString = (str) => {
   return str.split('').reverse().join('')
 }
+
+const jsePublicKey = 'MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAMIFJPPoh5auYAQnhCwFnQOdeZgUEF7n9tbIhImRGmqCguGT64GRrv73SJr4qc+IkkQy3eZrNboSXJOG9yYojzMCAwEAAQ=='
 
 /**
  * 生成jse加密实例

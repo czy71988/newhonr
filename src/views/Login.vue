@@ -38,8 +38,9 @@
                 <el-form-item class="img-code-item" prop="tuxing">
                   <el-input v-model="form1.tuxing" placeholder="请输入图形验证码"></el-input>
                   <div class="img-code-box">
-                    <img class="img-code__image" :src="imgUrl">
-                    <span class="img-code__btn" @click="generateImgCode">换一张</span>
+                    <!-- <canvas class="img-code__image" ref="imgCodeCanvas1"></canvas>
+                    <span class="img-code__btn" @click="generateImgCode">换一张</span> -->
+                     <img @click="getImg" class="verImg" :src="imgUrl">
                   </div>
                 </el-form-item>
                 <div class="jdsilvbi">
@@ -60,8 +61,9 @@
                 <el-form-item class="img-code-item" prop="tuxing">
                   <el-input v-model="form2.tuxing" placeholder="请输入图形验证码"></el-input>
                   <div class="img-code-box">
-                    <canvas class="img-code__image" ref="imgCodeCanvas2"></canvas>
-                    <span class="img-code__btn" @click="generateImgCode">换一张</span>
+                      <img @click="getImg" class="verImg" :src="imgUrl">
+                    <!-- <canvas class="img-code__image" ref="imgCodeCanvas2"></canvas>
+                    <span class="img-code__btn" @click="generateImgCode">换一张</span> -->
                   </div>
                 </el-form-item>
                 <div>
@@ -136,14 +138,14 @@
 </template>
 
 <script>
-// import { Message } from 'element-ui'
+// import { JSEncrypt } from 'jsencrypt'
 import { MessageBox } from 'element-ui'
-// import { saveUserToLocation, getToken } from '@/utils/auth'
-import { encryptionPW, getToken, saveUserToLocation } from '@/utils/auth'
-// import { encryptionPW, rememberPW, rememberForCheckUser, getRemembePW, deleteRememberPW } from '@/utils/auth'
-import { login, wangjimima, fetchPhoneCode } from '@/api/user'
-import { LOGIN } from '../api/login'
-import generateImgCode from '@/utils/generate-img-code'
+// import { getToken, encryptionPW, rememberPW, rememberForCheckUser, getRemembePW, deleteRememberPW } from '@/utils/auth'
+import { getToken, encryptionPW } from '@/utils/auth'
+import { wangjimima, fetchPhoneCode } from '@/api/user'
+import { accountLogin, CodeLogin } from '@/api/login'
+// import { tuxingyanzhengma } from '@/api/login'
+// import generateImgCode from '@/utils/generate-img-code'
 // import { log } from 'util'
 // window.onresize = function () {
 //   var offsetWid = document.documentElement.clientWidth
@@ -152,6 +154,7 @@ import generateImgCode from '@/utils/generate-img-code'
 export default {
   data () {
     return {
+      imgUrl: '/zkurtg-red-api/public/captchaImage?timestamp=' + new Date(),
       // 忘记密码表单数据
       ruleForm: {
         phone: '',
@@ -165,7 +168,7 @@ export default {
       activeName: 'first',
       wangjimima: false,
       dialogwidth: '',
-      imgUrl: '',
+      // imgUrl: '',
       labelPosition: 'right',
       form1: {
         phone: '',
@@ -213,54 +216,32 @@ export default {
           { required: true, message: '请输入市', trigger: ['blur', 'change'] }
         ],
         tuxing: [
-          { required: true, message: '请输入图形验证码', trigger: ['blur', 'change'] },
-          {
-            validator: (rule, value, callback) => {
-              if (value === '') {
-                callback(new Error('请输入图形验证码'))
-              } else if (this.imgCode !== value.toLowerCase()) {
-                callback(new Error('图形验证码不正确'))
-                this.generateImgCode()
-              } else {
-                callback()
-              }
-            },
-            trigger: [ 'blur' ]
-          }
+          { required: true, message: '请输入图形验证码', trigger: ['blur', 'change'] }
         ]
       }
     }
   },
   created () {
     this.setDialogWidth()
-    console.log(encryptionPW('hiot'))
-    LOGIN({
-      username: '18810583188',
-      password: 'NrxT3ShLtQoSKozwGyEkCd0zE/FY7PkGidCT4CGS3IaHGR612myYO/0f1tVnj5XhEUui1vXCHTxGUKMSQYiwyQ==',
-      captcha: '898998',
-      type: '1'
-    }).then(data => {
-
-    })
+    console.log(accountLogin)
+    console.log(CodeLogin)
   },
   mounted () {
     this.generateImgCode()
+
     window.onresize = () => {
       return (() => {
         this.setDialogWidth()
       })()
     }
 
-    this.getImg()
+    // this.gettuxingyanzhnegma()
   },
   methods: {
     // ======================================================================================
     // 获取图形验证码
-    getImg () { // 点击验证码
-      this.imgUrl = 'http://101.133.136.149:8888/zkurtg-red-api/public/captchaImage'
-      // tuxingyanzhengma({}).then(data => {
-      //   console.log(data)
-      // })
+    getImg () {
+      this.imgUrl = '/zkurtg-red-api/public/captchaImage?timestamp=' + new Date()
     },
     // ======================================================================================
     submitForm (formName) {
@@ -298,8 +279,7 @@ export default {
       this.$router.push({ name: 'home' })
     },
     generateImgCode () {
-      const refName = this.activeName === 'first' ? 'imgCodeCanvas1' : 'imgCodeCanvas2'
-      this.imgCode = generateImgCode(this.$refs[refName])
+      this.imgUrl = '/zkurtg-red-api/public/captchaImage?timestamp=' + new Date()
     },
     onSubmit () {
       console.log('submit!')
@@ -315,9 +295,9 @@ export default {
     },
     handleTabChange (ref) {
       // tab切换重新生成图形验证码
-      this.$nextTick(() => {
-        this.generateImgCode()
-      })
+      // this.$nextTick(() => {
+      this.generateImgCode()
+      // })
     },
     handleLogin (formName) {
       this.$refs[formName].validate(valid => {
@@ -333,55 +313,74 @@ export default {
       })
     },
     denglu () {
-      login({
-        type: 1,
-        phone: this.form1.phone,
-        password: this.form1.passWord
-      }).then(data => {
-        console.log(data)
-        saveUserToLocation(data)
-        setTimeout(() => {
-          this.redirectAfterLoginSuccess()
-        }, 200)
-      })
+      const obj = {
+        username: this.form1.phone,
+        password: encryptionPW(this.form1.passWord),
+        captcha: this.form1.tuxing,
+        type: 1
+      }
+      accountLogin(obj)
+      // login({
+      //   type: 1,
+      //   phone: this.form1.phone,
+      //   password: this.form1.passWord
+      // }).then(data => {
+      //   // console.log(data)
+      //   // saveUserToLocation(data)
+      //   setTimeout(() => {
+      //     this.redirectAfterLoginSuccess()
+      //   }, 200)
+      // })
       // }
     },
     denglu1 () {
-      this.$axios({
-        method: 'post',
-        url: '/api/user/login',
-        params: {
-          type: 2,
-          phone: this.form2.phone,
-          password: this.form2.yanzhengma
-        }
-      }).then(res => {
-        if ((res.data.code) === '10000') {
-          const data = res.data.data
-          console.log('这是用户信息')
-          console.log(data)
-          saveUserToLocation({
-            token: data.token,
-            userType: data.usertype,
-            state: data.state,
-            userId: data.id,
-            username: data.username,
-            paymentstate: data.paymentstate
-          })
-          console.log(data.username)
-          // 影藏登陆模态框
-          // console.log(res.data.msg)
-          // Message('登录' + res.data.msg)
-          MessageBox('登录' + res.data.msg)
-          this.redirectAfterLoginSuccess()
-        } else {
-          MessageBox(res.data.msg)
-          this.generateImgCode() // 重新获取验证码
-        }
+      let str = this.form2.phone + '_' + this.form2.yanzhengma + '_' + new Date().getTime()
+      const obj = {
+        username: this.form2.phone,
+        password: encryptionPW(str),
+        captcha: this.form2.tuxing,
+        type: 2
+      }
+
+      this.$axios.put('/zkurtg-red-api/rtg/portalLogin', obj).then(res => {
+        console.log(res)
       })
+      CodeLogin(obj)
+      // this.$axios({
+      //   method: 'post',
+      //   url: '/api/user/login',
+      //   params: {
+      //     type: 2,
+      //     phone: this.form2.phone,
+      //     password: this.form2.yanzhengma
+      //   }
+      // }).then(res => {
+      //   if ((res.data.code) === '10000') {
+      //     const data = res.data.data
+      //     // console.log('这是用户信息')
+      //     console.log(data)
+      //     // saveUserToLocation({
+      //     //   token: data.token,
+      //     //   userType: data.usertype,
+      //     //   state: data.state,
+      //     //   userId: data.id,
+      //     //   username: data.username,
+      //     //   paymentstate: data.paymentstate
+      //     // })
+      //     // console.log(data.username)
+      //     // 影藏登陆模态框
+      //     // console.log(res.data.msg)
+      //     // Message('登录' + res.data.msg)
+      //     MessageBox('登录' + res.data.msg)
+      //     this.redirectAfterLoginSuccess()
+      //   } else {
+      //     MessageBox(res.data.msg)
+      //     this.generateImgCode() // 重新获取验证码
+      //   }
+      // })
     },
     huoqu1 () {
-      console.log('huoqu')
+      // console.log('huoqu')
       var phone = this.ruleForm.phone
       if (!(/^1\d{10}$/.test(phone))) {
         MessageBox('手机号码有误，请重填')
@@ -409,7 +408,7 @@ export default {
       }
     },
     huoqu () {
-      console.log('huoqu')
+      // console.log('huoqu')
       var phone = this.form2.phone
       if (!(/^1\d{10}$/.test(phone))) {
         MessageBox('手机号码有误，请重填')
@@ -437,7 +436,7 @@ export default {
       }
     },
     setDialogWidth () {
-      console.log(document.body.clientWidth)
+      // console.log(document.body.clientWidth)
       var val = document.body.clientWidth
       const def = 800 // 默认宽度
       if (val < def) {
@@ -647,7 +646,7 @@ export default {
     position: absolute;
     top: 62px;
     right: 0px;
-    font-size: 18px;
+    font-size: 14px;
     text-align: center;
     line-height: 40px;
   }

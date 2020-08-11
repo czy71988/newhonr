@@ -37,7 +37,7 @@ axios.interceptors.request.use(function (config) {
   }
   return config
 })
-axios.defaults.headers.post['Content-Type'] = 'application/json'
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 // axios.defaults.headers.post['token'] = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOlsiL2FwaSIsIjE1NzQ5OTcxNzgyMjUiLCIxMDIzOCJdfQ.bN17lIjuczFbb4TgSuwAfo5_h91X1mRNTh9UzWFa6po'
 
 new Vue({
