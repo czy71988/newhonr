@@ -158,7 +158,9 @@ export default {
       type: '',
       goodslist: [], // 最近直播商品
       liveList: [], // 直播数据
-      seedList: [] // 种草视频
+      seedList: [], // 种草视频
+      token: sessionStorage.getItem('token'),
+      type1: sessionStorage.getItem('type')
       // =========================================================================
     }
   },
@@ -172,7 +174,13 @@ export default {
   methods: {
     // -------------------------------------------------------------------
     lianxi (id) {
-      this.ishow = true
+      if (!this.token && !this.type1) {
+        this.$message.error('请登录账号操作')
+      } else if (this.type1 !== 2) {
+        this.$message.error('您不是商家用户')
+      } else {
+        this.ishow = true
+      }
     },
     // 获取红人信息
     gitxinxi () {

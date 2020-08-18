@@ -240,6 +240,24 @@ const indexChildrenRouter = [
         meta: { auth: true },
         component: () => import('@/components/Personal/hongrenshangchuan.vue')
       },
+      {
+        path: 'PersonalMyshop',
+        name: 'PersonalMyshop',
+        meta: { auth: true },
+        component: () => import('@/components/Personal/PersonalMyshop.vue')
+      },
+      {
+        path: 'PersonalMyStore',
+        name: 'PersonalMyStore',
+        meta: { auth: true },
+        component: () => import('@/components/Personal/PersonalMyStore.vue')
+      },
+      {
+        path: 'PersonalMyVideo',
+        name: 'PersonalMyVideo',
+        meta: { auth: true },
+        component: () => import('@/components/Personal/PersonalMyVideo.vue')
+      },
       // 商家
       {
         path: 'myInf',

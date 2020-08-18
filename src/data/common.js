@@ -102,17 +102,17 @@ const authBodyData = [
 
 // 订单状态 0待发货1已发货2已收货3已拒绝
 const deliveryStatuData = [
-  { value: '0', label: '待发货' },
-  { value: '1', label: '已发货' },
-  { value: '2', label: '已拒绝' },
+  { value: '1', label: '待发货' },
+  { value: '2', label: '已发货' },
+  { value: '4', label: '已拒绝' },
   { value: '3', label: '已收货' }
 ]
 
 // 审核状态 0待审核1审核通过2审核拒绝
 const auditStateData = [
-  { value: '0', label: '待审核' },
-  { value: '1', label: '审核通过' },
-  { value: '2', label: '审核拒绝' }
+  { value: '1', label: '待审核' },
+  { value: '2', label: '审核通过' },
+  { value: '3', label: '审核拒绝' }
 ]
 
 // 尺码

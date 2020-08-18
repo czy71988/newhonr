@@ -9,6 +9,7 @@ module.exports = {
         // target: 'http://localhost:8082/zkurtg-red-api',
         // target: 'http://101.133.136.149:48081/zkurtg-red-api/',
         target: 'http://101.133.136.149:8888/',
+        // target: 'http://10.1.205.60:8083/',
         changeOrigin: true, // 是否改变源地址
         pathRewrite: {
           '^/temp1': ''

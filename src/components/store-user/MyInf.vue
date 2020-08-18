@@ -1,552 +1,627 @@
-<!-- 商家用户 我的信息 -->
 <template>
-<div>
-  <h2>我的信息</h2>
-  <div class="conent-danding">
-    <div class="content">
-      <div class="content-top">
-        <div class="top-xm">
+  <div class="Store_min">
+    <div v-if="div_show">
+      <div class="honr_touxiang">
+        <img src="../../assets/new/测试.png" alt="">
+        <img class="img1" src="../../assets/new/组 247.png" alt="">
+      </div>
+      <div class="content">
+        <p>
+          <span class="span1">我的信息</span>
+          <span v-if="show" @click="getsshow" class="span2">修改</span>
+        </p>
+        <div class="fenxian"></div>
+        <p class="p1">商家姓名：</p>
+        <p class="p2">{{data.vendorName}}</p>
+
+        <p class="p1">账号状态：</p>
+        <!-- <p v-if="show" class="p2 p3">
+          审核通过
+        </p> -->
+        <p class="p2">{{data.accountStatus | auditStateFilter}}
+          <span v-if="data.accountStatus === '2'" class="jujue_div" @click="store_jujuesize">查看原因</span>
+        </p>
+
+        <p class="p1">会员状态：</p>
+        <p class="p2 p4">
+          <span>{{data.vipStatus === '0' ?'非会员' : (data.vipStatus === '1' ?'正常' : '已过期')}} （{{data.vipValidityStart}}到期）</span>
+          <span class="sotre_span2" @click="div_show1">续费</span>
+        </p>
+
+        <p class="p1">所属平台：</p>
+        <p class="p2">{{data.shopPlatform | platformStoreFilter}}</p>
+        <p class="p1">所属地区：</p>
+        <p v-if="show" class="p2">
+          <span>{{data.province}}</span>
+          <span>{{data.city}}</span>
+        </p>
+        <el-select v-else v-model="this.from.fansType" multiple placeholder="请选择">
+          <el-option
+            v-for="item in provinceData"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value">
+          </el-option>
+        </el-select>
+
+        <p class="p1">店铺名称：</p>
+        <p v-if="show" class="p2">{{data.shopName}}</p>
+        <el-input v-else v-model="from.shopName" placeholder="请输入内容"></el-input>
+
+        <p class="p1">手机号：</p>
+        <p v-if="show" class="p2">{{data.phoneNumber}}</p>
+        <el-input v-else v-model="from.phoneNumber" placeholder="请输入内容"></el-input>
+
+        <p class="p1">微信号：</p>
+        <p v-if="show" class="p2">{{data.wechatAccount}}</p>
+        <el-input v-else v-model="from.wechatAccount" placeholder="请输入内容"></el-input>
+
+      </div>
+      <div @click="baocun" v-if="!show" class="bnt">完成</div>
+    </div>
+
+    <div v-else>
+      <p class="xufei_p1">会员续费</p>
+      <div class="fenxian"></div>
+      <p class="xufei_p">选择续费金额</p>
+      <div class="uanzejinr">
+        <div :class="active ? 'jine1' : ''">
           <p>
-            <span class="i89">我的姓名 ：</span>
-            <span class="hr-xingming1">{{myInf.username || myInf.nickname}}</span>
+            <span>10000</span>
+            <span>元/1年</span>
           </p>
-          <p>
-            <span class="i89">账号状态 ：</span>
-            <span class="i87">{{myInf.state === 1 ? '审核通过' : (myInf.state === 2 ? '审核未通过' : '待审核')}}</span>
-            <span>
-              <el-button type="text"
-              @click="fanhuixiugai = true"
-              class="shenghezhuangtaixiugai">{{myInf.state === 1 ? '修改' : (myInf.state === 2 ? '查看详情' : '修改')}}
-              </el-button>
-            </span>
-          </p>
-          <p>
-            <!-- 会员状态 -->
-            <span class="i89">会员状态 ：</span>
-            <!-- <span class="huiyuanzhuangtai-7">
-              <span class="i87"><img src="../../assets/VIP-shixiao.png" alt="">无效</span>
-              <span>
-                <button class="huiyuan-xufei">续费</button>
-              </span>
-            </span> -->
-            <span class="huiyuanzhuangtai-7">
-              <span class="jbadifvbiav" v-if="paymentstate === 1">
-                <img src="../../assets/VIP-tongguo.png" alt="">
-                {{endTime}}
-              </span>
-              <span class="jbadifvbiav" v-else>
-                <img src="../../assets/VIP-shixiao11.png" alt="">
-              </span>
-              <span>
-                <button class="huiyuan-xufei" @click="xufeitanchuang=true">续费</button>
-              </span>
-            </span>
-          </p>
+          <p>续费会员</p>
         </div>
-        <div class="content-content">
+        <div :class="active ? 'jine1' : ''">
           <p>
-            <img src="../../assets/地区.png" alt="">
-            <span class="yu1">所属地区：</span><span class="yu2">{{myInf.province || '--'}} {{myInf.city || '--'}} {{myInf.area || '--'}}</span>
+            <el-input></el-input>
+            <span>元</span>
           </p>
-          <p>
-            <img src="../../assets/平台管理.png" alt="">
-            <span class="yu1">所属平台：</span><span class="yu2">{{myInf.platform | platformStoreFilter}}</span>
-          </p>
-          <p>
-            <img src="../../assets/店铺.png" alt="">
-            <span class="yu1">店铺名称：</span><span class="yu2">{{myInf.shopname || '--'}}</span>
-          </p>
-          <p>
-            <img src="../../assets/手机.png" alt="">
-            <span class="yu1">手机号：</span><span class="yu2">{{myInf.phone || '--'}}</span>
-          </p>
-          <p></p>
-          <p></p>
-          <p></p>
+          <p>自定义金额</p>
         </div>
       </div>
+      <p class="xufei_p">
+        <span>选择支付方式</span>
+        <span>支付即同意《红人带货服务合同》</span>
+      </p>
+      <div>
+        <el-radio v-model="radio" label="1">支付宝支付</el-radio>
+        <el-radio v-model="radio" label="2">微信支付</el-radio>
+        <el-radio v-model="radio" label="3">银行卡</el-radio>
+      </div>
+
+      <div v-if="radio === '1'" class="fangshi_xuanze">
+        <p class="zhifu_fangshi_xuane">
+          <span>应付金额：</span>
+          <span>10000元</span>
+        </p>
+        <img src="../../assets/new/%E4%BA%8C%E7%BB%B4%E7%A0%81%E5%9B%BE%E7%89%87_8%E6%9C%887%E6%97%A515%E6%97%B626%E5%88%8602%E7%A7%92.png" alt="">
+        <p class="zhifubao_icon">
+          <img src="../../assets/new/zhifubao.png" alt="">
+          <span>跳转到支付宝网页版支付</span>
+        </p>
+      </div>
+      <div v-if="radio === '2'" class="fangshi_xuanze">
+        <p class="zhifu_fangshi_xuane">
+          <span>应付金额：</span>
+          <span>10000元</span>
+        </p>
+        <img src="../../assets/new/%E4%BA%8C%E7%BB%B4%E7%A0%81%E5%9B%BE%E7%89%87_8%E6%9C%887%E6%97%A515%E6%97%B626%E5%88%8602%E7%A7%92.png" alt="">
+        <p class="zhifubao_icon">
+          <img src="../../assets/new/weixin.png" alt="">
+          <span>使用微信扫码支付</span>
+        </p>
+      </div>
+      <div v-if="radio === '3'" class="fangshi_xuanze">
+        <p class="zhifu_fangshi_xuane">
+          <span>应付金额：</span>
+          <span>10000元</span>
+        </p>
+        <p class="skjhfd_eae1">注意  付款后联系客服开通VIP权限</p>
+        <p class="skjhfd_eae">
+          <span>银行卡号：</span>
+          <span>216400100100090343</span>
+        </p>
+        <p class="skjhfd_eae">
+          <span>开户行：</span>
+          <span>兴业银行上海青浦支行</span>
+        </p>
+        <p class="skjhfd_eae">
+          <span>客服电话：</span>
+          <span>187367230826</span>
+        </p>
+      </div>
+
+      <div class="xufei_wenan">
+        <p class="wenan_p1">开通后您将获得以下权限</p>
+        <p>1、直播带货服务（入驻服务+单次服务+ROI服务，平台提供直播匹配服务红人/明星/渠道）；</p>
+        <p>2、红人带货为商家推荐快递、仓储、快运服务并提供专属售后对接解决；</p>
+        <p>3、价值人民币贰万元（刊例价）的广告/渠道发布服务（广告发布渠道：如包裹贴、快递短信、模板消息、社群团购及微信公众号等）；</p>
+        <p>4、为期一年的 “有蜜APP”注册会员使用权限（价值人民币伍万元）；</p>
+        <p>5、红人带货专业的平台产品发布及相关问题的咨询服务；</p>
+        <p>6、平台定制化数据分析及应用服务。</p>
+      </div>
     </div>
+    <!-- 弹框 -->
+    <el-dialog
+      :visible.sync="centerDialogVisible"
+      center>
+      <p class="store_dialog_p1">未通过原因</p>
+      <p class="store_dialog_p2">感谢您的联，感谢您的联，感谢您的联，感谢您的联</p>
+      <div class="store_dialog_btn" @click="chongxinshengqing">重新申请</div>
+    </el-dialog>
   </div>
-  <!-- 这是修改弹出框 -->
-  <el-dialog
-    :title="myInf.state===2 ? '驳回原因' : '请修改注册信息'"
-    :visible.sync="fanhuixiugai"
-    width="50%"
-    center>
-    <div v-if="myInf.state === 2">
-      <p>{{myInf.remarks}}</p>
-      <div @click="innerVisible=true" class="skdbvisbdiv">前往修改</div>
-      <!--  -->
-      <el-dialog
-        width="50%"
-        title="请修改注册信息"
-        :visible.sync="innerVisible"
-        append-to-body>
-        <xiugaiStore v-if="fanhuixiugai" :infData="myInf" v-model="updateRegStepIndex" @updateSuccess = "handleUpdateRegSuccess" ></xiugaiStore>
-      </el-dialog>
-    </div>
-    <div v-else>
-      <xiugaiStore v-if="fanhuixiugai" :infData="myInf" v-model="updateRegStepIndex" @updateSuccess = "handleUpdateRegSuccess" ></xiugaiStore>
-    </div>
-  </el-dialog>
-  <!-- 这是续费弹窗 -->
-  <el-dialog
-    :visible.sync="xufeitanchuang"
-    width="50%"
-    :before-close="handleClose">
-    <div>
-      <el-form class="formTJAHSBVK" :model="formFour" status-icon :rules="rules" ref="formFour" @submit.native.prevent>
-        <div class="formTwo-a11">
-          <p>选择会员期限</p>
-        </div>
-        <div class="formTwo-aa">
-          <div class="formTwo-a1">
-            <el-radio-group fill="#FD3069" v-model="formFour.memberTimelimit">
-              <div>
-                <el-radio :label="1">一年会员<span>￥10000</span></el-radio>
-              </div>
-              <!-- <div>
-                <el-radio :label="2">二年期会员<span>11976</span>元</el-radio>
-              </div>
-              <div>
-                <el-radio :label="3">三年期会员<span>17964</span>元</el-radio>
-              </div> -->
-            </el-radio-group>
-          </div>
-          <div class="formTwo-a2">
-            选择支付方式
-            <!-- <el-radio-group fill="#FD3069" v-model="formFour.openstate1" @change="agreeChange"> -->
-            <el-radio-group fill="#FD3069" v-model="formFour.openstate1">
-              <el-radio :label="0">支付宝支付（默认）</el-radio>
-              <el-radio :label="1">银行卡支付</el-radio>
-            </el-radio-group>
-          </div>
-          <div class="formTwo-a3" v-if="formFour.openstate1 === 1">
-            <p class="yinghangzhifu3">
-              <span>注意：请付款后联系客服开通VIP权限</span>
-            </p>
-            <p class="yinghangzhifu"><span class="yinghangzhifu1">开户行：</span><span class="yinghangzhifu2">兴业银行上海青浦支行</span></p>
-            <p class="yinghangzhifu"><span class="yinghangzhifu1">银行账号：</span><span class="yinghangzhifu2">2164 0010 0100 0903 43</span></p>
-            <p></p>
-          </div>
-          <div class="formTwo-a2">
-            是否需要开票
-            <el-radio-group fill="#FD3069" v-model="formFour.openstate">
-              <el-radio :label="0">否</el-radio>
-              <el-radio :label="1">是</el-radio>
-            </el-radio-group>
-          </div>
-          <div class="formTwo-a3" v-if="formFour.openstate === 1">
-            <p class="formTwo-a4">
-              <!-- 抬头类型 ： -->
-              <el-form-item label="抬头类型" label-width="90px" prop="risetype">
-                <el-radio-group fill="#FD3069" v-model="formFour.risetype">
-                  <el-radio :label="1">专用发票</el-radio>
-                  <el-radio :label="2">普通发票</el-radio>
-                </el-radio-group>
-              </el-form-item>
-            </p>
-            <div>
-              <el-form-item label="发票抬头" label-width="90px" prop="rise">
-                <el-input placeholder="请填写发票抬头" v-model="formFour.rise"></el-input>
-              </el-form-item>
-              <el-form-item label="税 号" label-width="90px" prop="dutyParagraph">
-                <el-input placeholder="请填写税号" v-model="formFour.dutyParagraph"></el-input>
-              </el-form-item>
-              <!-- 专用发票 注册电话 开户行 银行账号必填 否选填 -->
-              <el-form-item label="注册地址" prop="registerAddress" label-width="90px" >
-                <el-input placeholder="请填写注册地址" v-model="formFour.registerAddress"></el-input>
-              </el-form-item>
-              <el-form-item label="注册电话" prop="registerTelephone" label-width="90px" :rules="{ required: formFour.risetype === 1, message: '请填写注册电话', trigger: 'blur' }">
-                <el-input placeholder="填写注册电话" v-model="formFour.registerTelephone"></el-input>
-              </el-form-item>
-              <el-form-item label="开户行" prop="bankName" label-width="90px" :rules="{ required: formFour.risetype === 1, message: '请填写银行账号', trigger: 'blur' }">
-                <el-input placeholder="填写账号行" v-model="formFour.bankName"></el-input>
-              </el-form-item>
-              <el-form-item  label="银行账号" prop="bankNumber" label-width="90px" :rules="{ required: formFour.risetype === 1,  message: '请填写开户行', trigger: 'blur' }">
-                <el-input placeholder="填写银行账号" v-model="formFour.bankNumber"></el-input>
-              </el-form-item>
-              <el-form-item label="备 注" label-width="90px" prop="invoiceremark">
-                <el-input placeholder="填写备注" v-model="formFour.invoiceremark"></el-input>
-              </el-form-item>
-            </div>
-          </div>
-          <!-- <div v-else></div> -->
-          <div class="pay-protocal-box">
-            <!-- <el-radio-group class="pay-protocal-tip" fill="#FD3069" v-model="formFour.yuedu">
-                <el-radio :label="3">我已阅读并同意 <span>《用户支付协议》</span></el-radio>
-              </el-radio-group> -->
-            <el-checkbox
-              class="pay-protocal-tip"
-              v-model="formFour.agree"
-              name="yuedu">
-              我已阅读并遵守
-              <span><a href="https://writer.zohopublic.com.cn/writer/published/xse0o201742ac28d246d3b05becf37a7d9740?mode=embed" target="_blank">《红人带货会员服务合同》</a></span>
-            </el-checkbox>
-          </div>
-        </div>
-        <div class="button-group-4">
-          <button class="jsbdivbaibvoafivbdbv" @click="handlePay('formFour')">立即支付</button>
-        </div>
-        <div class="dsevoervber">
-          <div class="dsevoervber-1"></div>
-          <div class="dsevoervber-2">开通会员后您将获得以下权益</div>
-        </div>
-        <div class="jdpovdger">
-          <p>1、6次带货服务（单次带货服务过程中产生的佣金及相关合理费用由商家自行承担）；</p>
-          <p>2、为商家推荐快递、仓储服务商，并提供专属客服对接服务；</p>
-          <p>3、价值人民币贰万元（刊例价）的广告发布服务（广告发布渠道：如电子面单、包裹贴、短信、模板消息及微信公众号等）；</p>
-          <p>4、为期一年的 “AI小蜜蜂”系统使用权限（价值人民币伍万元）；</p>
-          <p>5、专业的平台使用及相关问题的咨询服务；</p>
-          <p>6、定制化平台数据应用服务（待开发）。</p>
-        </div>
-      </el-form>
-    </div>
-    <!-- <span slot="footer" class="dialog-footer">
-      <el-button @click="xufeitanchuang = false">取 消</el-button>
-      <el-button type="primary" @click="xufeitanchuang = false">确 定</el-button>
-    </span> -->
-  </el-dialog>
-</div>
 </template>
 
 <script>
-import { fetchMyInf, pay } from '@/api/user'
-// import { getToken } from '@/utils/auth'
-import xiugaiStore from '@/components/register/UpdateStore.vue'
+import { provinceData } from '../../data/common'
+import { storeContent, storeContentXiugai } from '@/api/newshopList'
 export default {
-  name: 'StoreUserMyInf',
   data () {
     return {
-      rules: {
-        rise: [{ required: true, message: '请输入发票抬头', trigger: 'blur' }],
-        risetype: [{ required: true, message: '请选择抬头类型', trigger: 'blur' }],
-        dutyParagraph: [{ required: true, message: '请输入税号', trigger: 'blur' }],
-        agree: [{ required: true, message: '请勾选同意协议', trigger: 'blur' }],
-        registerAddress: [{ required: true, message: '请填写注册地址', trigger: 'blur' }]
+      show: true,
+      div_show: true,
+      provinceData,
+      centerDialogVisible: false,
+      radio: '1',
+      from: {
+        shopName: '',
+        phoneNumber: '',
+        wechatAccount: ''
       },
-      xufeitanchuang: false,
-      myInf: {},
-      fanhuixiugai: false,
-      paymentstate: '',
-      endTime: '',
-      phone: '',
-      innerVisible: false,
-      updateRegStepIndex: 1,
-      formFour: {
-        memberTimelimit: 1, // 会员期限
-        openstate: 0, // 是否开发票
-        rise: '', // 抬头
-        risetype: '', // 抬头类型 1 企业 2 个人
-        dutyParagraph: '',
-        invoiceremark: '', // 发票备注
-        openstate1: 0,
-        price: '',
-        agree: '',
-        body: '',
-        bankName: '',
-        registerTelephone: '',
-        registerAddress: '',
-        bankNumber: ''
-      }
+      token: sessionStorage.getItem('token'),
+      data: {}
     }
   },
-  components: {
-    xiugaiStore
-  },
   mounted () {
-    this.getMyInf()
+    this.getlist()
   },
   methods: {
-    getMyInf () {
-      // const userId = getUserId()
-      fetchMyInf({ }).then(data => {
-        this.myInf = this.formatMyInfData(data)
-        if (this.myInf.paymentstate === 1) {
-          this.endTime = this.myInf.endTime.slice(0, 10)
-          console.log('---===---===---===---')
-          console.log(this.endTime)
-        }
-        console.log('--------------------这是我的信息---------------------')
+    getsshow () {
+      this.show = !this.show
+    },
+    baocun () {
+      storeContentXiugai(this.from).then(data => {
         console.log(data)
-        this.paymentstate = data.paymentstate
-        console.log(this.paymentstate)
-        this.phone = data.phone
-        console.log(this.phone)
-      })
-    },
-    handleClose (done) {
-      this.$confirm('确认关闭？')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
-    },
-    // 修改注册信息成功
-    // 重新获取信息
-    handleUpdateRegSuccess () {
-      this.fanhuixiugai = false
-      this.getMyInf()
-    },
-    formatMyInfData (data) { // 格式化我的个人信息数据
-      // const platform = data.platform
-      // 将平台，内容分类拼接字符串改成数组
-      data.platform = data.platform && data.platform.split('|')
-      data.contentstate = data.contentstate && data.contentstate.split('|')
-      return data
-    },
-    // 提交支付
-    handleSubmitPay () {
-      // ------
-      // ------
-      const formFour = Object.assign({}, this.formFour)
-      const memberTimelimit = this.formFour.memberTimelimit
-      if (formFour.openstate === 0) {
-        formFour.rise = ''
-        formFour.risetype = ''
-        formFour.dutyParagraph = ''
-        formFour.invoiceremark = ''
-        formFour.registerTelephone = ''
-        formFour.bankName = ''
-        formFour.registerAddress = ''
-        formFour.bankNumber = ''
-      }
-      // formFour.price = memberTimelimit === 1 ? 10000 : (memberTimelimit === 2 ? 11976 : 17964)
-      formFour.price = memberTimelimit === 1 ? 0.01 : (memberTimelimit === 2 ? 0.02 : 0.03)
-      const form = Object.assign({}, formFour, {
-        subject: '商家会员' + '(' + this.phone + ')'
-      })
-      if (formFour.openstate1 === 1) {
-        pay(form).then(data => {
-          // 请联系在线客服进行审核
-          this.$confirm('请联系在线客服进行审核', '', {
-            title: '',
-            center: true,
-            showCancelButton: false,
-            confirmButtonText: '确定'
-          }).then(res => {
-            this.xufeitanchuang = false
-          })
-        })
-      } else {
-        pay(form).then(data => {
-          this.redirectToPay(data.result)
-          // this.xufeitanchuang = false
-        })
-      }
-    },
-    // 跳转支付页
-    redirectToPay (result) {
-      document.body.innerHTML = result
-      document.forms[0].submit()
-    },
-    handlePay (formName) {
-      if (!this.formFour.agree) {
         this.$message({
-          message: '请勾选是否同意用户支付协议',
-          type: 'error'
+          showClose: true,
+          message: '修改成功',
+          type: 'success'
         })
-        return
-      }
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.handleSubmitPay()
-        }
+        this.show = !this.show
+        this.getlist()
       })
+    },
+    // 获取信息
+    getlist () {
+      storeContent({
+        sessionId: this.token
+      }).then(data => {
+        this.data = data.rbud
+        this.from = this.data
+        console.log(this.data)
+      })
+    },
+    // 查看拒绝原因
+    store_jujuesize () {
+      // alert('ooo')
+      this.centerDialogVisible = !this.centerDialogVisible
+    },
+    // 重新申请
+    chongxinshengqing () {
+      this.centerDialogVisible = !this.centerDialogVisible
+      this.$router.push({ name: 'shangjiashengqing' })
+    },
+    // 点击续费按钮
+    div_show1 () {
+      this.div_show = !this.div_show
     }
   }
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
+.Store_min {
+  .el-input {
+    .el-input__inner {
+      width:290px;
+      height:42px;
+      border:1px solid rgba(226,226,226,1);
+      opacity:1;
+      border-radius:10px;
+    }
+  }
+  .el-textarea {
+    .el-textarea__inner {
+      width:290px;
+      height:97px;
+      border:1px solid rgba(226,226,226,1);
+      opacity:1;
+      border-radius:10px;
+      margin-bottom: 20px;
+    }
+  }
+  .el-date-editor.el-input, .el-date-editor.el-input__inner {
 
-// -----------商家注册页添加会员样式------------
-.dsevoervber {
-  font-size:16px;
-  font-family:PingFangSC-Regular,PingFang SC;
-  font-weight:400;
-  color:rgba(50,51,52,1);
-  position: relative;
-  .dsevoervber-1 {
-    width: 100%;
-    height:1px;
-    background:rgba(162,162,162,1);
-    border-radius:3px;
-    position: absolute;
-    top: 50px;
+      width: 150px;
+    .el-input__inner {
+
+      width: 135px;
+    }
   }
-  .dsevoervber-2 {
-    text-align: center;
-    width: 250px;
-    height: 20px;
-    margin-top: 30px;
-    margin-left: 280px;
-    position: absolute;
-    top: 10px;
-    background-color: #fff;
+  .el-dialog {
+    width:460px;
+    background:rgba(255,255,255,1);
+    opacity:1;
+    border-radius:10px;
+    .el-dialog__header {
+      display: none;
+    }
   }
-}
-.jdpovdger {
-    margin-top: 100px;
-  p {
-    font-size:16px;
-    font-family:PingFangSC-Regular,PingFang SC;
-    font-weight:400;
-    color:rgba(107,107,107,1);
-    margin-bottom: 20px;
-  }
-}
-.formTJAHSBVK {
-  padding: 0 90px;
-}
-.button-group-4 {
-  text-align: center;
-  margin-top: 25px;
-}
-.formTwo-a3 {
-  width:377px;
-  height:269px;
-  height:100%;
-  background:rgba(255,255,255,1);
-  box-shadow:0px 0px 2px 1px rgba(154,154,154,0.2);
-  border-radius:3px;
-  margin-top: 25px;
-  margin-left: 100px;
-  margin-bottom: 20px;
-  padding: 15px 20px;
-  box-sizing: border-box;
-  .yinghangzhifu {
-    margin-bottom: 20px;
-    .yinghangzhifu1 {
+  .uanzejinr {
+    .el-input {
       display: inline-block;
-      width: 100px;
-      font-size: 18px;
+      width: 90px;
+      height: 32px;
+      border: none;
+      background-color: #e3e3e3;
+      margin-top: 10px;
+      line-height: 22px;
+      .el-input__inner {
+      width: 88px;
+      height: 30px;
+      border: none;
+      background-color: #e3e3e3;
+      }
     }
-    .yinghangzhifu2 {
-      font-size: 18px;
-    }
-  }
-  .yinghangzhifu3 {
-    margin-bottom: 20px;
-    text-align: center;
-    font-size: 20px;
-    color: red;
   }
 }
-.formTwo-a1 {
-  margin-left: 100px;
-  div {
-    margin-bottom: 25px;
-  }
-}
-.formTwo-a4 {
-  margin-bottom: 10px;
-}
-.jsbdivbaibvoafivbdbv {
-  width: 150px;
-  height: 40px;
-  line-height: 40px;
-  margin-left: 0px;
-  margin-right: 0px;
-  font: 400 13.3333px Arial;
-  background-color: #FD3069;
-  color: #fff;
-  border-radius: 5px;
-  margin: 0 auto;
-}
-// -----------------------
-.jbadifvbiav {
-  font-size: 18px;
-  margin-right: 10px;
-  color: #fd3269;
-}
-.huiyuanzhuangtai-7 {
-  img {
-    width: 20px;
-    height: 20px;
-    margin-right: 10px;
-  }
-}
-.huiyuan-xufei {
-  color: #fff;
-  background-color: #fd3269;
-}
-.skdbvisbdiv {
-  margin-top: 100px;
-  margin: 0 auto;
-  width: 100px;
-  height: 50px;
-  background-color: #fd346a;
-  color: #fff;
-  text-align: center;
-  border-radius: 25px;
-  line-height: 50px;
-  font-size: 20px;
-}
+</style>
 
-h2 {
-  height: 60px;
-  width: 100%;
-  line-height: 60px;
-}
-.conent-danding {
-  width: 100%;
-  height: 100%;
-  background-color: #fff;
-  border: 1px solid #dddddd;
-  padding: 50px 250px;
-  box-sizing: border-box;
-  .content {
-    margin-left: 30px;
-    .content-top {
-      .top-xm {
-        margin-top: 30px;
-        padding-left: 20px;
-        padding-bottom: 20px;
-        box-sizing: border-box;
-        padding-top: 20px;
-        width: 322px;
-        height: 100%;
-        border: 1px solid #cccccc;
-        box-sizing: border-box;
-        .i89 {
-          font-size: 16px;
-          color: #333333;
+<style lang="less" socped>
+  .Store_min {
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    border-top: 2px solid rgba(232,37,29,1);
+    padding-left: 45px;
+    padding-top: 30px;
+    box-sizing: border-box;
+    position: relative;
+    .honr_touxiang {
+      width: 110px;
+      float: left;
+      img {
+        width:110px;
+        height:110px;
+        background:rgba(217,217,217,1);
+        border:3px solid rgba(244,244,244,1);
+        border-radius:50%;
+        opacity:1
+      }
+      .img1 {
+        width: 26px;
+        height: 26px;
+        position: absolute;
+        top: 125px;
+        left: 125px;
+      }
+    }
+    .content {
+      width: 100%;
+      height: 100%;
+      padding-left: 157px;
+      box-sizing: border-box;
+      p {
+        .span1 {
+          font-size:20px;
+          font-family:PingFang SC;
+          font-weight:500;
+          color:rgba(85,85,85,1);
+          opacity:1;
+          line-height:25px;
+          margin-right: 10px;
         }
-        .hr-xingming1 {
-          font-size: 16px;
-          color: #fd395f;
-        }
-        .i87 {
-          font-size: 16px;
-          color: #888888;
-          margin-right: 30px;
+        .span2 {
+          display: inline-block;
+          width:45px;
+          height:25px;
+          border:1px solid rgba(232,37,29,1);
+          opacity:1;
+          border-radius:6px;
+          font-size:12px;
+          font-family:PingFang SC;
+          font-weight:400;
+          line-height:25px;
+          color:rgba(232,37,29,1);
+          opacity:1;
+          text-align: center;
         }
       }
-      .content-content {
+      .fenxian {
+        width: 100%;
+        height:2px;
+        border:1px solid rgba(208,208,208,1);
+        opacity:1;
+        box-sizing: border-box;
         margin-top: 20px;
-        p {
-          line-height: 40px;
-          margin-left: 20px;
-          font-size: 12px;
-          img {
-            width: 15px;
-            height: 15px;
-          }
-          .yu1 {
-            display: inline-block;
-            width: 70px;
-          color: #333333;
-          }
-          .yu2 {
-          color: #888888;;
-          }
+        margin-bottom: 20px;
+      }
+      .p1 {
+        font-size:16px;
+        font-family:PingFang SC;
+        font-weight:400;
+        line-height:36px;
+        color:rgba(153,153,153,1);
+        opacity:1;
+      }
+      .p2 {
+        font-size:16px;
+        font-family:PingFang SC;
+        font-weight:400;
+        line-height:55px;
+        color:rgba(51,51,51,1);
+        opacity:1;
+        .jujue_div {
+          display: inline-block;
+          width:76px;
+          height:22px;
+          background:rgba(234,64,57,1);
+          opacity:0.13;
+          border-radius:6px;
+          text-align: center;
+          font-size:14px;
+          font-family:PingFang SC;
+          font-weight:400;
+          line-height:22px;
+          color:rgba(247,98,92,1);
+          opacity:1;
+        }
+      }
+      .p3 {
+        font-size:16px;
+        font-family:PingFang SC;
+        font-weight:400;
+        line-height:55px;
+        color:rgba(106,199,155,1);
+        opacity:1;
+      }
+      .p4 {
+        font-size:16px;
+        font-family:PingFang SC;
+        font-weight:400;
+        line-height:55px;
+        color:rgba(198,156,88,1);
+        opacity:1;
+        .sotre_span2 {
+          display: inline-block;
+          text-align: center;
+          width:45px;
+          height:22px;
+          // line-height:22px;
+          background:rgba(189,150,81,1);
+          opacity:1;
+          border-radius:6px;
+          font-size:14px;
+          font-family:PingFang SC;
+          font-weight:400;
+          line-height:22px;
+          color:rgba(255,255,255,1);
+          opacity:1;
         }
       }
     }
+    .bnt {
+      width:170px;
+      height:42px;
+      background:rgba(234,64,57,1);
+      opacity:1;
+      border-radius:10px;
+      margin-top: 60px;
+      text-align: center;
+      font-size:16px;
+      font-family:PingFang SC;
+      font-weight:400;
+      line-height:42px;
+      color:rgba(255,255,255,1);
+      opacity:1;
+      margin: 60px auto;
+    }
+    .xufei_p1 {
+
+      font-size:20px;
+      font-family:PingFang SC;
+      font-weight:500;
+      line-height:37px;
+      color:rgba(85,85,85,1);
+      opacity:1;
+    }
+    .fenxian {
+      width: 100%;
+      height:2px;
+      border:1px solid rgba(208,208,208,1);
+      opacity:1;
+      box-sizing: border-box;
+      margin-top: 20px;
+      margin-bottom: 20px;
+    }
+    .xufei_p {
+      font-size:16px;
+      font-family:PingFang SC;
+      font-weight:400;
+      line-height:32px;
+      color:rgba(153,153,153,1);
+      opacity:1;
+      margin-bottom: 30px;
+      span:nth-child(2) {
+        margin-left: 10px;
+        color:rgba(234,64,57,1);
+      }
+    }
+    .uanzejinr {
+      margin-bottom: 60px;
+        height:84px;vertical-align:top;
+      div {
+        width:140px;
+        height:84px;
+        border:1px solid rgba(226,226,226,1);
+        box-sizing: border-box;
+        opacity:0.9;
+        border-radius:5px;
+        margin-right: 20px;
+        display: inline-block;vertical-align:top;
+        P {
+          text-align: center;
+          color:rgba(153,153,153,1);
+        }
+        p:nth-child(1) {
+          line-height: 50px;
+          text-align: center;
+          font-size:16px;
+          font-family:PingFang SC;
+          font-weight:400;
+          opacity:1;
+          span:nth-child(1) {
+            font-size: 22px;
+            color: #EA4039;
+          }
+        }
+      }
+      div:hover {
+        border:1px solid rgba(234,64,57,1);
+        p {
+          color:rgba(51,51,51,1);
+        }
+      }
+      .jine1 {
+        width:140px;
+        height:84px;
+        border:1px solid rgba(234,64,57,1);
+        opacity:1;
+        border-radius:5px;
+        box-sizing: border-box;vertical-align:top;
+      }
+    }
+    .fangshi_xuanze {
+      margin-left: 50px;
+      margin-top: 40px;
+      margin-bottom: 20px;
+      .zhifu_fangshi_xuane {
+        span:nth-child(1) {
+          font-size:16px;
+          font-family:PingFang SC;
+          font-weight:500;
+          line-height:32px;
+          color:#333333;
+          opacity:1;
+        }
+        span:nth-child(2) {
+          font-size:22px;
+          font-family:PingFang SC;
+          font-weight:500;
+          line-height:32px;
+          color:#EA4039;
+          opacity:1;
+        }
+      }
+      img {
+        margin-top: 20px;
+        width: 187px;
+        height: 187px;
+      }
+      .zhifubao_icon {
+        font-size:16px;
+        font-family:PingFang SC;
+        font-weight:400;
+        color:rgba(33,154,215,1);
+        opacity:1;
+        img {
+          width: 22px;
+          height: 22px;
+          margin-top: 0;
+          margin-right: 8px;
+          // vertical-align:top;
+        }
+        span {
+          vertical-align:top;
+        }
+      }
+      .skjhfd_eae {
+        font-size:16px;
+        font-family:PingFang SC;
+        font-weight:400;
+        line-height:32px;
+        color:rgba(51,51,51,1);
+        opacity:1;
+        span:nth-child(1) {
+          color: #999999;
+        }
+      }
+      .skjhfd_eae1 {
+        font-size:16px;
+        font-family:PingFang SC;
+        font-weight:400;
+        line-height:32px;
+        color:rgba(234,64,57,1);
+        opacity:1;
+      }
+    }
+    .xufei_wenan {
+      p {
+        font-size:14px;
+        font-family:PingFang SC;
+        font-weight:400;
+        line-height:32px;
+        color:rgba(153,153,153,1);
+        opacity:1;
+      }
+      .wenan_p1 {
+        font-size:16px;
+        font-family:PingFang SC;
+        font-weight:400;
+        line-height:32px;
+        color:rgba(102,102,102,1);
+        opacity:1;
+      }
+    }
+
+    .store_dialog_p1 {
+      font-size:20px;
+      font-family:PingFang SC;
+      font-weight:400;
+      color:rgba(102,102,102,1);
+      opacity:1;
+      text-align: center;
+      margin-top: 50px;
+      padding: 0 70px;
+      box-sizing: border-box;
+    }
+    .store_dialog_p2 {
+      font-size:14px;
+      font-family:PingFang SC;
+      font-weight:400;
+      color:rgba(153,153,153,1);
+      opacity:1;
+      text-align: center;
+      margin-top: 50px;
+      margin-bottom: 50px;
+      padding: 0 70px;
+      box-sizing: border-box;
+    }
+    .store_dialog_btn {
+      width:137px;
+      height:40px;
+      background:rgba(234,64,57,1);
+      opacity:1;
+      border-radius:10px;
+      text-align: center;
+      font-size:16px;
+      font-family:PingFang SC;
+      font-weight:400;
+      line-height:40px;
+      color:rgba(255,255,255,1);
+      opacity:1;
+      margin: auto;
+    }
   }
-}
-.shenghezhuangtaixiugai {
-  color: blue;
-}
 </style>

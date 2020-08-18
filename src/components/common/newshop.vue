@@ -47,7 +47,7 @@
             <span class="dfjbkdtt">
               <img src="../../assets/new/购物车.png" alt="">
             </span>
-            <span @click="hanldeApplicationSample(this.item)">
+            <span @click="hanldeApplicationSample">
               申请取样
             </span>
           </p>
@@ -111,7 +111,9 @@ export default {
         oldFiles: []
       },
       item: {},
-      shopUrls: []
+      shopUrls: [],
+      token: sessionStorage.getItem('token'),
+      type: sessionStorage.getItem('type')
     }
   },
   mounted () {
@@ -126,8 +128,14 @@ export default {
     // this.huoqu()
   },
   methods: {
-    hanldeApplicationSample (item) {
-      this.$router.push({ name: 'applicationSample' })
+    hanldeApplicationSample () {
+      if (!this.token && !this.type) {
+        this.$message.error('您还未登陆账号，请先登陆红人账号')
+      } else if (this.type !== 1) {
+        this.$message.error('请先登陆红人账号')
+      } else {
+        this.$router.push({ name: 'applicationSample', query: { item: this.item } })
+      }
     }
 
   }

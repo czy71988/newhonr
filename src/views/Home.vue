@@ -259,12 +259,12 @@ export default {
     },
     // 跳转商品详情页
     handleGoodsItem (item) {
-      this.$router.push({ name: 'newshop', query: { item: item } })
+      this.$router.push({ name: 'newshop', query: { item: item.rtgGoodsDto } })
     },
-    // 申请取样
-    shenqingquyang (item) {
-      this.$router.push({ name: 'applicationSample', query: { item: item } })
-    },
+    // // 申请取样
+    // shenqingquyang (item) {
+    //   this.$router.push({ name: 'applicationSample', query: { item: item } })
+    // },
     // 点击红人头像跳转
     hongren (id) {
       console.log('5555555555555')

@@ -54,7 +54,7 @@ Vue.filter('platformStoreFilter', val => {
       }
     })
   }
-  return labels.join(' ')
+  return labels.join('')
 })
 
 // 内容分类

@@ -1,9 +1,8 @@
 import axios from 'axios'
 import baseURL from '../config/request.config.js'
-import { Message, MessageBox } from 'element-ui'
-import { getToken } from '@/utils/auth'
-import noAuthReqUrlData from '@/data/noAuthReqUrl'
+import { Message, MessageBox, Loading } from 'element-ui'
 import router from '@/router/index'
+
 let token = localStorage.getItem('token')
 // 创建axios实例
 const service = axios.create({
@@ -18,10 +17,34 @@ service.setToken = (val) => { // 设置token
 service.getToken = () => token // 获取token
 
 // 请求拦截器
+let loading
+// 内存中正在请求的数量
+let loadingNum = 0
+function startLoading () {
+  if (loadingNum === 0) {
+    loading = Loading.service({
+      lock: true,
+      text: '拼命加载中...',
+      background: 'rgba(255,255,255,0.5)'
+    })
+  }
+  // 请求数量加1
+  loadingNum++
+}
+function endLoading () {
+  // 请求数量减1
+  loadingNum--
+  if (loadingNum <= 0) {
+    loading.close()
+  }
+}
 service.interceptors.request.use(config => {
   if (process.env.NODE_ENV === 'production') {
     config.baseURL = baseURL
   }
+  // 加载动画
+  startLoading()
+
   return config
 }, err => {
   return Promise.reject(err)
@@ -29,6 +52,8 @@ service.interceptors.request.use(config => {
 
 // 响应拦截器
 service.interceptors.response.use(res => {
+  // 关闭加载动画
+  endLoading()
   const data = res.data
   if (data.code && data.code.toString() === '99999') {
     return Promise.reject(new Error('99999'))
@@ -50,34 +75,34 @@ const request = (config = {}, catchConfig) => {
   if (IS_DEVLOPMENT_ENV && config.url.indexOf('api/') < 0 && config.url.indexOf('temp/') < 0) {
     config.url = 'temp/' + config.url
   }
-  let shouldToken = true
-  for (const noAuthReq of noAuthReqUrlData) {
-    if (config.url.indexOf(noAuthReq) > -1) {
-      shouldToken = false
-      break
-    }
-  }
-  console.log('==')
-  console.log(getToken())
-  config.data || (config.data = {})
-  if (shouldToken) config.data.token = getToken()
-  config = Object.assign({
-    method: 'post',
-    header: {},
-    authToken: true
-  }, config)
-  const method = config.method || 'post'
-  if (!config.header.token && config.authToken === true) {
-    if (method.toLowerCase() === 'post') { // 给post请求默认添加token
-      if (token) {
-        config.header.token = token
-      }
-    }
-  }
-  if (method.toLowerCase() === 'get' && !config.params) { // 将get请求的data赋值给params
-    config.params = config.data
-    config.data = {}
-  }
+  // let shouldToken = true
+  // for (const noAuthReq of noAuthReqUrlData) {
+  //   if (config.url.indexOf(noAuthReq) > -1) {
+  //     shouldToken = false
+  //     break
+  //   }
+  // }
+  // console.log('==')
+  // console.log(getToken())
+  // config.data || (config.data = {})
+  // if (shouldToken) config.data.token = getToken()
+  // config = Object.assign({
+  //   method: 'post',
+  //   header: {},
+  //   authToken: true
+  // }, config)
+  // const method = config.method || 'post'
+  // if (!config.header.token && config.authToken === true) {
+  //   if (method.toLowerCase() === 'post') { // 给post请求默认添加token
+  //     if (token) {
+  //       config.header.token = token
+  //     }
+  //   }
+  // }
+  // if (method.toLowerCase() === 'get' && !config.params) { // 将get请求的data赋值给params
+  //   config.params = config.data
+  //   config.data = {}
+  // }
 
   const promise = new Promise((resolve, reject) => {
     service(config).then(data => {

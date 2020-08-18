@@ -45,13 +45,16 @@ export default {
     item: {
       type: Object,
       default () {
-        return {}
+        return {
+        }
       }
     }
   },
   data () {
     return {
-      show: false
+      show: false,
+      token: sessionStorage.getItem('token'),
+      type: sessionStorage.getItem('type')
     }
   },
   methods: {
@@ -66,7 +69,13 @@ export default {
     // ==================================================================
     // 申请取样
     hanldeApplicationSample (item) {
-      this.$router.push({ name: 'applicationSample', query: { item: item } })
+      if (!this.token && !this.type) {
+        this.$message.error('您还未登陆账号，请先登陆红人账号')
+      } else if (this.type !== 1) {
+        this.$message.error('请先登陆红人账号')
+      } else {
+        this.$router.push({ name: 'applicationSample', query: { item: item } })
+      }
     },
     handleGoodsItem (item) { // 点击商品榜列表项
       this.$router.push({ name: 'newshop', query: { item: item } })

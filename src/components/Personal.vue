@@ -1,6 +1,6 @@
 <template>
   <div class="personal">
-    <div class="horn">
+    <div v-if="type === '1'" class="horn">
       <p class="honrn_p">个人中心</p>
       <el-row class="tac">
         <el-col :span="12">
@@ -23,10 +23,40 @@
               <el-menu-item-group>
                 <el-menu-item index="3-1">近期直播商品</el-menu-item>
                 <el-menu-item index="3-2">近期合作商家</el-menu-item>
-                <el-menu-item index="3-3">种草视屏</el-menu-item>
+                <el-menu-item index="3-3">种草视频</el-menu-item>
               </el-menu-item-group>
             </el-submenu>
             <el-menu-item index="4">
+              <span slot="title">修改密码</span>
+            </el-menu-item>
+          </el-menu>
+        </el-col>
+      </el-row>
+    </div>
+
+    <div v-else class="horn">
+      <p class="honrn_p">个人中心</p>
+      <el-row class="tac">
+        <el-col :span="12">
+          <el-menu
+            default-active="1"
+            class="el-menu-vertical-demo"
+            @open="handleOpen"
+            @select="handleSelect1"
+            @close="handleClose">
+            <el-menu-item index="1">
+              <span slot="title">我的信息</span>
+            </el-menu-item>
+            <el-menu-item index="2">
+              <span slot="title">我的商品</span>
+            </el-menu-item>
+            <el-menu-item index="3">
+              <span slot="title">我的订单</span>
+            </el-menu-item>
+            <el-menu-item index="4">
+              <span slot="title">我的发票</span>
+            </el-menu-item>
+            <el-menu-item index="5">
               <span slot="title">修改密码</span>
             </el-menu-item>
           </el-menu>
@@ -45,18 +75,29 @@ import { personalHonr, personalStroe } from '../data/common'
 export default {
   data () {
     return {
-      type: 'honren',
+      // type: 'honren',
       personalHonr,
-      personalStroe
+      personalStroe,
+      jj: false,
+      type: sessionStorage.getItem('type')
     }
   },
   methods: {
     handleSelect (index) {
-      console.log(index)
       if (index === '1') { this.$router.push({ name: 'personalMyxinxi' }) }
+      if (index === '3-1') { this.$router.push({ name: 'PersonalMyshop' }) }
+      if (index === '3-2') { this.$router.push({ name: 'PersonalMyStore' }) }
+      if (index === '3-3') { this.$router.push({ name: 'PersonalMyVideo' }) }
       if (index === '2') { this.$router.push({ name: 'personalMydingdan' }) }
       if (index === '3') { this.$router.push({ name: 'hongrenshangchuan' }) }
       if (index === '4') { this.$router.push({ name: 'personalMymima' }) }
+    },
+    handleSelect1 (index) {
+      if (index === '1') { this.$router.push({ name: 'myInf' }) }
+      if (index === '2') { this.$router.push({ name: 'shangjiamyshangping' }) }
+      if (index === '3') { this.$router.push({ name: 'shangjiadingdan' }) }
+      if (index === '4') { this.$router.push({ name: 'fapiao' }) }
+      if (index === '5') { this.$router.push({ name: 'shangjiamima' }) }
     }
   }
 }
