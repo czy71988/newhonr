@@ -155,6 +155,7 @@ export default {
       ishow: false,
       list: [],
       Tuilist: [],
+      id: '',
       type: '',
       goodslist: [], // 最近直播商品
       liveList: [], // 直播数据
@@ -165,7 +166,6 @@ export default {
     }
   },
   created () {
-    // setInterval(this.scroll, 2000)
   },
   mounted () {
     // this.geteeid()
@@ -176,7 +176,7 @@ export default {
     lianxi (id) {
       if (!this.token && !this.type1) {
         this.$message.error('请登录账号操作')
-      } else if (this.type1 !== 2) {
+      } else if (this.type1 !== '2') {
         this.$message.error('您不是商家用户')
       } else {
         this.ishow = true
@@ -184,9 +184,9 @@ export default {
     },
     // 获取红人信息
     gitxinxi () {
-      const id = this.$route.params.redskinsId
+      this.id = this.$route.query.redskinsId
       honrshuju({
-        redskinsId: id
+        redskinsId: this.id
       }).then(data => {
         console.log('====', data)
         this.goodslist = data.goodslist // 最近直播商品

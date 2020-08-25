@@ -4,7 +4,7 @@
   <div class="honrList">
     <div class="hezi" @mouseenter="showDialog" @mouseleave="hideDialog">
       <img :src="item.imageUrl" alt="" class="touxiang">
-      <img src="../../assets/new/douyin@2x.png" alt="" class="leibie">
+      <img :src="item.redskinsPlatformUrl" alt="" class="leibie">
       <div class="mengban"></div>
       <span class="leibieIcon">{{item.redskinsPlatform === '1' ? '淘宝' : (item.redskinsPlatform === '2' ? '抖音' : (item.redskinsPlatform === '3' ? '快手' : (item.redskinsPlatform === '4' ? '微视' : (item.redskinsPlatform === '5' ? '小红书' : '其他'))))}}</span>
       <p class="Pmingcheng">{{item.redskinsName}}</p>
@@ -48,7 +48,7 @@ export default {
   },
   methods: {
     hongrenshuju (id) {
-      this.$router.push({ name: 'hongrenshuju', params: { redskinsId: id } })
+      this.$router.push({ name: 'hongrenshuju', query: { redskinsId: id } })
     },
     honren ({ id }) {
       const { token, userType } = getUserInf()

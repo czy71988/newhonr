@@ -2,7 +2,7 @@
   <div class="store_home_shop">
     <p class="top_p">我的商品</p>
     <div>
-      <el-select v-model="value" placeholder="请选择">
+      <el-select v-model="value" placeholder="请选择" @change="sousuo">
         <el-option
           v-for="item in auditStateData"
           :key="item.value"
@@ -11,6 +11,7 @@
         </el-option>
       </el-select>
       <div class="shangchuan_btn" @click="shangchuan">上传商品</div>
+      <div>批量删除</div>
     </div>
     <div class="shop_content">
       <el-table
@@ -97,8 +98,8 @@ export default {
       centerDialogVisible: false,
       tableData: [],
       totalCount: 0,
-      row: '10',
-      page: '1',
+      row: 10,
+      page: 1,
       multipleSelection: []
     }
   },
@@ -106,6 +107,10 @@ export default {
     this.getlits()
   },
   methods: {
+    // 搜索
+    sousuo () {
+      this.getlits()
+    },
     // 分页
     handleSizeChange (val) {
       console.log(`每页 ${val} 条`)
@@ -133,7 +138,9 @@ export default {
     getlits () {
       storeShopList({
         sessionId: this.token,
-        filters: {},
+        filters: {
+          auditStatus: this.value
+        },
         page: this.page,
         rows: this.row
       }).then(data => {
@@ -145,13 +152,19 @@ export default {
     },
     // 批量操作
     handleSelectionChange (val) {
-      val.forEach(item => {
-        this.multipleSelection.push(item.goodsId)
+      this.multipleSelection = val.map(item => {
+        return item.goodsId
       })
       // this.multipleSelection = val
 
-      console.log(this.multipleSelection)
+      console.log('批量', this.multipleSelection)
     }
+
+    // handleSelectionChange (val) {
+    //   console.log('1', val)
+    //   this.multipleSelection = val.goodsId
+    //   console.log('批量', this.multipleSelection)
+    // }
   }
 }
 </script>

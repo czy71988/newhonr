@@ -29,7 +29,7 @@
         </p>
 
         <p class="p1">所属平台：</p>
-        <p class="p2">{{data.shopPlatform | platformStoreFilter}}</p>
+        <p class="p2">{{arr | platformStoreFilter}}</p>
         <p class="p1">所属地区：</p>
         <p v-if="show" class="p2">
           <span>{{data.province}}</span>
@@ -170,7 +170,8 @@ export default {
         wechatAccount: ''
       },
       token: sessionStorage.getItem('token'),
-      data: {}
+      data: {},
+      arr: []
     }
   },
   mounted () {
@@ -194,12 +195,25 @@ export default {
     },
     // 获取信息
     getlist () {
+      const token = sessionStorage.getItem('token')
       storeContent({
-        sessionId: this.token
+        sessionId: token
       }).then(data => {
         this.data = data.rbud
         this.from = this.data
-        console.log(this.data)
+        var l = this.data.shopPlatform
+        // var arr = [] // 定义数组
+        // for (var i in l) {
+        //   arr.push(l[i])
+        // }
+        // var obj = l // 定义对象
+
+        for (var i in l) {
+          this.arr.push(l[i])
+        }
+
+        console.log('pppp1', this.arr)
+        console.log('pppp', this.data)
       })
     },
     // 查看拒绝原因

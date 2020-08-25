@@ -1,10 +1,7 @@
 import axios from 'axios'
 import baseURL from '../config/request.config.js'
 import { Message, MessageBox, Loading } from 'element-ui'
-// import { getToken } from '@/utils/auth'
-// import noAuthReqUrlData from '@/data/noAuthReqUrl'
 import router from '@/router/index'
-// import { Toast } from 'vant'
 import Qs from 'qs'
 let token = localStorage.getItem('token')
 // 创建axios实例
@@ -26,6 +23,7 @@ service.setToken = (val) => { // 设置token
 }
 service.getToken = () => token // 获取token
 
+// 请求拦截器
 let loading
 // 内存中正在请求的数量
 let loadingNum = 0
@@ -47,20 +45,11 @@ function endLoading () {
     loading.close()
   }
 }
-
-// 请求拦截器
 service.interceptors.request.use(config => {
   if (process.env.NODE_ENV === 'production') {
     config.baseURL = baseURL
   }
-  console.log('55555555555555555555555')
   // 加载动画
-  // Toast.loading({
-  //   duration: 0,
-  //   mask: false,
-  //   forbidClick: true,
-  //   message: '加载中...'
-  // })
   startLoading()
 
   return config
@@ -71,14 +60,39 @@ service.interceptors.request.use(config => {
 // 响应拦截器
 service.interceptors.response.use(res => {
   // 关闭加载动画
-  // Toast.clear()
   endLoading()
   const data = res.data
-  if (data.code && data.code.toString() === '99999') {
-    return Promise.reject(new Error('99999'))
-  }
+  console.log()
+  // if (data.code && data.code.toString() === '99999') {
+  //   return Promise.reject(new Error('99999'))
+  // }
   return data.success ? data.data : Promise.reject(new Error(data.msg))
 }, err => {
+  const data = err.response.data
+  console.log('00000', data)
+  endLoading()
+  if (data.success === false) {
+    console.log('mmm')
+    Message({
+      message: data.data,
+      type: 'error',
+      duration: 3000
+    })
+  }
+  if (data.code === 10002 || data.message === 'Unauthorized') {
+    console.log('======', err.message)
+    MessageBox({
+      title: '',
+      type: 'wraning',
+      message: '登录身份已过期，请重新登录',
+      center: true,
+      showCancelButton: false,
+      confirmButtonText: '去登录'
+    }).then(() => {
+      router.push({ name: 'login' })
+    })
+    return
+  }
   return Promise.reject(err)
 })
 
@@ -94,73 +108,13 @@ const request = (config = {}, catchConfig) => {
   if (IS_DEVLOPMENT_ENV && config.url.indexOf('api/') < 0 && config.url.indexOf('temp/') < 0) {
     config.url = 'temp/' + config.url
   }
-  // let shouldToken = true
-  // for (const noAuthReq of noAuthReqUrlData) {
-  //   if (config.url.indexOf(noAuthReq) > -1) {
-  //     shouldToken = false
-  //     break
-  //   }
-  // }
-  // console.log('==')
-  // console.log(getToken())
-  // config.data || (config.data = {})
-  // if (shouldToken) config.data.token = getToken()
-  // config = Object.assign({
-  //   method: 'post',
-  //   header: {},
-  //   authToken: true
-  // }, config)
-  // const method = config.method || 'post'
-  // if (!config.header.token && config.authToken === true) {
-  //   if (method.toLowerCase() === 'post') { // 给post请求默认添加token
-  //     if (token) {
-  //       config.header.token = token
-  //     }
-  //   }
-  // }
-  // if (method.toLowerCase() === 'get' && !config.params) { // 将get请求的data赋值给params
-  //   config.params = config.data
-  //   config.data = {}
-  // }
 
   const promise = new Promise((resolve, reject) => {
     service(config).then(data => {
       resolve(data)
-    }).catch(err => {
-      // 参数为对象的，并对象属性open为false,则不开启消息处理模式, 或者为false 则不开启
-      if (catchConfig === false || (typeof catchConfig === 'object' && catchConfig.open === false)) {
-        reject(err)
-      } else {
-        if (err.message === 'token失效' || err.message === '99999') {
-          console.log('======', err.message)
-          MessageBox({
-            title: '',
-            type: 'wraning',
-            message: '登录身份已过期，请重新登录',
-            center: true,
-            showCancelButton: false,
-            confirmButtonText: '去登录'
-          }).then(() => {
-            router.push({ name: 'login' })
-          })
-          return
-        }
-        dealCatch(err, catchConfig)
-      }
     })
   })
   return promise
-}
-
-function dealCatch (err, config) { // 处理错误信息
-  if (typeof config !== 'object') {
-    Message({
-      message: err.response.data.data,
-      type: 'error',
-      duration: 3000
-    })
-  }
-  // 根据配置项进行定义提示
 }
 
 export default request

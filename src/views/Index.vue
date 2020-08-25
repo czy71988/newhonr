@@ -47,19 +47,17 @@
                 <span><router-link  :to="{name:'login'}" class="menu__item">登录</router-link></span>
               </span>
               <span>
-                <router-link :to="{name: 'personalMyxinxi'}"><img src="../assets/new/路径 251@2x.png" alt=""></router-link>
-                <!-- <span>陈志英</span> -->
+                <span @click="dfbieijb" :to="{name: 'personalMyxinxi'}"><img src="../assets/new/路径 251@2x.png" alt=""></span>
 
               </span>
 
-              <!-- <router-link class="menu__item" :to="{name: usertype === 'store' ? 'myInf' : 'personalMyxinxi'}" href="">个人中心</router-link> -->
-              <span @click="fushow(1)"><img src="../assets/new/路径 65@2x.png" alt=""></span>
-              <span @click="fushow(2)"><img src="../assets/new/menu-button@2x.png" alt=""></span>
+              <span v-if="this.$route.path === '/home'" @click="fushow(1)"><img src="../assets/new/路径 65@2x.png" alt=""></span>
+              <span v-if="this.$route.path === '/home'" @click="fushow(2)"><img src="../assets/new/menu-button@2x.png" alt=""></span>
             </div>
             <!-- 搜索弹框 -->
             <div class="dfaerecvnjoi" v-if="fushow1">
-              <el-input placeholder="请输入内容" v-model="input3" class="input-with-select" @keyup.enter.native="quedingsousuo">
-                <el-select v-model="select" slot="prepend" placeholder="搜商品" >
+              <el-input v-if="this.$route.path === '/home'" placeholder="请输入内容" v-model="input3" class="input-with-select" @keyup.enter.native="quedingsousuo">
+                <el-select v-model="select" slot="prepend" placeholder="搜商品">
                   <el-option label="搜商品" value="1"></el-option>
                   <el-option label="搜红人" value="2"></el-option>
                 </el-select>
@@ -70,41 +68,22 @@
             <div v-if="show3" class="bhuvgyghj">
               <div class="sHow3P1">优品类别</div>
               <ul class="sHow3P1List">
-                <li>优品类别</li>
-                <li>优品类别</li>
-                <li>优品类别</li>
-                <li>优品类别</li>
-                <li>优品类别</li>
+                <li @click="youpintuijian(item.value)" v-for="item in youxuan" :key="item.id">{{item.label}}</li>
               </ul>
-              <div class="sHow3P1">优品类别</div>
+              <div class="sHow3P1">红人数据</div>
               <ul class="sHow3P1List">
-                <li>优品类别</li>
-                <li>优品类别</li>
-                <li>优品类别</li>
-                <li>优品类别</li>
-                <li>优品类别</li>
+                <li @click="fansnember(item.value)" v-for="item in fansNumberData" :key="item.id">{{item.label}}</li>
+                <li @click="fansType(item.value)" v-for="item in fansFavoriteData" :key="item.id">{{item.label}}</li>
               </ul>
-              <div class="sHow3P1">优品类别</div>
+              <div class="sHow3P1">所属平台</div>
               <ul class="sHow3P1List">
-                <li>优品类别</li>
-                <li>优品类别</li>
-                <li>优品类别</li>
-                <li>优品类别</li>
-                <li>优品类别</li>
+                <li @click="honrPt" v-for="item in platformData" :key="item.id">{{item.label}}</li>
               </ul>
             </div>
 
           </div>
         </el-header>
         <el-main>
-          <!-- <div v-if="$route.meta.auth && !isLoggedIn" class="router-view logging-in-box">
-            <div class="three-bounce">
-              <span class="label">自动登录中</span>
-              <div class="bounce1"></div>
-              <div class="bounce2"></div>
-              <div class="bounce3"></div>
-            </div>
-          </div> -->
           <!-- keep-alive 缓存当前输出视图组件 -->
           <div class="fiuehaflioh router-view">
             <keep-alive>
@@ -142,71 +121,38 @@
 </template>
 
 <script>
-import { clearUserFromLocation, isLoggedIn, getUserInf, saveUserToLocation, judgeUserType, getUserType } from '@/utils/auth'
-import { fetchMyOrder } from '@/api/order'
-import { fetchMyInf } from '@/api/user'
 import { makeScrollNodeScrollToMiddle } from '@/utils/mix'
-import ztConfig from '@/config/zt-service-config'
+import { platformData, fansNumberData, fansFavoriteData } from '../data/common'
+// import ztConfig from '@/config/zt-service-config'
 
 export default {
   name: 'Index',
   data () {
     return {
       // ----zuixin---
-      activeIndex: '1',
       scrollTop: '',
       fuxian: false,
       fushow1: false,
       show3: false,
       select: '1',
       input3: '',
-      // -------------
-      search: {
-        select: '1',
-        input: ''
-      },
-      ztServiceIframeSrc: `https://online.zto.com?configId=${ztConfig.configId}&pcType=clientDialog`,
-      showZtIframe: false, // 显示中通客服
-      // scBtn: true,
-      searchVal: '',
-      show: false,
-      dialogFormVisible: false,
-      userInf: getUserInf() || {},
-      usertype: getUserType(),
-      total: 0,
-      showGoTopBtn: false,
-      searchInputFocus: false, // 搜索框被聚焦
-      isLoggedIn: isLoggedIn() // 是否登录
+      youxuan: [
+        { value: '1', label: '居家日用' },
+        { value: '2', label: '数码家电' },
+        { value: '3', label: '美妆个护' },
+        { value: '4', label: '食品饮料' },
+        { value: '7', label: '精品女装' },
+        { value: '9', label: '精品箱包' },
+        { value: '10', label: '潮流男装' },
+        { value: '11', label: '鞋品' },
+        { value: '12', label: '家装家纺' }
+      ],
+      fansNumberData,
+      fansFavoriteData,
+      platformData
     }
   },
   created () {
-    // 若果是移动，则监听事件，用户改变搜索框形态
-    if (this.$device.isMobile) {
-      window.addEventListener('touchstart', this.handleTouchStart)
-      window.addEventListener('scroll', this.handleWindowScroll)
-    }
-    // 未登录状态，根据token, 获取用户信息
-    const token = localStorage.getItem('token')
-    console.log(this.isLoggedIn)
-    if (!this.isLoggedIn && token) {
-      console.log('获取用户信息')
-      fetchMyInf({
-        token
-      }, false).then(data => {
-        console.log('我在拉取用户的名字')
-        console.log(data)
-        this.isLoggedIn = true
-        this.userInf = data
-        this.usertype = judgeUserType(data.usertype)
-        saveUserToLocation(data) // 将用户信息保存在本地
-        // 获取用户未处理(红人：未确认收获 商家：待发货)的订单量
-        this.getNumOfUnprocessedOrder(data)
-      }).catch(() => { })
-    }
-  },
-  beforeDestroy () {
-    window.removeEventListener('touchstart', this.handleTouchStart)
-    window.removeEventListener('scroll', this.handleWindowScroll)
   },
   mounted () {
     window.addEventListener('scroll', this.showbtn, true)
@@ -254,120 +200,56 @@ export default {
       }
     },
     quedingsousuo () {
-      alert('确定了')
-    },
-    // ------------------------------------------------------------
-    hsbjvcuwefgv () {
-      this.show = !this.show
-    },
-    // 鼠标移入事件
-    mouseenter () {
-      this.show = true
-      // this.show = false
-    },
-    // 鼠标移出事件
-    mouseleave () {
-      this.show = false
-      // this.show = true
+      if (this.select === '1') {
+        this.$router.push({ name: 'goodsList', query: { sousuo: this.input3 } })
+        this.input3 = ''
+      } else if (this.select === '2') {
+        this.$router.push({ name: 'favorite', query: { sousuo: this.input3 } })
+        this.input3 = ''
+      }
     },
     handleNavChange (e) {
       // alert(e)
       makeScrollNodeScrollToMiddle(e.currentTarget, this.$refs.navListNode)
     },
-    handleConcactCustService () {
-      /* eslint-disable */
-      if (IB) IB.chat()
-      else {
-        this.$notify({ title: '正在与客服建立连接中，请稍后操作', showClose: false, duration: 900 })
-      }
-    },
-    handleGoTop () {
-      window.scrollTo(0, 0)
-    },
-    handleWindowScroll () {
-      var scrollTop = document.documentElement.scrollTop || document.body.scrollTop
-      this.showGoTopBtn = scrollTop > 300
-    },
-    handleTouchStart (e) {
-      const target = e.target
-      const { searchGoodsLstBtn, searchInput, searchFavoriteBtn } = this.$refs
-      // 当用户点击的都不是搜索框或者搜索按钮时候，且值为空，那么回到最初的状态
-      if (this.searchInputFocus && this.searchVal === '' && target !== searchGoodsLstBtn.$el && target !== searchFavoriteBtn.$el && target.parentNode !== searchInput.$el) {
-        this.searchInputFocus = false
-        searchInput.$el.children[0].blur()
-        // console.log
-      } else if (target.parentNode === searchInput.$el) {
-        this.searchInputFocus = true
-        target.focus()
-        console.log(target)
-      }
-    },
-    // 获取用户未处理(红人：未确认收获 商家：待发货)的订单量
-    getNumOfUnprocessedOrder ({ id, usertype }) {
-      fetchMyOrder({
-        row: 4,
-        page: 1,
-        bindId: id,
-        deliveryStatus: usertype === 1 ? '1' : '0'
-      }).then(data => {
-        console.log('这是未操作的订单数据')
-        console.log(data)
-        this.total = data.total
-        console.log(this.total)
-      })
-    },
-    // 点击logo跳转到首页
-    homeabciobov () {
-      this.$router.push({ name: 'home' })
-    },
-    handlerSearch () { // 搜索
-      const { select, input } = this.search
-      // 1: 搜商人 2: 搜红人
-      let redirectName = '' // 搜索，跳转的路由名称
-      switch (select) {
-        case '1':
-          redirectName = 'goodsList'
-          break
-        case '2':
-          redirectName = 'favorite'
-          break
-      }
-      // 搜索跳转同路由则替换当前路由，否则是进入路由
-      const query = { searchVal: input, timestamp: Date.now() }
-      if (this.$route.name !== redirectName) {
-        this.$router.push({ name: redirectName, query })
+    // 点击进入个人中心
+    dfbieijb () {
+      const token = sessionStorage.getItem('token')
+      if (!token) {
+        this.$alert('您还未登陆账号，请登录账号', '注意！', {
+          confirmButtonText: '确定',
+          callback: action => {
+            this.$router.push({ name: 'login' })
+          }
+        })
       } else {
-        this.$router.replace({ name: redirectName, query })
-        // this.$route.query = query
+        this.$router.push({ name: 'personal' })
       }
-      console.group('搜索')
-      console.log(select)
-      console.log(input)
-      console.groupEnd()
     },
-    querySearchAsync (queryString, cb) {
-      // 从后台拉起
-      var restaurants = [
-        { id: 1, value: '红人a' },
-        { id: 2, value: '红人b' },
-        { id: 3, value: '红人c' }
-      ]
-      console.log('===')
-      console.log(queryString)
-      var results = queryString ? restaurants.filter(item => { return item.value.indexOf(queryString) > -1 }) : restaurants
-      console.log(restaurants)
-      clearTimeout(this.timeout)
-      this.timeout = setTimeout(() => {
-        cb(results)
-      }, 500)
+    // 点击优品类别
+    youpintuijian (value) {
+      this.$router.push({ name: 'goodsList', query: { value: value } })
+      this.show3 = !this.show3
     },
-    tuichudengl () {
-      if (localStorage !== '') {
-        clearUserFromLocation()
-        this.isLoggedIn = false
-        this.$router.push('/home')
-      }
+    // 点击粉丝数量，跳转红人榜
+    fansnember (value) {
+      this.$router.push({ name: 'favorite', query: { value: value } })
+      this.show3 = !this.show3
+    },
+    // 点击粉丝类别，跳转红人榜
+    fansType (value) {
+      this.$router.push({ name: 'favorite', query: { value1: value } })
+      this.show3 = !this.show3
+    },
+    // 点击平台，跳转红人榜
+    honrPt (value) {
+      this.$router.push({ name: 'favorite', query: { value2: value } })
+      this.show3 = !this.show3
     }
+    // 搜索按钮
+    // sousuo () {
+    //   if()
+    // }
   }
 }
 </script>
@@ -421,6 +303,16 @@ a {
     background-color: #FFFFFF;
     position: relative;
     width: 100vw;
+    .jjjjjjjjj {
+      display: block;
+      width: 100px;
+      height: 50px;
+      background-color: darkgoldenrod;
+      position: absolute;
+      top: 50%;
+      right: 100px;
+      color: #fff;
+    }
     .top {
       margin: auto;
       // background-color: #FFFFFF;

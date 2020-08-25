@@ -41,7 +41,7 @@
               </p>
             </div>
             <p class="title">
-              带货能力&优势描述（必填）
+              带货能力&优势描述（必填）1
             </p>
             <el-input
               type="textarea"
@@ -83,9 +83,9 @@
                   <p class="row" v-if="item.couponnumber > 0"><span class="label">优惠券</span>：<span class="value">¥{{item.disprice - item.orprice}}</span> </p>
                 </div>
               </div>
-              <div class="goods-item__ft remark">
+              <div class="goods-item__ft pxark">
                 <!-- <span class="goods-item__title">{{item.sputitle}}</span> -->
-                <span class="label remark">标题:</span> <span class="value remark">{{item.sputitle || '--'}}</span>
+                <span class="label pxark">标题:</span> <span class="value pxark">{{item.sputitle || '--'}}</span>
               </div>
             </li>
           </ul>
@@ -182,7 +182,7 @@ export default {
         this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
         document.body.classList.add('overflow-hiden')
       } else {
-        document.body.classList.remove('overflow-hiden')
+        document.body.classList.pxove('overflow-hiden')
         window.scrollTo(0, this.scrollTop)
       }
     }
@@ -463,7 +463,7 @@ export default {
       text-align: justify;
       text-align-last:justify;
       color: #888;
-      &.remark {
+      &.pxark {
         margin-top: 6px;
         // width: 60px;
         font-weight: 700;
@@ -480,7 +480,7 @@ export default {
     }
     .goods-item__ft {
       margin-top: 2px;
-      &.remark {
+      &.pxark {
         margin-top: 2px;
         // border-top: 1px solid #f7f6f6;
         padding-left: 10px;

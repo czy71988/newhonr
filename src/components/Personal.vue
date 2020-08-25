@@ -5,11 +5,9 @@
       <el-row class="tac">
         <el-col :span="12">
           <el-menu
-            default-active="1"
+            :default-active="defaultActiveIndex"
             class="el-menu-vertical-demo"
-            @open="handleOpen"
-            @select="handleSelect"
-            @close="handleClose">
+            @select="handleSelect">
             <el-menu-item index="1">
               <span slot="title">我的信息</span>
             </el-menu-item>
@@ -39,11 +37,9 @@
       <el-row class="tac">
         <el-col :span="12">
           <el-menu
-            default-active="1"
+            :default-active="defaultActiveIndex"
             class="el-menu-vertical-demo"
-            @open="handleOpen"
-            @select="handleSelect1"
-            @close="handleClose">
+            @select="handleSelect1">
             <el-menu-item index="1">
               <span slot="title">我的信息</span>
             </el-menu-item>
@@ -82,6 +78,13 @@ export default {
       type: sessionStorage.getItem('type')
     }
   },
+  beforeRouteUpdate (to, from, next) {
+    this.swichToActivedMenuWithFreshPage(to)
+    next()
+  },
+  created () {
+    this.swichToActivedMenuWithFreshPage(this.$route)
+  },
   methods: {
     handleSelect (index) {
       if (index === '1') { this.$router.push({ name: 'personalMyxinxi' }) }
@@ -98,7 +101,29 @@ export default {
       if (index === '3') { this.$router.push({ name: 'shangjiadingdan' }) }
       if (index === '4') { this.$router.push({ name: 'fapiao' }) }
       if (index === '5') { this.$router.push({ name: 'shangjiamima' }) }
-    }
+    },
+    // 切换到激活的菜单按钮,当刷新页面，解决用户从地址栏刷新页面，页面显示激活的菜单按钮与当前页不匹配
+    swichToActivedMenuWithFreshPage (route) {
+      let defaultActiveIndex = '1'
+      const name = route.name
+      if (name === 'personalMydingdan' || name === 'shangjiamyshangping') {
+        defaultActiveIndex = '2'
+      } else if (name === 'hongrenshangchuan' || name === 'shangjiadingdan') {
+        defaultActiveIndex = '3'
+      } else if (name === 'personalMymima' || name === 'fapiao') {
+        defaultActiveIndex = '4'
+      } else if (name === 'shangjiamima') {
+        defaultActiveIndex = '5'
+      } else if (name === 'PersonalMyshop') {
+        defaultActiveIndex = '3-1'
+      } else if (name === 'PersonalMyStore') {
+        defaultActiveIndex = '3-2'
+      } else if (name === 'PersonalMyVideo') {
+        defaultActiveIndex = '3-3'
+      }
+      this.defaultActiveIndex = defaultActiveIndex
+    },
+    handleOpen () {}
   }
 }
 </script>

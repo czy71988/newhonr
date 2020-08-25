@@ -1,13 +1,8 @@
 <template>
 <div class="login_container">
-  <div class="login_img">
-    <img src="../assets/new/组 735@2x.png" alt="">
-  </div>
+  <img src="../assets/new/组 54@2x.png" alt="" class="login_img1">
+  <!-- 账号密码登录 -->
   <div class="login_div">
-    <img src="../assets/new/组 54@2x.png" alt="" class="login_img1">
-    <p class="login_p1">
-      欢迎登录红人带货
-    </p>
     <div class="login_p2">
       <div class="login_mima" :class="active === 1 ? 'mima' : ''" @click="mima_denglu">密码登录</div>
       <div class="login_phone" :class="active === 2 ? 'mima' : ''" @click="phone_denglu">手机登录</div>
@@ -21,19 +16,29 @@
       </el-input>
       <div class="skdfjfbgd">
         <el-input v-model="form1.tuxing" placeholder="请输入内容"></el-input>
-        <img :src="imgUrl" alt="">
+        <img :src="imgUrl" alt="" @click="handleTabChange">
       </div>
     </div>
+    <!-- 验证码登录 -->
     <div class="login_from" v-else>
-      222
+      <el-input placeholder="请输入手机号码" v-model="form2.phone">
+        <template slot="prepend"><i class="el-icon-user-solid"></i></template>
+      </el-input>
+          <el-input placeholder="请输入内容" v-model="form2.yanzhengma" class="input-with-select">
+            <el-button slot="append" @click="countDown">{{content}}</el-button>
+          </el-input>
     </div>
     <div class="login_p2 login_p3">
-      <div class="login_mima" @click="mima_denglu">免费注册</div>
-      <div class="login_phone" @click="phone_denglu">忘记密码？</div>
+      <div class="login_mima1" @click="zhuce"><span>还没有账号？</span>免费注册</div>
+      <div class="login_phone2" @click="ForgetthePassword">忘记密码？</div>
     </div>
     <div class="login_btn" v-if="this.active ===1" @click="denglu">登陆</div>
     <div class="login_btn" v-else @click="denglu1">登陆</div>
   </div>
+  <p class="footer">
+    <span>浙江中快网络科技有限公司</span>
+    <span>备案号码：沪ICP备17053507号</span>
+  </p>
 </div>
 </template>
 
@@ -108,11 +113,16 @@ export default {
         tuxing: [
           { required: true, message: '请输入图形验证码', trigger: ['blur', 'change'] }
         ]
-      }
+      },
+      content: '发送验证码', // 按钮里显示的内容
+      totalTime: 60, // 记录具体倒计时时间
+      canClick: true,
+      nowTime: ''
     }
   },
   created () {
     this.setDialogWidth()
+    this.getTime()
     // console.log(accountLogin)
     // console.log(CodeLogin)
   },
@@ -134,6 +144,50 @@ export default {
     },
     phone_denglu () {
       this.active = 2
+    },
+    ForgetthePassword () {
+      this.$router.push({ name: 'changepassword' })
+    },
+    zhuce () {
+      this.$router.push({ name: 'registered' })
+    },
+    // 发送验证码
+    countDown () {
+      if (!this.form2.phone) {
+        this.$message({
+          message: '请输入手机号',
+          type: 'success'
+        })
+        return
+      }
+      this.$axios.get('/zkurtg-red-api/public/captchaImageByPhone?phone=' + this.form2.phone).then((response) => {
+        console.log(response.data)
+        this.$message({
+          message: '验证码发送成功',
+          type: 'success'
+        })
+      })
+
+      if (!this.canClick) return // 改动的是这两行代码
+      this.canClick = false
+      this.content = this.totalTime + 's后重新发送'
+      let clock = window.setInterval(() => {
+        this.totalTime--
+        this.content = this.totalTime + 's后重新发送'
+        if (this.totalTime < 0) {
+          window.clearInterval(clock)
+          this.content = '重新发送验证码'
+          this.totalTime = 10
+          this.canClick = true // 这里重新开启
+        }
+      }, 1000)
+    },
+    getTime () {
+      setInterval(() => {
+        // new Date() new一个data对象，当前日期和时间
+        // toLocaleString() 方法可根据本地时间把 Date 对象转换为字符串，并返回结果。
+        this.nowtime = new Date().toLocaleString()
+      }, 1000)
     },
     // ======================================================================================
     submitForm (formName) {
@@ -207,14 +261,20 @@ export default {
     },
     // 登录接口
     denglu1 () {
+      console.log(this.form2.phone)
+      console.log(this.form2.yanzhengma)
+      console.log(Date.parse(new Date()))
+      console.log(this.form2.phone + '_' + this.form2.yanzhengma + '_' + Date.parse(new Date()))
       const obj = {
         username: this.form2.phone,
-        password: encryptionPW(this.form2.phone),
+        captcha: this.form2.yanzhengma,
+        password: encryptionPW(this.form2.phone + '_' + this.form2.yanzhengma + '_' + Date.parse(new Date())),
         type: 2
       }
       LOGIN(obj).then(err => {
         sessionStorage.setItem('token', err.sessionId)
         sessionStorage.setItem('type', err.loginPersonnelType)
+        this.$router.push({ name: 'index' })
       })
     },
 
@@ -297,23 +357,26 @@ export default {
 <style lang="less" scoped>
   .login_container {
     height: 100vh;
-        display: flex;
-    .login_img {
-      width: 100%;
-        height: 100vh;
-      img {
-        height: 100vh;
-      }
+    width: 100vw;
+    text-align: center;
+    .login_img1 {
+      height: 68px;
+      margin-bottom: 100px;
+      margin-top: 50px;
     }
     .login_div {
-      float: right;
-      width: 100%;
-      height: 100vh;
-      .login_img1 {
-        height: 83px;
-        margin-top: 240px;
-        margin-left: 200px;
-      }
+      width:483px;
+      padding: 10px 0;
+      box-sizing: border-box;
+      // height:554px;
+      background:rgba(255,255,255,1);
+      box-shadow:0px 0px 8px rgba(0,0,0,0.16);
+      opacity:1;
+      border-radius:10px;
+      margin: auto;
+      // margin-top: 50%;
+      // transform: rotateX(-50%);
+
       .login_p1 {
         font-size:21px;
         font-family:PingFang SC;
@@ -326,33 +389,55 @@ export default {
       }
       .login_p2 {
         width: 367px;
-        font-size:18px;
-        height:64px;
+        font-size:16px;
         font-family:PingFang SC;
         font-weight:400;
         line-height:64px;
-        color:rgba(102,102,102,1);
+        color:rgba(153,153,153,1);
         opacity:1;
-        margin-left: 144px;
+        margin: auto;
         margin-top: 20px;
-        .login_mima {
+        .login_mima1 {
           float: left;
           text-align: left;
-
+          color:#EA4039 ;
+          span {
+            font-size:16px;
+            font-family:PingFang SC;
+            font-weight:400;
+            line-height:43px;
+            color:#7E7E7E;
+            opacity:1;
+          }
         }
-        .login_phone {
+        .login_phone2 {
           float: right;
           text-align: right;
         }
+        .login_mima {
+          display: inline-block;
+          // float: left;
+          margin-right: 20px;
+        }
+        .login_phone {
+          display: inline-block;
+        }
         .mima {
-          color: crimson;
+          font-size:24px;
+          font-family:PingFang SC;
+          font-weight:400;
+          line-height:64px;
+          color:rgba(102,102,102,1);
+          opacity:1;
         }
       }
       .login_from {
-        margin-left: 144px;
+        margin: auto;
         width: 367px;
       }
       .login_p3 {
+        display: inline-block;
+        height: 43px;
         font-size:16px;
         font-family:PingFang SC;
         font-weight:400;
@@ -364,7 +449,7 @@ export default {
         }
       }
       .login_btn {
-        margin-left: 226px;
+        margin: 30px auto;
         width:205px;
         height:51px;
         background:rgba(234,64,57,1);
@@ -377,6 +462,17 @@ export default {
         font-weight:400;
         color:rgba(255,255,255,1);
         opacity:1;
+      }
+    }
+    .footer {
+      display: block;
+      width: 100%;
+      color: #999999;
+      font-size: 16px;
+      position: fixed;
+      bottom: 10px;
+      span:nth-child(1) {
+        margin-right: 30px;
       }
     }
   }

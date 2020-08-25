@@ -33,9 +33,9 @@
         <div class="order-item__ft order-inf">
           <span class="label order-inf">商品标题：</span><span class="value order-inf">{{item.shopName || '--'}}</span>
         </div>
-        <!-- <div class="order-item__ft remark" v-else-if="item.auditStatus === 2"> -->
-        <!-- <div class="order-item__ft line remark">
-          <span class="label remark">备注：</span><span class="value remark">{{item.remarks || '--'}}</span>
+        <!-- <div class="order-item__ft pxark" v-else-if="item.auditStatus === 2"> -->
+        <!-- <div class="order-item__ft line pxark">
+          <span class="label pxark">备注：</span><span class="value pxark">{{item.pxarks || '--'}}</span>
         </div> -->
         <div class="order-item__ft line order-more-item">
           <div class="box-title" @click="item.favoriteActived = !item.favoriteActived" :class="item.favoriteActived ? 'active' : ''">红人信息
@@ -133,7 +133,7 @@ export default {
       form: {
         kuaidi: '',
         courierNumber: '',
-        remarks: '',
+        pxarks: '',
         date2: '',
         delivery: false,
         type: [],
@@ -159,7 +159,7 @@ export default {
         deliveryStatus: ''
       },
       rules: {
-        remarks: [
+        pxarks: [
           { required: true, message: '请输入拒绝理由', trigger: 'blur' }
         ],
         kuaidi: [
@@ -186,7 +186,7 @@ export default {
     this.adjustNavListWidth()
   },
   destroyed () {
-    window.removeEventListener('scroll', this.debunceWrapHandleScroll)
+    window.pxoveEventListener('scroll', this.debunceWrapHandleScroll)
   },
   methods: {
     // 跳转导航栏的宽度
@@ -249,7 +249,7 @@ export default {
         console.log('我拉去到了数据')
         const id = data.list
         this.total = data.total
-        this.remarks = data.remarks
+        this.pxarks = data.pxarks
         console.log(id)
         console.log(data)
       })
@@ -281,7 +281,7 @@ export default {
         if (valid) {
           addOrUpdateDeliveryOrder({
             id: id,
-            remarks: this.form.remarks,
+            pxarks: this.form.pxarks,
             deliveryStatus: 2
           }).then(data => {
             console.log('拒绝寄样')
@@ -428,8 +428,8 @@ h2 {
             -webkit-box-orient: vertical;
           }
           .spP3-1 {
-            // width: 50PX;
-            height: 20PX;
+            // width: 50px;
+            height: 20px;
             color: #ff455a;
             text-align: center
           }
@@ -736,7 +736,7 @@ h2 {
       text-align: justify;
       text-align-last:justify;
       color: #888;
-      &.remark {
+      &.pxark {
         margin-top: 6px;
         width: 60px;
         font-weight: 800;
@@ -750,7 +750,7 @@ h2 {
     .value {
       letter-spacing: 2px;
       color: #888;
-      &.remark {
+      &.pxark {
         letter-spacing: 1px;
         text-align: justify;
       }

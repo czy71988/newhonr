@@ -17,25 +17,36 @@
         </el-select>
       </div>
 
-      <p class="upload_cont_p">商品ID：</p>
+      <p class="upload_cont_p">商品链接：</p>
       <div class="srter">
         <div style="margin-top: 15px;">
-          <el-input placeholder="请输入内容" v-model="from.platformGoodsId" class="input-with-select">
+          <el-input placeholder="请输入内容" v-model="from.goodsLinkUrl" class="input-with-select">
             <el-button class="element_btn" slot="append">一键填写</el-button>
           </el-input>
         </div>
       </div>
 
       <p class="upload_cont_p">商品主图：</p>
-      <el-upload
-        class="avatar-uploader"
-        action="https://jsonplaceholder.typicode.com/posts/"
-        :show-file-list="false"
-        :on-success="handleAvatarSuccess"
-        :before-upload="beforeAvatarUpload">
-        <img v-if="from.goodsDrawingUrl" :src="from.goodsDrawingUrl" class="avatar">
-        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-      </el-upload>
+      <div v-if="this.from.marketPlatform !== '5'">
+        <el-upload
+          class="avatar-uploader"
+          :action="actions.UploadWithoutPermission + '?type=' + '5'"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess1">
+          <img v-if="from.goodsDrawingUrl" :src="from.goodsDrawingUrl" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+      </div>
+      <div v-else>
+        <el-upload
+          class="avatar-uploader"
+          :action="actions.UploadWithoutPermission + '?type=' + '6'"
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess1">
+          <img v-if="from.goodsDrawingUrl" :src="from.goodsDrawingUrl" class="avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+        </el-upload>
+      </div>
 
       <p class="upload_cont_p">商品名称：</p>
       <el-input v-model="from.goodsName" placeholder="请输入内容"></el-input>
@@ -57,8 +68,8 @@
       <p class="upload_cont_p">佣金比例：</p>
       <el-input v-model="from.commissionRate" placeholder="请输入内容"></el-input>
 
-      <p class="upload_cont_p">商品链接：</p>
-      <el-input v-model="from.goodsLinkUrl" placeholder="请输入内容"></el-input>
+      <!-- <p class="upload_cont_p">商品链接：</p>
+      <el-input v-model="from.goodsLinkUrl" placeholder="请输入内容"></el-input> -->
 
       <p class="upload_cont_p">商品销量：</p>
       <el-input v-model="from.goodsSales" placeholder="请输入内容"></el-input>
@@ -66,28 +77,45 @@
       <p class="upload_cont_p">商品有效期：</p>
       <div class="sfrohn">
         <el-date-picker
+          value-format="timestamp"
           v-model="from.startTime"
           type="date"
           placeholder="选择日期">
         </el-date-picker>
         <el-date-picker
-          v-model="from.endTime"
+          value-format="timestamp"
+          v-model="from.goodsValidity"
           type="date"
           placeholder="选择日期">
         </el-date-picker>
       </div>
 
       <p class="upload_cont_p">商品详情图</p>
-      <el-upload
-        :action="'/zkurtg-red-api/public/uploadFiles'"
-        list-type="picture-card"
-        :on-preview="handlePictureCardPreview"
-        :on-remove="handleRemove">
-        <i class="el-icon-plus"></i>
-      </el-upload>
-      <el-dialog :visible.sync="dialogVisible">
-        <img width="100%" :src="from.dialogImageUrl" alt="">
-      </el-dialog>
+      <div v-if="this.from.marketPlatform !== '5'">
+
+        <el-upload
+          :action="actions.UploadWithoutPermission + '?type=' + '5'"
+          list-type="picture-card"
+          :on-success="handleAvatarSuccess"
+          :on-pxove="handlepxove">
+          <i class="el-icon-plus"></i>
+        </el-upload>
+        <el-dialog :visible.sync="dialogVisible">
+          <img width="100%" :src="from.dialogImageUrl" alt="">
+        </el-dialog>
+      </div>
+      <div v-else>
+        <el-upload
+          :action="actions.UploadWithoutPermission + '?type=' + '6'"
+          list-type="picture-card"
+          :on-success="handleAvatarSuccess"
+          :on-pxove="handlepxove">
+          <i class="el-icon-plus"></i>
+        </el-upload>
+        <el-dialog :visible.sync="dialogVisible">
+          <img width="100%" :src="from.dialogImageUrl" alt="">
+        </el-dialog>
+      </div>
 
       <div class="upload_cont_btn" @click="over">完成</div>
     </div>
@@ -97,10 +125,12 @@
 <script>
 import { platformshangjia, contentCategoryData1 } from '../../data/common'
 import { storeShopnew } from '@/api/newshopList'
+import actions from '@/data/actions'
 export default {
   data () {
     return {
       platformshangjia,
+      actions,
       contentCategoryData1,
       from: {
         marketPlatform: '1',
@@ -118,25 +148,38 @@ export default {
         goodsLinkUrl: '',
         goodsSales: '',
         startTime: '',
-        endTime: '',
-        goodsDetailsPicture: ''
+        goodsValidity: '',
+        goodsDetailsPicture: [],
+        gdPath: ''
       },
       dialogVisible: false
     }
   },
+  catch: {
+  },
+  mounted: {
+  },
   methods: {
-    handleRemove (file, fileList) {
+    handlepxove (file, fileList) {
       console.log(file, fileList)
     },
-    handlePictureCardPreview (file) {
-      this.dialogImageUrl = file.url
-      this.dialogVisible = true
+
+    handleAvatarSuccess1 (response, file, fileList) {
+      this.from.goodsDrawingUrl = response.data.fullPath
+      this.from.gdPath = response.data.path
+      console.log('2', this.from.goodsDrawingUrl)
     },
-    // 完成按钮
+
+    handleAvatarSuccess (response, file, fileList) {
+      this.from.goodsDetailsPicture.push({ 'PATH': response.data.fullPath, 'URL': response.data.path })
+      console.log('1', this.from.goodsDetailsPicture)
+    },
     over () {
+      console.log(this.from.marketPlatform)
       storeShopnew(this.from).then(data => {
         console.log(data)
         this.$router.push({ name: 'shangjiamyshangping' })
+        this.from = {}
       })
     }
   }

@@ -37,7 +37,7 @@ wx.authConfig = (cfg = {}, jsapiTicket, shareData = {}) => {
   wx.config(config)
 }
 // 分享
-const shareMessage = (shareData = {}) => {
+const shapxessage = (shareData = {}) => {
   shareData = Object.assign({}, defaulShareData, shareData)
   console.log(shareData)
   const shareFriendFun = latestVersion ? 'updateAppMessageShareData' : 'onMenuShareAppMessage'
@@ -51,17 +51,17 @@ wx.ready(function () {
   wx.checkJsApi({
     jsApiList: ['updateAppMessageShareData'], // 需要检测的JS接口列表，所有JS接口列表见附录2,
     success: function (res) {
-      console.log(shareMessage)
+      console.log(shapxessage)
       const checkResult = res.checkResult.updateAppMessageShareData
       if (typeof checkResult === 'boolean') {
         latestVersion = checkResult
       } else {
         latestVersion = checkResult.indexOf('no') < 0
       }
-      shareMessage()
+      shapxessage()
     }
   })
 })
 wx.updateShareData = (shareData) => {
-  shareMessage(shareData)
+  shapxessage(shareData)
 }

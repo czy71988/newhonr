@@ -51,7 +51,7 @@
     width="95%"
     center>
     <div v-if="myInf.state === 2">
-      <p>{{myInf.remarks}}</p>
+      <p>{{myInf.pxarks}}</p>
       <div @click="innerVisible=true" class="skdbvisbdiv">前往修改</div>
       <!--  -->
       <el-dialog
@@ -142,8 +142,8 @@
               <el-form-item  label="银行账号" prop="bankNumber" label-width="90px" :rules="{ required: formFour.risetype === 1,  message: '请填写开户行', trigger: 'blur' }">
                 <el-input placeholder="填写银行账号" v-model="formFour.bankNumber"></el-input>
               </el-form-item>
-              <el-form-item label="备 注" label-width="90px" prop="invoiceremark">
-                <el-input placeholder="填写备注" v-model="formFour.invoiceremark"></el-input>
+              <el-form-item label="备 注" label-width="90px" prop="invoicepxark">
+                <el-input placeholder="填写备注" v-model="formFour.invoicepxark"></el-input>
               </el-form-item>
             </div>
           </div>
@@ -215,7 +215,7 @@ export default {
         rise: '', // 抬头
         risetype: '', // 抬头类型 1 企业 2 个人
         dutyParagraph: '',
-        invoiceremark: '', // 发票备注
+        invoicepxark: '', // 发票备注
         price: '',
         agree: '',
         body: '',
@@ -291,7 +291,7 @@ export default {
         formFour.rise = ''
         formFour.risetype = ''
         formFour.dutyParagraph = ''
-        formFour.invoiceremark = ''
+        formFour.invoicepxark = ''
         formFour.registerTelephone = ''
         formFour.bankName = ''
         formFour.registerAddress = ''

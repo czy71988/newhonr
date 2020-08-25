@@ -14,7 +14,7 @@
           <el-form-item class="code-box" label="请输入验证码" prop="yanzhemgma">
             <el-input v-model="form.code" placeholder="输入验证码"></el-input>
             <span class="code-btn" v-show="verShow" @click="handleGetCode">获取验证码</span>
-            <span class="code-btn remain-time" v-show="!verShow">{{timer}}s</span>
+            <span class="code-btn pxain-time" v-show="!verShow">{{timer}}s</span>
           </el-form-item>
           <el-form-item label="请输入新密码" prop="xpwd">
             <el-input type="password" v-model="form.xpwd" placeholder="包含一位大写字母+数字,不包含特殊字符"></el-input>
@@ -200,7 +200,7 @@ export default {
       line-height: 38px;
       color: #545454;
       background-color: #ededed;
-      &.remain-time {
+      &.pxain-time {
         color: #ff4459;
       }
     }

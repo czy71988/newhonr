@@ -24,7 +24,7 @@
               <span>{{item.commissionRate || '暂无'}}%</span>
             </p>
           </span>
-          <span class="dgshop1">{{item.goodsSales}}</span>
+          <span class="dgshop1">{{item.goodsSales || '--'}}</span>
           <span class="dgshop2">0</span>
           <span class="dgshop3">{{item.discountsCoupon}}</span>
         </div>
@@ -41,34 +41,34 @@
           <span>联系方式：</span>
           <span v-if="input_show === true">
             <el-input
-              placeholder="18321201141"
+              :placeholder="data.deliveryAddressPhone"
               v-model="form.input1"
               clearable>
             </el-input>
           </span>
-          <span v-else>18321201141</span>
+          <span v-else>{{data.deliveryAddressPhone || '--'}}</span>
         </p>
         <p class="xinxi_p">
           <span>收货人：</span>
           <span v-if="input_show === true">
             <el-input
-              placeholder="陈俊杰"
+              :placeholder="data.deliveryAddressName"
               v-model="form.input2"
               clearable>
             </el-input>
           </span>
-          <span v-else>陈俊杰</span>
+          <span v-else>{{data.deliveryAddressName || '--'}}</span>
         </p>
         <p class="xinxi_p">
           <span>收货地址：</span>
           <span v-if="input_show === true">
             <el-input
-              placeholder="上海市青浦区华新镇华志路1685号老一号楼"
+              :placeholder="data.deliveryAddressDetails"
               v-model="form.input3"
               clearable>
             </el-input>
           </span>
-          <span v-else>上海市青浦区华新镇华志路1685号老一号楼</span>
+          <span v-else>{{data.deliveryAddressDetails || '--'}}</span>
         </p>
         <div class="xiugai_btn" @click="xiugai">修改</div>
       </div>
@@ -94,6 +94,8 @@
   </div>
 </template>
 <script>
+import { Hrshenqingxiangqing } from '../api/newhonrList'
+import { storeDingDan } from '../api/newshopList'
 // import { fetchApplicationSampleInf, addApplicationSample } from '@/api/goods'
 // import { fetchMyInf, updateMyInf } from '@/api/user'
 // import { getToken } from '@/utils/auth.js'
@@ -125,7 +127,10 @@ export default {
         input3: ''
       },
       input_show: false,
-      item: {}
+      item: {},
+      data: {},
+      id: '',
+      list: [] // 此店铺其他商品
 
     }
   },
@@ -133,11 +138,31 @@ export default {
   },
   mounted () {
     this.item = this.$route.query.item
+    this.grtlist()
     console.log('带过来的数据', this.item)
   },
   methods: {
     xiugai () {
       this.input_show = true
+    },
+    grtlist () {
+      const token = sessionStorage.getItem('token')
+      Hrshenqingxiangqing({
+        sessionId: token
+      }).then(data => {
+        this.data = data
+        console.log('获取申请详情', data)
+        this.id = data.businessId
+      })
+      storeDingDan({
+        sessionId: token,
+        filters: {
+          businessId: this.id
+        }
+      }).then(data => {
+        console.log('此店铺其他商品', data)
+        this.list = data.result
+      })
     }
   }
 

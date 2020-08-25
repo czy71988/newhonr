@@ -35,7 +35,7 @@
         </p>
         <p class="LtopP6">
           <span>日 期</span>
-          <span>商品有效期：{{item.goodsValidity || ''}}</span>
+          <span>商品有效期：{{item.goodsValidity | datafilter}}</span>
         </p>
         <p class="LtopP7">
           <span>店 铺</span>
@@ -99,6 +99,7 @@
 // import { platformshangjia } from '../../data/common'
 // import { getGoodsDetail } from '../../api/goods'
 // import { huoquxiangqingtu } from '../../api/user'
+import { storeShopContent } from '../../api/newshopList'
 export default {
   data () {
     return {
@@ -112,26 +113,29 @@ export default {
       },
       item: {},
       shopUrls: [],
-      token: sessionStorage.getItem('token'),
-      type: sessionStorage.getItem('type')
+      ids: ''
     }
   },
   mounted () {
-    this.item = this.$route.query.item
-    const urlss = this.item.goodsDetailsPicture
-    console.log('-商品详情图-', urlss)
-    this.shopUrls = () => {
-      return urlss.split(',')
-    }
-    console.log('切割出来的url', this.shopUrls)
-    // this.getshops()
-    // this.huoqu()
+    this.ids = this.$route.query.id
+    const token = sessionStorage.getItem('token')
+    storeShopContent({
+      sessionId: token,
+      goodsId: this.ids
+    }).then(data => {
+      console.log('根据id查询的商品详情', data)
+      this.item = data
+
+      this.shopUrls = data.goodsDetailsPicture.split(',')
+    })
   },
   methods: {
     hanldeApplicationSample () {
-      if (!this.token && !this.type) {
+      const token = sessionStorage.getItem('token')
+      const type = sessionStorage.getItem('type')
+      if (!token && !type) {
         this.$message.error('您还未登陆账号，请先登陆红人账号')
-      } else if (this.type !== 1) {
+      } else if (type !== '1') {
         this.$message.error('请先登陆红人账号')
       } else {
         this.$router.push({ name: 'applicationSample', query: { item: this.item } })
@@ -140,7 +144,6 @@ export default {
 
   }
 
-  // const goodsId = this.$route.query.goodsId
 }
 </script>
 

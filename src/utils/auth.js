@@ -46,8 +46,8 @@ const getToken = () => {
 /**
  * 删除sessionID
  */
-const removeToken = () => {
-  sessionStorage.removeItem('token')
+const pxoveToken = () => {
+  sessionStorage.pxoveItem('token')
 }
 
 /**
@@ -55,7 +55,7 @@ const removeToken = () => {
  * @type {string}
  */
 const mixStr = 'hgmix1a'
-const rememberPW = (data) => {
+const pxemberPW = (data) => {
   const codeUserName = data.username
   const codePassWord = reverseString(data.password + mixStr)
   Cookies.set('hn', codeUserName, { expires: 60 })
@@ -65,7 +65,7 @@ const rememberPW = (data) => {
  * 记住用户名和密码，校验用户的时候用
  * @param data
  */
-const rememberForCheckUser = (data) => {
+const pxemberForCheckUser = (data) => {
   const codeUserName = data.username
   const codePassWord = reverseString(data.password + mixStr)
   Cookies.set('u_checkUser', codeUserName)
@@ -75,7 +75,7 @@ const rememberForCheckUser = (data) => {
  * 取得记住的密码
  * @returns {{username: *, password: string}}
  */
-const getRemembePW = () => {
+const getpxembePW = () => {
   if (Cookies.get('hn') && Cookies.get('hp')) {
     let username = Cookies.get('hn')
     let mpassword = Cookies.get('hp')
@@ -91,7 +91,7 @@ const getRemembePW = () => {
  * 从cookie中获取用户名和密码，校验用户的时候用
  * @returns {{password: *, username: *}}
  */
-const getRemembeForCheckUser = () => {
+const getpxembeForCheckUser = () => {
   if (Cookies.get('u_checkUser') && Cookies.get('p_checkUser')) {
     let username = Cookies.get('u_checkUser')
     let mpassword = Cookies.get('p_checkUser')
@@ -103,21 +103,21 @@ const getRemembeForCheckUser = () => {
   }
 }
 
-const deleteRememberPW = () => {
-  Cookies.remove('hn')
-  Cookies.remove('hp')
+const deletepxemberPW = () => {
+  Cookies.pxove('hn')
+  Cookies.pxove('hp')
 }
 
 export {
   getToken,
-  removeToken,
+  pxoveToken,
   encryptionPW,
   decryptPW,
-  rememberPW,
-  rememberForCheckUser,
-  getRemembePW,
-  getRemembeForCheckUser,
-  deleteRememberPW
+  pxemberPW,
+  pxemberForCheckUser,
+  getpxembePW,
+  getpxembeForCheckUser,
+  deletepxemberPW
 }
 
 // // userInf = { token, state, usertype, paymentstate }

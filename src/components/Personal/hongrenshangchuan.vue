@@ -24,7 +24,7 @@
                <span class="el-upload-list__item-actions">
                 <span
                   class="el-upload-list__item-delete"
-                  @click="handleRemoveFileByCust(file)"
+                  @click="handlepxoveFileByCust(file)"
                 >
                   <i class="el-icon-delete"></i>
                 </span>
@@ -50,7 +50,7 @@
         <div class="shuju-let" >直播数据</div>
           <div class="live-list">
             <div v-for="(item, index) of liveList" :key="index" style="margin-bottom: 10px">
-              <button class="btn" type="text" style="width: 12px" @click="handleRemoveLiveRow(index)">x</button>
+              <button class="btn" type="text" style="width: 12px" @click="handlepxoveLiveRow(index)">x</button>
               <input class="input1" type="text" placeholder="商家名称" v-model="item.businessname">
               <input type="text" placeholder="销售量" v-model="item.sales">
             </div>
@@ -119,7 +119,7 @@ export default {
     this.getMyInf()
   },
   methods: {
-    handleRemoveLiveRow (index) {
+    handlepxoveLiveRow (index) {
       this.liveList.splice(index, 1)
     },
     handleNewLiveRow () {
@@ -130,7 +130,7 @@ export default {
       })
     },
     // 自定义移除文件
-    handleRemoveFileByCust (file) {
+    handlepxoveFileByCust (file) {
       console.log(file)
     },
     // 提交

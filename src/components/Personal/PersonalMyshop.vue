@@ -3,56 +3,59 @@
     <p class="p_1">近期直播商品</p>
     <p class="p_2">近期直播商品：</p>
     <ul>
-      <li>
-        <img src="../../assets/new/测试.png" alt="">
-        <p>三只松鼠每日坚果75三只松鼠每日坚果75…</p>
+      <li v-for="item in goodslist" :key="item.id">
+        <img :src="item.recordUrl" alt="">
+        <p>{{item.recordName}}</p>
         <p>
           <span>销量</span>
-          <span>10000</span>
+          <span>{{item.orderCount}}</span>
         </p>
-        <img class="small_img" src="../../assets/new/组 666.png" alt="">
-      </li>
-      <li>
-        <img src="../../assets/new/测试.png" alt="">
-        <p>三只松鼠每日坚果75三只松鼠每日坚果75…</p>
-        <p>
-          <span>销量</span>
-          <span>10000</span>
-        </p>
-        <img class="small_img" src="../../assets/new/组 666.png" alt="">
+        <img @click="shujushanchu(item.recordId)" class="small_img" src="../../assets/new/组 666.png" alt="">
       </li>
     </ul>
     <p class="p_2">新增直播商品：</p>
     <el-upload
       class="avatar-uploader"
-      action="https://jsonplaceholder.typicode.com/posts/"
+      :action="actions.UploadWithoutPermission + '?type=4'"
       :show-file-list="false"
       :on-success="handleAvatarSuccess"
       :before-upload="beforeAvatarUpload">
-      <img v-if="imageUrl" :src="imageUrl" class="avatar">
+      <img v-if="from.imageUrl" :src="from.imageUrl" class="avatar">
       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
     </el-upload>
     <p class="p_2">商品名称：</p>
-    <el-input v-model="shop_name" placeholder="请输入内容"></el-input>
+    <el-input v-model="from.recordName" placeholder="请输入内容"></el-input>
     <p class="p_2">商品销量：</p>
-    <el-input v-model="shop_number" placeholder="请输入内容"></el-input>
+    <el-input v-model="from.orderCount" placeholder="请输入内容"></el-input>
 
-    <div class="over_btn">完成</div>
+    <div class="over_btn" @click="wancheng">完成</div>
   </div>
 </template>
 
 <script>
+import { honrMymessage, honrMyshuju, honrMyshujuNew, honrMyOut } from '../../api/newhonrList'
+import actions from '../../data/actions'
 export default {
   data () {
     return {
-      imageUrl: '',
-      shop_name: '',
-      shop_number: ''
+      actions,
+      from: {
+        imageUrl: '',
+        recordName: '',
+        orderCount: ''
+      },
+      goodslist: '', // 近期直播商品
+      page: '1',
+      row: '10'
     }
   },
+  mounted () {
+    this.getlist1()
+  },
   methods: {
-    handleAvatarSuccess (res, file) {
-      this.imageUrl = URL.createObjectURL(file.raw)
+
+    handleAvatarSuccess (response, file, fileList) {
+      this.from.imageUrl = response.data.fullPath
     },
     beforeAvatarUpload (file) {
       const isJPG = file.type === 'image/jpeg'
@@ -65,6 +68,62 @@ export default {
         this.$message.error('上传头像图片大小不能超过 2MB!')
       }
       return isJPG && isLt2M
+    },
+    // 获取红人主键ID
+    getlist1 () {
+      const token = sessionStorage.getItem('token')
+      honrMymessage({
+        sessionId: token,
+        redskinsId: ''
+      }).then(data => {
+        const id = data.redskinsId
+        honrMyshuju({
+          filters: {
+            recordType: 1,
+            redskinsId: id
+          },
+          page: this.page,
+          rows: this.row
+        }).then(data => {
+          console.log('获取的红人详情数据1', data)
+          this.goodslist = data.result
+        })
+      })
+    },
+    // 新增操作
+    wancheng () {
+      const token = sessionStorage.getItem('token')
+      honrMyshujuNew({
+        recordType: 1,
+        recordName: this.from.recordName,
+        orderCount: this.from.orderCount,
+        urlType: 1,
+        recordUrl: this.from.imageUrl,
+        sessionId: token
+      }).then(data => {
+        this.from = {
+          recordName: '',
+          orderCount: '',
+          imageUrl: ''
+        }
+        this.$message({
+          message: '添加成功',
+          type: 'success'
+        })
+        this.getlist1()
+      })
+    },
+    // 删除数据
+    shujushanchu (id) {
+      const ids = id.split()
+      const token = sessionStorage.getItem('token')
+      // 删除数据
+      honrMyOut({
+        sessionId: token,
+        recordIdList: ids
+      }).then(data => {
+        this.getlist1()
+      })
     }
   }
 }

@@ -1,221 +1,157 @@
 <template>
-<!-- 注册页 -->
-<div>
-  <!-- 第一步 formOne -->
-  <el-form class="form"
-  :model="formOne"
-  status-icon
-  :rules="rules"
-  v-if="value === 1"
-  ref="formOne"
-  @submit.native.prevent
-  >
+  <div class="zhuce_hr">
 
-    <el-form-item label="" prop="username" required>
-      <el-input v-model="formOne.username" autocomplete="off" placeholder="请输入姓名  （必 填）" prop="username"></el-input>
-    </el-form-item>
-    <el-form-item prop="sex" >
-      <el-select v-model="formOne.sex" placeholder="请选择性别  （必 填）" class="aj6" prop="sex">
-        <el-option label="男" value="0"></el-option>
-        <el-option label="女" value="1"></el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item prop="province">
-      <el-select v-model="formOne.province" placeholder="省  （必 填）" class="aj6" prop="province" @focus="handleProvinceChange">
-        <el-option v-for="item in provinceMap" :key="item[0]" :label="item[1]" :value="item[1]"></el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item prop="city">
-      <el-select v-model="formOne.city" placeholder="市  （必 填）" class="aj6" @focus="handleCitySelect" @change="handleCityChange">
-        <el-option v-for="item in cityMap" :key="item[0]" :label="item[1]" :value="item[1]"></el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item prop="platform">
-      <el-select v-model="formOne.platform" multiple placeholder="请选择推广平台  （必 填）" class="aj6">
-        <el-option v-for="item in platformData" :key="item.value" :label="item.label" :value="item.value"></el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item prop="contentstate">
-      <el-select v-model="formOne.contentstate" multiple placeholder="请选择所属内容分类  （必 填）" class="aj6">
-        <el-option v-for="item in contentCategoryData" :key="item.value" :label="item.label" :value="item.value"></el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item prop="deviationstate">
-      <el-select v-model="formOne.deviationstate" placeholder="请选择粉丝偏向  （必 填）" class="aj6">
-        <el-option v-for="item in fansFavoriteData" :key="item.value"
-            :label="item.label" :value="item.value"></el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item prop="fansnumber">
-      <el-input v-model="formOne.fansnumber" autocomplete="off" placeholder="请填写目前拥有粉丝数量  （必 填）" prop="resource"></el-input>
-    </el-form-item>
-    <el-form-item prop="toplikes">
-      <el-input v-model="formOne.toplikes" autocomplete="off" placeholder="请填写最高获赞数量  （必 填）"></el-input>
-    </el-form-item>
-    <button class="zhuce-btn" @click="handleStepNext('formOne')">下一步</button>
-  </el-form>
-  <!-- 第二步 formTwo -->
-  <el-form v-else-if="value === 2" @submit.native.prevent>
-    <p class="tip">上传身份证照片（<span class="tip__notes">请保证上传照片的信息清晰可读</span>）</p>
-    <div class="id-card-ctn">
-      <div class="id-card-box">
-        <p class="title">正面</p>
-        <div class="img-wrap upload-animation-box"
-            v-loading="loading.frontIdCardPic"
-            element-loading-text="拼命上传中">
-          <img :src="formTwo.frontIdCardPic || frontIdCardPlaceholderPic" class="id-card-img" alt="">
+    <div class="fanhui" @click="btn" v-if="index !==1"><i class="el-icon-arrow-left"></i>上一步</div>
+    <div class="onw" v-if="index === 1">
+      <el-form ref="form" :model="from" :rules="rules">
+        <el-form-item label="姓名" prop="redskinsName">
+          <el-input v-model="from.redskinsName" placeholder="请输入红人姓名"></el-input>
+        </el-form-item>
+
+        <el-form-item label="性别" prop="redskinsGender">
+          <el-select v-model="from.redskinsGender" placeholder="请选择性别">
+            <el-option
+              v-for="item in options"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+              :disabled="item.disabled">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <div class="dizhixuanze">
+          <el-form-item label="地址">
+            <el-select v-model="from.province" placeholder="省" @focus="handleProvinceChange">
+              <el-option
+                v-for="item in provinceMap"
+                :key="item[0]"
+                :label="item[1]"
+                :value="item[1]">
+              </el-option>
+            </el-select>
+            <el-select v-model="from.city" placeholder="市" @focus="handleCitySelect" @change="handleCityChange">
+              <el-option v-for="item in cityMap" :key="item[0]" :label="item[1]" :value="item[1]">
+              </el-option>
+            </el-select>
+
+            <!-- 测试 -->
+            <v-distpicker @selected="selected"></v-distpicker>
+            <!--  -->
+          </el-form-item>
         </div>
-        <el-upload
-          :action="actions.uploadFrontIDCard + '&token=' + id"
-          list-type="text"
-          accept="image/*"
-          :on-success="(res, file) => handleUploadPicSuccess(file, 'front')"
-          :before-upload="file => handleUploadPicBefore(file, 'front')"
-          :on-error="(error, file) => handleUploadPicError(error, 'front')">
-          <button class="upload-btn">
-            <p>选择图片</p>
-            <p>(大小为1M以下)</p>
-          </button>
-        </el-upload>
-      </div>
-      <div class="id-card-box">
-        <p class="title">反面</p>
-        <div class="img-wrap upload-animation-box"
-            v-loading="loading.backIdCardPic"
-            element-loading-text="拼命上传中">
-          <img :src="formTwo.backIdCardPic || backIdCardPlaceholderPic" class="id-card-img" alt="">
-        </div>
-        <el-upload
-          :action="actions.uploadBackIDCard + '&token=' + id"
-          list-type="text"
-          accept="image/*"
-          :before-upload="file => handleUploadPicBefore(file, 'back')"
-          :on-success="(res, file) => handleUploadPicSuccess(file, 'back')"
-          :on-error="(error, file) => handleUploadPicError(error, 'back')">
-          <button class="upload-btn">
-            <p>选择图片</p>
-            <p>(大小为1M以下)</p>
-          </button>
-        </el-upload>
-      </div>
+
+        <el-form-item label="电子邮箱">
+          <el-input v-model="from.electronicMail" placeholder="请输入电子邮箱"></el-input>
+        </el-form-item>
+
+        <el-form-item label="请选择推广平台" prop="redskinsPlatform">
+          <el-select v-model="from.redskinsPlatform" placeholder="请选择平台">
+            <el-option
+              v-for="item in platformData"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+              :disabled="item.disabled">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="所属内容分类" prop="contentType">
+          <el-select v-model="from.contentType" placeholder="请选择内容分类">
+            <el-option
+              v-for="item in contentCategoryData"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+              :disabled="item.disabled">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="目前拥有粉丝最高数量" prop="fansAmount">
+          <el-input v-model="from.fansAmount" placeholder="请输入粉丝最高数量"></el-input>
+        </el-form-item>
+
+        <el-form-item label="最高获赞量" prop="highestLikes">
+          <el-input v-model="from.highestLikes" placeholder="请输入获赞量"></el-input>
+        </el-form-item>
+      </el-form>
+      <div class="btn" @click="btn1">下一步</div>
     </div>
-    <p class="tip">上传手持身份证照片（<span class="tip__notes">请保证照片的人物清晰，且身份证上的信息清</span>）</p>
-    <div class="id-card-ctn">
-      <div class="id-card-box">
-        <div class="img-wrap upload-animation-box"
-            v-loading="loading.holdIdCardPic"
-            element-loading-text="拼命上传中">
-          <img :src="formTwo.holdIdCardPic || holdIdCardPlaceholderPic" class="id-card-img" alt="">
-        </div>
-        <el-upload
-          :action="actions.uploadHoldIDCard + '&token=' + id"
-          list-type="text"
-          accept="image/*"
-          :before-upload="file => handleUploadPicBefore(file, 'hold')"
-          :on-success="(res, file) => handleUploadPicSuccess(file, 'hold')"
-          :on-error="(error, file) => handleUploadPicError(error, 'hold')">
-          <button class="upload-btn">
-            <p>选择图片</p>
-            <p>(大小为1M以下)</p>
-          </button>
-        </el-upload>
-      </div>
-      <div class="id-card-box">
-        <img src="@/assets/hold-idcard-sample.png" class="id-card-img" alt="">
-        <span class="tip">样例图片</span>
-      </div>
+
+    <div class="two" v-if="index === 2">
+      <el-form ref="form" :model="from">
+        <el-form-item label="上传身份证照片（请保证上传照片的信息清晰可见）">
+          <el-upload
+            class="avatar-uploader"
+            :action="actions.uploadBusinessLicense + '?type=0'"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess">
+            <img v-if="from.cardFrontUrl" :src="from.cardFrontUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+          <el-upload
+            class="avatar-uploader"
+            :action="actions.uploadBusinessLicense + '?type=0'"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess1">
+            <img v-if="from.cardReverseUrl" :src="from.cardReverseUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form-item>
+        <el-form-item label="上传手持身份证照片（请保证上传照片的人物清晰 且身份证上面的信息清晰可读）">
+          <el-upload
+            class="avatar-uploader"
+            :action="actions.uploadBusinessLicense + '?type=0'"
+            :show-file-list="false"
+            :on-success="handleAvatarSuccess2">
+            <img v-if="from.cardHandheldUrl" :src="from.cardHandheldUrl" class="avatar">
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+          <div class="sdfoerg">
+            <img class="img_yanglitupian" src="../../assets/new/组 738@2x.png" alt="">
+            <p class="p_yanglitupian">示例照片</p>
+          </div>
+          <div class="btn" @click="btn1">下一步</div>
+        </el-form-item>
+      </el-form>
     </div>
-    <div class="button-group">
-      <button class="btn--11 go-back-btn" @click="handleStepBack">返回上一步</button>
-      <button class="btn--22 go-next-btn" @click="handleStepNext('formTwo')">下一步</button>
+
+    <div class="three" v-if="index === 3">
+      <el-form ref="form" :model="from" :rules="rules">
+        <el-form-item label="手机号" prop="username">
+          <el-input v-model="from.username"></el-input>
+        </el-form-item>
+        <el-form-item prop="captcha">
+          <el-input placeholder="请输入验证码" v-model="from.captcha" class="input-with-select">
+            <el-button slot="append" @click="countDown">{{content}}</el-button>
+          </el-input>
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
+          <el-input v-model="from.password"></el-input>
+        </el-form-item>
+        <el-form-item label="再次输入密码" prop="password1">
+          <el-input v-model="password1"></el-input>
+        </el-form-item>
+      </el-form>
+      <div class="btn" @click="btn2">完成注册</div>
     </div>
-  </el-form>
-  <!-- 第三步 formThree -->
-  <el-form class="svbrivbpsierbv form" v-else :model="formThree" status-icon :rules="rules" ref="formThree" @submit.native.prevent>
-    <el-form-item prop="phone">
-      <el-input v-model="formThree.phone" placeholder="请输入手机号  （必 填）"></el-input>
-    </el-form-item>
-    <el-form-item prop="code" class="code-input-box" :validate-event="false">
-      <el-input v-model="formThree.code" placeholder="请输入验证码  （必 填）" autocomplete="off" :validate-event="false"></el-input>
-      <div v-show="verShow" class="t456" @click="huoqu">获取验证码</div>
-      <div v-show="!verShow" class="t456"><span>{{timer}}</span>秒后重新获取</div>
-    </el-form-item>
-    <!-- 图形验证码 -->
-    <el-form-item prop="imagecode" class="code-input-box">
-      <el-input v-model="formThree.imagecode" placeholder="请输入图形验证码  （必 填）" autocomplete="off"></el-input>
-      <!-- <canvas class="img-code-box" @click="generateImgCode" ref="imgCodeCanvas">获取验证码</canvas> -->
-      <div class="img-code-box">
-        <canvas class="img-code__image" ref="imgCodeCanvas"></canvas>
-        <span class="img-code__btn" @click="generateImgCode">换一张</span>
-      </div>
-    </el-form-item>
-    <el-form-item prop="password">
-      <el-input type="password" v-model="formThree.password" placeholder="请设置账号密码  （必 填）"></el-input>
-    </el-form-item>
-    <el-form-item prop="pwdagain">
-      <el-input type="password" v-model="formThree.pwdagain" placeholder="请再次输入账号密码  （必 填）"></el-input>
-    </el-form-item>
-    <!-- <el-form-item label="" prop="type4">
-      <el-checkbox-group v-model="formThree.type4">
-        <el-checkbox label="请仔细阅读此协议" name="1"></el-checkbox>
-      </el-checkbox-group>
-    </el-form-item> -->
-    <div class="pay-protocal-box">
-        <!-- <el-radio-group class="pay-protocal-tip" fill="#FD3069" v-model="formFour.yuedu">
-            <el-radio :label="3">我已阅读并同意 <span>《用户支付协议》</span></el-radio>
-          </el-radio-group> -->
-      <el-checkbox
-        class="pay-protocal-tip"
-        v-model="formThree.agree"
-        name="yuedu">
-        我已阅读并遵守
-          <span><a href="https://writer.zohopublic.com.cn/writer/published/xse0o71f434c574284515bb1164b9a0e3d791?mode=embed" target="_blank">《红人带货网站服务条款》/</a></span>
-          <span><a href="https://writer.zohopublic.com.cn/writer/published/xse0oa2028ffb85694be085cb233d58de5dc6?mode=embed" target="_blank">《隐私政策》/</a></span>
-          <span><a href="https://writer.zohopublic.com.cn/writer/published/xse0o2c20fa5e00624e78b04457d3cb1a0a7e?mode=embed" target="_blank">《红人合作合同》/</a></span>
-        <!-- <span><router-link :to="{name:'fuwuxieyi'}">《红人带货网站服务条款》/</router-link></span>
-        <span><router-link :to="{name:'yisizhengce'}">《隐私政策》/</router-link></span> -->
-      </el-checkbox>
-    </div>
-    <button class="btn--11" @click="handleStepBack">返回上一步</button>
-    <button class="btn--22" @click="handleSubmitReg('formThree')">完成注册</button>
-  </el-form>
-  <el-dialog
-  title="!!提示!!"
-  :visible.sync="centerDial"
-  width="30%"
-  center>
-  <p class="xintianjia">信息未完善</p>
-  <p class="xintianjia">请先前往个人中心完善我的信息</p>
-  <p class="xintianjia xintianjia1">否则无法审核通过</p>
-  <span slot="footer" class="dialog-footer">
-    <el-button type="primary" @click="centerDial3">确 定</el-button>
-  </span>
-</el-dialog>
-</div>
+
+  </div>
 </template>
-
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="./template/v-distpicker.js"></script>
 <script>
-import { register, fetchPhoneCode } from '@/api/user'
-// import { saveUserToLocation } from '@/utils/auth'
-import { getProvinceMap, getCityMap, getRegionMap } from '@/utils/china-location'
-import { fansFavoriteData, contentCategoryData, platformData } from '@/data/common'
-import frontIdCardPlaceholderPic from '@/assets/idcard-front.png'
-import backIdCardPlaceholderPic from '@/assets/idcard-back.png'
-import holdIdCardPlaceholderPic from '@/assets/hold-idcard.png'
+// import { zhuceHR } from '../../api/login'
+import { platformData, contentCategoryData } from '../../data/common'
 import actions from '@/data/actions'
-import generateImgCode from '@/utils/generate-img-code'
+// import VDistpicker from 'v-distpicker' // 引入省市区三级联动插件
 
 export default {
-  props: {
-    value: {
-      type: Number,
-      default: 1
-    },
-    id: {
-      type: String,
-      default: ''
-    }
-  },
+  // components: {
+  //   VDistpicker // 注册省市区三级联动组件
+  // },
   data () {
     let reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,12}$/
     var validateNewPwd = (rule, value, callback) => {
@@ -234,43 +170,68 @@ export default {
     }
     return {
       actions,
-      provinceMap: getProvinceMap(),
-      cityMap: null,
-      centerDial: false,
-      // areaMap: null,
-      frontIdCardPlaceholderPic, // 身份证正面占位图
-      backIdCardPlaceholderPic, // 身份证反面占位图
-      holdIdCardPlaceholderPic,
+      // provinceMap: getProvinceMap(),
+      platformData,
+      contentCategoryData,
+      index: 1,
+      from: {
+        redskinsName: '', // 红人姓名
+        redskinsGender: '', // 性别
+        province: '', // 省
+        city: '', // 市
+        district: '', // 区
+        redskinsPlatform: [], // 推广平台0-其他，1-淘宝，2-抖音，3-快手，4-微视，5-小红书
+        contentType: [], //  内容分类：0-其他，1-母婴玩具，2-科技生活，3-美妆护肤，4-美食攻略，5-服装穿搭，6-家具百货，
+        fansAmount: '', // 粉丝数量
+        highestLikes: '', // 最高获赞数量
+        electronicMail: '', //  电子邮箱
+        //
+        username: '', // 手机号
+        password: '', // 密码要 使用RSA加密
+        captcha: '', // 验证码
+        type: 1,
+        fansType: '', // 粉丝偏向：1-男女均衡，2-男粉多，3-女粉多
+        cardFrontUrl: '', // 身份证正面照片URL
+        cfPaht: '', // 身份证正面照片PATH
+        cardReverseUrl: '', // 身份证反面照片URL
+        crPath: '', // 身份证反面照片PATH
+        cardHandheldUrl: '', // 身份证手持图片URL
+        chPath: '' // 身份证手持图片PATH
+      },
+      options: [
+        { value: '1', label: '男' },
+        { value: '2', label: '女' }
+      ],
       rules: {
-        username: [
-          { required: true, message: '请输入姓名', trigger: ['blur', 'change'] },
+        redskinsName: [
+          { required: true, message: '请输入姓名', trigger: 'blur' },
           { min: 2, max: 8, message: '长度在 2 到 8 个字符', trigger: 'change' }
         ],
-        sex: [
+        redskinsGender: [
           { required: true, message: '请选择性别', trigger: 'change' }
         ],
         province: [
-          { required: true, message: '请选择省份', trigger: ['blur', 'change'] }
+          { required: true, message: '请选择省份', trigger: 'blur' }
         ],
         // type4: [
         //   { type: 'array', required: true, message: '请勾选此选项', trigger: 'change' }
         // ],
         city: [
-          { required: true, message: '请选择市', trigger: ['blur', 'change'] }
+          { required: true, message: '请选择市', trigger: 'blur' }
         ],
         // area: [
         // ],
-        platform: [
-          { required: true, message: '请选择推广平台', trigger: 'change' }
+        redskinsPlatform: [
+          { required: true, message: '请选择推广平台', trigger: 'blur' }
         ],
-        contentstate: [
-          { required: true, message: '请选择内容分类', trigger: ['blur', 'change'] }
+        contentType: [
+          { required: true, message: '请选择内容分类', trigger: 'blur' }
         ],
         deviationstate: [
-          { required: true, message: '请选择粉丝偏向', trigger: ['blur', 'change'] }
+          { required: true, message: '请选择粉丝偏向', trigger: 'blur' }
         ],
-        fansnumber: [
-          { required: true, message: '请输入粉丝数量', trigger: ['blur', 'change'] },
+        fansAmount: [
+          { required: true, message: '请输入粉丝数量', trigger: 'blur' },
           {
             required: true,
             pattern: /^\d+$/,
@@ -278,8 +239,8 @@ export default {
             trigger: 'blur'
           }
         ],
-        toplikes: [
-          { required: true, message: '请输入最高获赞数量', trigger: ['blur', 'change'] },
+        highestLikes: [
+          { required: true, message: '请输入最高获赞数量', trigger: 'blur' },
           {
             required: true,
             pattern: /^\d+$/,
@@ -287,8 +248,8 @@ export default {
             trigger: 'blur'
           }
         ],
-        phone: [
-          { required: true, message: '请输入手机号码', trigger: ['blur', 'change'] }
+        username: [
+          { required: true, message: '请输入手机号码', trigger: 'blur' }
           // {
           //   required: true,
           //   pattern: /^((1[3,5,8][0-9])|(14[5,7])|(17[0,6,7,8])|(19[7]))\d{8}$/,
@@ -296,8 +257,8 @@ export default {
           //   trigger: 'blur'
           // }
         ],
-        code: [
-          { required: true, message: '请输入验证码', trigger: ['blur', 'change'] }
+        captcha: [
+          { required: true, message: '请输入验证码', trigger: 'blur' }
         ],
         imagecode: [
           { required: true, message: '请输入图形验证码' },
@@ -312,7 +273,7 @@ export default {
                 callback()
               }
             },
-            trigger: [ 'blur' ]
+            trigger: 'blur'
           }
         ],
         agree: [{ required: true, message: '请勾选同意协议', trigger: 'blur' }],
@@ -320,615 +281,230 @@ export default {
           { required: true, message: '请输入密码', trigger: 'blur' },
           { validator: validateNewPwd, trigger: 'blur' }
         ],
-        pwdagain: [
+        password1: [
           { required: true, message: '请输入确认密码', trigger: 'blur' },
           { validator: validateComfirmPwd, trigger: 'blur' }
         ]
       },
-      loading: { // 加载对象， true 加载中， false 未加载中, 用于显示加载动画
-        frontIdCardPic: false,
-        backIdCardPic: false,
-        holdIdCardPic: false
-      },
-      fansFavoriteData, // 分享偏爱
-      contentCategoryData, // 粉丝分类
-      platformData, // 平台
-      showReg: true,
-      formOne: {
-        username: '',
-        sex: '',
-        province: '',
-        city: '',
-        // area: '',
-        platform: [],
-        contentstate: [],
-        deviationstate: '',
-        fansnumber: '',
-        toplikes: ''
-      },
-      formTwo: {
-        frontIdCardPic: null,
-        backIdCardPic: null,
-        holdIdCardPic: null
-      },
-      formThree: {
-        phone: '',
-        nickname: '',
-        password: '',
-        type: '',
-        imagecode: '',
-        code: '',
-        address: '',
-        token: '',
-        usertype: '1',
-        wechat: '',
-        state: '',
-        realnameStatus: '',
-        extime: '',
-        headimgurl: '',
-        shopname: '',
-        pwdagain: '',
-        agree: ''
-        // type4: []
-      },
-      verShow: true,
-      timer: 60,
-      activeName: 'first',
-      formLabelWidth: '120px',
-      checked: true,
-      zhuce: false,
-      imgCode: ''
-    }
-  },
-  watch: {
-    show (value) {
-      if (value === false) {
-        this.$emit('registerclick')
-      }
-    },
-    value (val) {
-      // 生成图形验证码
-      if (val === 3) {
-        this.$nextTick(() => this.generateImgCode())
-      }
-      // 滚动条回到到顶端
-      window.scrollTo(0, 0)
+      content: '发送验证码', // 按钮里显示的内容
+      totalTime: 60, // 记录具体倒计时时间
+      canClick: true,
+      cityMap: '',
+      password1: '',
+      ruleForm: {
+        province: '', // 省
+        city: '', // 市
+        area: '', // 区
+        schoolName: '', // 学校名称
+        addr: '', // 地址
+        concatUser: '', // 联系人
+        concatUserPhone: '', // 联系人电话
+        list: [
+          {
+            disapperSort: 1,
+            disapperName: '',
+            disapperPwd: ''
+          },
+          {
+            disapperSort: 2,
+            disapperName: '',
+            disapperPwd: ''
+          },
+          {
+            disapperSort: 3,
+            disapperName: '',
+            disapperPwd: ''
+          }
+        ] // 校区销核用户
+      } // 表单内容
     }
   },
   methods: {
-    // 注册完成前往个人中心完善信息
-    centerDial3 () {
-      this.centerDial = false
-      this.$router.push('/home')
+    // 省市区选择最后一项触发
+    selected (data) {
+      this.from.province = data.province.value
+      this.from.city = data.city.value
+      this.from.district = data.area.value
+      console.log(this.from.province)
+      console.log(this.from.city)
+      console.log(this.from.district)
     },
-    createTempId () {
-      this.$parent.createTempId()
-    },
-    generateImgCode () {
-      const imgCodeCanvas = this.$refs['imgCodeCanvas']
-      this.imgCode = generateImgCode(imgCodeCanvas)
-    },
-    handleStepNext (formName) {
-      if (formName === 'formTwo') {
-        const formTwo = this.formTwo
-        let msg = ''
-        if (!formTwo.frontIdCardPic) {
-          msg = '身份证正面未上传'
-        } else if (!formTwo.backIdCardPic) {
-          msg = '身份证反面未上传'
-        } else if (!formTwo.holdIdCardPic) {
-          msg = '手持身份证未上传'
-        } else {
-          this.$emit('input', this.value + 1)
-        }
-        if (msg) {
-          this.$notify({
-            title: '警告',
-            message: msg,
-            type: 'warning'
-          })
-        }
-      } else {
-        this.$refs[formName].validate(valid => {
-        // 正确可下一步
-          if (valid) {
-            this.$emit('input', this.value + 1)
-          }
-        })
-      }
-    },
-    handleStepBack () {
-      this.$emit('input', this.value - 1)
-    },
-    // 提交注册
-    submitReg () {
-      const form = Object.assign({
-        usertype: '1' // 红人
-      }, this.formOne, this.formThree, {
-        token: this.id
-      })
-      form.contentstate = form.contentstate && form.contentstate.join('|')
-      form.platform = form.platform && form.platform.join('|')
-      register(form).then(data => {
-        console.group('红人注册====成功')
-        console.log(data)
-        console.groupEnd()
-        this.centerDial = true
-        // this.g()
-      })
-    },
-    // g () {
-    //   // 请求小蜜蜂
-    //   this.$axios({
-    //     method: 'post',
-    //     url: 'http://10.1.204.120:80/Wengwenglog/HrApproval',
-    //     params: {
-    //       Telephone: '18521364048',
-    //       Content: '来生意了！有个（' + this.formThree.phone + '）红人宝宝来了，待审核'
-    //     }
-    //   }).then(Message => {
-    //     console.log('----------------------------------------------------------------------------------------------------')
-    //     console.log(Message)
-    //   }).catch(Message => {
-    //     console.log('----------------------------------------------------------------------------------------------------')
-    //     console.log(Message)
-    //   })
-    // },
-    // 提交注册事件
-    handleSubmitReg (formName) {
-      console.group('红人注册step-2')
-      console.log(this.formThree)
-      console.log(formName)
-      console.groupEnd()
-      this.$refs[formName].validate(valid => {
-        if (valid) {
-          this.submitReg()
-        } else {
-          // 验证失败，重新获取验证码
-          this.generateImgCode()
-        }
-      })
-    },
-    huoqu () {
-      if (this.formThree.phone === '' || null) {
+    countDown () {
+      this.$axios.get('/zkurtg-red-api/public/captchaImageByPhone?phone=' + this.from.username).then((response) => {
+        console.log(response.data)
         this.$message({
-          message: '请输入正确的手机号',
-          type: 'warning'
-        })
-        return false
-      } else {
-        this.verShow = false
-        var authTimer = setInterval(() => {
-          this.timer--
-          if (this.timer <= 0) {
-            this.verShow = true
-            this.timer = 60
-            clearInterval(authTimer)
-          }
-        }, 1000)
-      }
-      // 获取验证码
-      const { phone } = this.formThree
-      fetchPhoneCode({
-        type: 2,
-        phone
-      }).then(data => {
-        this.$message({
-          message: '手机验证码已发送成功',
+          message: '验证码发送成功',
           type: 'success'
         })
       })
-    },
-    // 处理省份改变
-    handleProvinceChange () {
-      this.formOne.city = null
-      this.formOne.area = null
-    },
-    // 处理城市改变
-    handleCityChange () {
-      this.formOne.area = null
-    },
-    // 处理城市选择
-    handleCitySelect () {
-      if (this.formOne.province) {
-        console.log(this.formOne.province)
-        this.cityMap = getCityMap(this.formOne.province)
-      }
-    },
-    // 处理地区选择
-    handleAreaSelect () {
-      if (this.formOne.city) {
-        this.areaMap = getRegionMap(this.formOne.city)
-      }
-    },
-    // operatorType: front(上传正面身份证) back(上传反面身份证) hold(上传手持身份证)
-    handleUploadPicSuccess (file, operatorType) {
-      if (operatorType === 'front') {
-        this.formTwo.frontIdCardPic = URL.createObjectURL(file.raw)
-        this.loading.frontIdCardPic = false
-      } else if (operatorType === 'back') {
-        this.formTwo.backIdCardPic = URL.createObjectURL(file.raw)
-        this.loading.backIdCardPic = false
-      } else {
-        this.formTwo.holdIdCardPic = URL.createObjectURL(file.raw)
-        this.loading.holdIdCardPic = false
-      }
-    },
-    // 处理上次身份证失败
-    handleUploadPicError (error, operatorType) {
-      console.log(error)
-      let message = null
-      if (operatorType === 'front') {
-        this.loading.frontIdCardPic = false
-        message = '上传正面身份证照片失败，请重新上传'
-      } else if (operatorType === 'back') {
-        this.loading.backIdCardPic = false
-        message = '上传反面身份证照片失败，请重新上传'
-      } else {
-        this.loading.holdIdCardPic = false
-        message = '上传手持身份证照片失败，请重新上传'
-      }
-      this.$notify({
-        title: '警告',
-        message,
-        center: true,
-        type: 'warning'
-      })
-    },
-    handleUploadPicBefore (file, operatorType) { // operatorType 操作类型
-      // 上传的图片不能超过2M
-      if (file.size / 1024 / 1024 > 1) {
-        this.$notify({
-          title: '警告',
-          message: '上传失败, 图片尺寸不能超过1M',
-          center: true,
-          type: 'warning'
-        })
-        return false
-      }
-      // 上传图片之前检查是否创建了用户id，
-      // 未创建则上传失败，重新创建用户id
-      if (this.id) {
-        if (operatorType === 'front') {
-          this.loading.frontIdCardPic = true
-        } else if (operatorType === 'back') {
-          this.loading.backIdCardPic = true
-        } else {
-          this.loading.holdIdCardPic = true
+
+      if (!this.canClick) return // 改动的是这两行代码
+      this.canClick = false
+      this.content = this.totalTime + 's后重新发送'
+      let clock = window.setInterval(() => {
+        this.totalTime--
+        this.content = this.totalTime + 's后重新发送'
+        if (this.totalTime < 0) {
+          window.clearInterval(clock)
+          this.content = '重新发送验证码'
+          this.totalTime = 10
+          this.canClick = true // 这里重新开启
         }
-        return
-      }
-      this.$notify({
-        title: '警告',
-        message: '上传失败, 请重新上传',
-        center: true,
-        type: 'warning'
-      })
-      this.createTempId()
-      return false
+      }, 1000)
+    },
+    zhuce () {
+      // zhuceHR(this.fromOnw).then(data => {
+      //   console.log(data)
+      // })
+    },
+    btn1 () {
+      this.index = this.index + 1
+    },
+    // 完成注册
+    btn2 () {
+      console.log('完成注册')
+    },
+    btn () {
+      this.index = this.index - 1
+    },
+    // 上传图片获取url和path
+    handleAvatarSuccess (response, file, fileList) {
+      this.from.cardFrontUrl = response.data.fullPath
+      this.from.cfPaht = response.data.path
+    },
+    handleAvatarSuccess1 (response, file, fileList) {
+      this.from.cardReverseUrl = response.data.fullPath
+      this.from.crPath = response.data.path
+    },
+    handleAvatarSuccess2 (response, file, fileList) {
+      this.from.cardHandheldUrl = response.data.fullPath
+      this.from.chPath = response.data.path
     }
   }
 }
 </script>
 
-<style lang="less">
-.zhuce-1 {
-  .zhuce-2 {
-    font-size: 12px;
-    .el-tabs__nav {
-      position: none;
+<style lang="less" scoped>
+  .zhuce_hr {
+    .fanhui {
+      position: absolute;
+      top: 200px;
+      left: 580px;
+      font-size:18px;
+      font-family:PingFang SC;
+      font-weight:400;
+      color:rgba(232,37,29,1);
+      opacity:1;
+      i {
+        margin-right: 10px;
+      }
     }
-    .el-tabs__active-bar {
-      width: 0px !important;
-      background-color: none;
+    .onw {
+      .p {
+        font-size:16px;
+        font-family:PingFang SC;
+        font-weight:400;
+        line-height:64px;
+        color:rgba(102,102,102,1);
+        opacity:1;
+      }
+      .btn {
+        width: 100%;
+        height:51px;
+        background:rgba(234,64,57,1);
+        opacity:1;
+        border-radius:10px;
+        font-size:17px;
+        font-family:PingFang SC;
+        font-weight:400;
+        line-height:51px;
+        color:rgba(255,255,255,1);
+        opacity:1;
+        text-align: center;
+        margin-top: 60px;
+      }
     }
-    .el-tabs__item:hover {
-      color: #FD3069;
-    }
-    .el-tabs__item {
-      width: 60px;;
-      margin: 10px 45px;
-    }
-    .el-tabs__item.is-active {
-      color: #FD3069;
-    }
-  }
-  .l56 {
-    .el-input__inner {
-      display: inline-block;
-      width: 150px;
-      border-right: none;
-    }
-  }
-}
+    .two {
+      .img_yanglitupian {
+        width: 169px;
+        height: 127px;
+        vertical: top;
 
-.id-card-box {
-  .el-upload-list {
-    display: none;
+      }
+      .p_yanglitupian {
+        text-align: right;
+      }
+      .sdfoerg {
+        display: inline-block;
+        width: 180px;
+        height: 195px;
+      }
+    }
+      .btn {
+        width: 100%;
+        height:51px;
+        background:rgba(234,64,57,1);
+        opacity:1;
+        border-radius:10px;
+        font-size:17px;
+        font-family:PingFang SC;
+        font-weight:400;
+        line-height:51px;
+        color:rgba(255,255,255,1);
+        opacity:1;
+        text-align: center;
+        margin-top: 60px;
+      }
   }
-}
-
-// 验证码输入
-.code-input-box {
-  .el-input {
-    width: 219px;
-  }
-}
 </style>
 
-<style lang="less" scoped>
-.xintianjia {
-  text-align: center;
-}
-.xintianjia1 {
-  color: #fd3069;
-  font-size: 18px;
-}
-.btn--11 {
-  width: 100px;
-  height: 40px;
-  background-color: rgb(37, 96, 207);
-  color: #fff;
-  border-radius: 5px;
-  margin-left: 45px;
-  margin-right: 50px;
-}
-.btn--22 {
-  width: 100px;
-    height: 40px;
-    background-color: #FD3069;
-    color: #fff;
-    border-radius: 5px;
-}
-
-.go-back-btn, .go-next-btn {
-  width: 300px;
-  height: 46px;
-}
-
-.go-back-btn {
-  background-color: #fff;
-  font-size:18px;
-  font-family:PingFangSC-Semibold,PingFang SC;
-  font-weight:600;
-  color:rgba(255,154,168,1);
-  line-height:25px;
-  border: 1px solid rgba(255,154,168,1);
-}
-
-  .t456{
-    display: inline-block;
-    width: 117px;
-    margin-left: 2px;
-    height: 40px;
-    background-color: #e3e3e3;
-    right: 0px;
-    text-align: center;
-    line-height: 40px;
-    vertical-align: bottom;
-    border-radius: 1px;
-  }
-
-.img-code-box {
-    display: inline-block;
-    position: relative;
-    width: 117px;
-    height: 40px;
-    margin-left: 2px;
-    vertical-align: bottom;
-    .img-code__image {
-      width: 115px;
-      height: 38px;
-      background-color: #fff;
-      border: 1px solid #ddd;
+<style lang="less">
+  .zhuce_hr {
+    .el-form-item__label {
+        font-size:16px;
+        font-family:PingFang SC;
+        font-weight:400;
+        // line-height:64px;
+        color:rgba(102,102,102,1);
+        opacity:1;
+        width: 100%;
+        text-align: left;
     }
-    .img-code__btn {
-      display: none;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+    .el-select {
       width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      text-align: center;
-      color:#fff;
-      font-size: 18px;
-      cursor: pointer;
     }
-    &:hover {
-      .img-code__btn {
-        display: inline-block;
-      }
-    }
-  }
-
-.svbrivbpsierbv {
-  font-size: 12px;
-}
-
-  .l356 {
-    float: right;
-    width: 105px;
-    height: 40px;
-    background-color: aqua;
-  }
-    .h789 {
-      margin-left: 10px;
-    }
-.l456 {
-    width: 80px;
-    height: 38px;
-    // float: left;
-    position: absolute;
-    left: 145px;
-    top: 124px;
-    margin: 0;
-    border: 1px solid #DCDFE6;
-    border-left: none;
-    // background-color: aqua;
-    span {
-      line-height: 40px;
-    }
-    img {
-      width: 20px;
-      height: 20px;
-      vertical-align:middle;
-    }
-    .h789 {
-      margin-left: 10px;
-    }
-  }
-.zhuce{
-  margin: 0 auto;
-  width: 1200px;
-  height: 100%;
-  padding: 50px 200px;
-  box-sizing: border-box;
-  background-color: #fff;
-  border: 1px solid #e3e3e3;
-  margin-top: 50px;
-}
-.zhuce-1 {
-  width: 500px;
-  margin: 0 auto;
-}
-.aj {
-  width: 295px;
-}
-.registered-btn {
-  font-size: 20px;
-  line-height: none;
-  width: 140px;
-}
-.aj2 {
-  width: 200px;
-}
-.aj3 {
-  width: 140px;
-}
-.aj4 {
-  margin-right: 8px;
-}
-.aj6 {
-  width: 100%;
-}
-.aj7 {
-  margin-top: 25px;
-}
-.zhuce-2 {
-  height: 100%;
-  padding: 0 80px;
-}
-.zhuce-btn {
-  width: 100%;
-  height: 40px;
-  background-color: #FD3069;
-  color: #fff;
-  border-radius: 5px;
-}
-.zhuce-heared {
-  border-bottom: 1px solid #e3e3e3;
-  p {
-    margin: 0 auto;
-    width: 100px;
-    display: block;
-    text-align: center;
-    border-bottom: 2px solid #FD3069;
-  }
-
-  .l356 {
-    float: right;
-    width: 125px;
-    height: 40px;
-    background-color: aqua;
-  }
-}
-
-.tip {
-  // width:112px;
-  // height:22px;
-  font-size:16px;
-  font-family:PingFangSC-Regular,PingFang SC;
-  font-weight:400;
-  color:rgba(50,51,52,1);
-  line-height:22px;
-  .tip__notes {
-    font-size:16px;
-    font-family:PingFangSC-Regular,PingFang SC;
-    font-weight:400;
-    color:rgba(228,91,80,1);
-    line-height:22px;
-  }
-}
-
-.form {
-  width: 340px;
-  margin: 0 auto;
-}
-
-.id-card-ctn {
-  margin-top: 30px;
-  margin-bottom: 55px;
-  display: flex;
-  .id-card-box {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    .title {
-      font-size:14px;
-      font-family:PingFangSC-Regular,PingFang SC;
-      font-weight:400;
-      color:rgba(50,51,52,1);
-      line-height:20px;
-    }
-    .img-wrap {
-      margin-top: 19px;
-      margin-bottom: 24px;
-    }
-    .id-card-img {
-      width: 278px;
-      height: 208px;
-      // margin-top: 19px;
-      // margin-bottom: 24px;
-      padding: 2px;
-      border: 2px dashed #eee8e8;
-    }
-    .upload-btn {
-      width:120px;
-      height:40px;
-      background:rgba(231,50,81,1);
-      border-radius:2px;
-      // font-size:18px;
-      // font-family:PingFangSC-Semibold,PingFang SC;
-      // font-weight:600;
-      // color:rgba(255,255,255,1);
-      // line-height:25px;
-      p {
-      font-size:14px;
-      font-family:PingFangSC-Semibold,PingFang SC;
-      color:rgba(255,255,255,1);
-      font-weight:600;
-      line-height:20px;
-      }
-    }
-    .tip {
+    .avatar-uploader {
       display: inline-block;
-      width:120px;
-      height:40px;
-      font-size:18px;
-      font-family:PingFangSC-Regular,PingFang SC;
-      font-weight:400;
-      color:rgba(50,51,52,1);
-      line-height:40px;
+      margin-right: 20px;
+      .el-upload {
+        border: 1px dashed #d9d9d9;
+        border-radius: 6px;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+      }
+    }
+    .avatar-uploader .el-upload:hover {
+      border-color: #409EFF;
+    }
+    .avatar-uploader-icon {
+      font-size: 28px;
+      color: #8c939d;
+      width: 178px;
+      height: 178px;
+      line-height: 178px;
       text-align: center;
     }
+    .avatar {
+      width: 178px;
+      height: 178px;
+      display: block;
+    }
   }
-}
-
-.button-group {
-  text-align: center;
-}
+  .dizhixuanze {
+    .el-select {
+      width: 30%;
+      margin-right: 13px;
+    }
+  }
 </style>

@@ -8,7 +8,7 @@
             <div class="div-1"><span class="ttt">发票类型：</span>{{ item.risetype ===1 ? '专用发票' : '普通发票'}}</div>
             <div class="div-2"><span class="ttt">发票抬头：</span>{{item.rise}}</div>
             <div class="div-3"><span class="ttt">税    号：</span>{{item.dutyParagraph}}</div>
-            <div class="div-4"><span class="ttt">备注：</span>{{item.invoiceremark}}</div>
+            <div class="div-4"><span class="ttt">备注：</span>{{item.invoicepxark}}</div>
           </div>
           <div class="mb-css">
             <div class="div-5"><span class="ttt">物流信息：</span><span>{{item.kuaidi || '--'}}</span><span>{{item.courierNumber || '--'}}</span></div>

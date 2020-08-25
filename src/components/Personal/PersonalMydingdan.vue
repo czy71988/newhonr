@@ -5,7 +5,7 @@
         <span class="span1">我的订单</span>
       </p>
       <div class="fenxian"></div>
-      <el-select v-model="value" placeholder="请选择">
+      <el-select v-model="value" placeholder="请选择" @change="sousuo">
         <el-option
           v-for="item in deliveryStatuData"
           :key="item.value"
@@ -20,23 +20,26 @@
           stripe
           style="width: 100%">
           <el-table-column
-            prop="date"
             label="商品信息">
+          <template slot-scope="scope">
+            <img :src="scope.row.goodsDrawingUrl" alt="">
+          </template>
           </el-table-column>
           <el-table-column
-            prop="name"
+            prop="commissionRate"
             label="佣金比例">
           </el-table-column>
           <el-table-column
-            prop="address"
             label="订单状态">
+          <template slot-scope="scope">
+            <p class="tabel_p">{{scope.row.orderStatus===1 ? '待发货' : (scope.row.orderStatus===2 ? '已发货' : (cope.row.orderStatus===3 ? '已收货' : '已拒绝'))}}</p>
+          </template>
           </el-table-column>
           <el-table-column
-            prop="address"
+            prop="orderId"
             label="订单编号">
           </el-table-column>
           <el-table-column
-            prop="address"
             label="订单操作">
           </el-table-column>
         </el-table>
@@ -55,14 +58,24 @@
 
 <script>
 import { deliveryStatuData } from '../../data/common'
+import { storeDingDan } from '../../api/newshopList'
 export default {
   data () {
     return {
       deliveryStatuData,
-      value: '' // 发货状态
+      value: '', // 发货状态
+      page: '1',
+      row: '10',
+      tableData: []
     }
   },
+  mounted () {
+    this.getlist()
+  },
   methods: {
+    sousuo () {
+      this.getlist()
+    },
     getsshow () {
       this.show = !this.show
     },
@@ -71,6 +84,26 @@ export default {
     },
     handleCurrentChange (val) {
       console.log(`当前页: ${val}`)
+      this.page = val
+      this.getlist()
+    },
+    // 获取订单列表
+    getlist () {
+      const token = sessionStorage.getItem('token')
+      storeDingDan({
+        sessionId: token,
+        filters: {
+          orderStatus: this.value,
+          goodsId: '',
+          marketPlatform: '',
+          platformGoodsId: ''
+        },
+        page: this.page,
+        rows: this.row
+      }).then(data => {
+        this.tableData = data.result
+        console.log('订单信息', this.tableData)
+      })
     }
   }
 }

@@ -24,7 +24,7 @@ export function Homeshoplist (data, catchConfig) {
 }
 
 // 商家信息接口
-export function storeContent (data, catchConfig) {
+export function Shop (data, catchConfig) {
   const req = request({
     method: 'post',
     // url: 'goodsStoreAjax/queryAllfen',
@@ -35,7 +35,7 @@ export function storeContent (data, catchConfig) {
 }
 
 // 商家信息修改接口
-export function storeContentXiugai (data, catchConfig) {
+export function ShopXiugai (data, catchConfig) {
   const req = request({
     method: 'post',
     // url: 'goodsStoreAjax/queryAllfen',
@@ -73,6 +73,18 @@ export function storeDingDan (data, catchConfig) {
     method: 'post',
     // url: 'goodsStoreAjax/queryAllfen',
     url: '/zkurtg-red-api/rtg/RtgSampleOrder/listPage',
+    data
+  }, catchConfig)
+  return req
+}
+
+// 商品详情接口
+
+export function storeShopContent (data, catchConfig) {
+  const req = request({
+    method: 'post',
+    // url: 'goodsStoreAjax/queryAllfen',
+    url: '/zkurtg-red-api/rtg/RtgGoods/getDetails',
     data
   }, catchConfig)
   return req

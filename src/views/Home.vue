@@ -19,21 +19,21 @@
         <router-link :to="{name: 'goodsList'}">
           <img class="Goodproductrecommendation" :src="haopinimg" alt="">
         </router-link>
-        <div class="Homehaopindiv" @mouseenter="showDialog" @mouseleave="hideDialog" v-for="item in haohuoList_shop" :key="item.id">
+        <div class="Homehaopindiv" @mouseenter="showDialog" @mouseleave="hideDialog" v-for="(item, index) in haohuoList_shop" :key="index">
           <div class="shopImg">
-            <img :src="item.rtgGoodsDto.goodsDrawingUrl" alt="" @click="handleGoodsItem(item)">
+            <img :src="item.goodsDrawingUrl" alt="" @click="handleGoodsItem(item.goodsId)">
             <p class="Homehaopinnumber">
-              <span class="numberSpan1">¥{{item.rtgGoodsDto.goodsDiscountsPrice}}</span>
-              <s class="numberSpan2">¥{{item.rtgGoodsDto.goodsPrice}}</s>
-              <span class="numberSpan3">佣金:<span class="numberSpan4">{{item.rtgGoodsDto.commissionRate}}%</span></span>
+              <span class="numberSpan1">¥{{item.goodsDiscountsPrice}}</span>
+              <s class="numberSpan2">¥{{item.goodsPrice}}</s>
+              <span class="numberSpan3">佣金:<span class="numberSpan4">{{item.commissionRate}}%</span></span>
             </p>
             <p class="shopname">
-              {{item.rtgGoodsDto.goodsName}}
+              {{item.goodsName}}
             </p>
             <div class="shopquan">
-              <div class="shopquankuang"> {{item.rtgGoodsDto.marketPlatform === 1 ? '淘宝' : (item.rtgGoodsDto.marketPlatform === 2 ? '天猫' : (item.rtgGoodsDto.marketPlatform === 4 ? '京东' : (item.rtgGoodsDto.marketPlatform===3 ? '拼多多' : '供应商')))}}</div>
-              <div class="shopquan1">券 ¥ {{item.rtgGoodsDto.discountsCoupon || '0'}}</div>
-              <span>商品有效期：{{item.rtgGoodsDto.goodsValidity | datafilter}}</span>
+              <div class="shopquankuang"> {{item.marketPlatform === 1 ? '淘宝' : (item.marketPlatform === 2 ? '天猫' : (item.marketPlatform === 4 ? '京东' : (item.marketPlatform===3 ? '拼多多' : '供应商')))}}</div>
+              <div class="shopquan1">券 ¥ {{item.discountsCoupon || '0'}}</div>
+              <span>商品有效期：{{item.goodsValidity | datafilter}}</span>
             </div>
           </div>
         </div>
@@ -50,19 +50,19 @@
           <img class="Goodproductrecommendation" :src="this.rexiao_shop1" alt="">
           <div class="Homehaopindiv" @mouseenter="showDialog" @mouseleave="hideDialog" v-for="item in rexiaoList1" :key="item.id">
             <div class="shopImg">
-              <img :src="item.rtgGoodsDto.goodsDrawingUrl" alt="" @click="handleGoodsItem(item)">
+              <img :src="item.goodsDrawingUrl" alt="" @click="handleGoodsItem(item.goodsId)">
               <p class="Homehaopinnumber">
-                <span class="numberSpan1">¥{{item.rtgGoodsDto.goodsDiscountsPrice}}</span>
-                <s class="numberSpan2">¥{{item.rtgGoodsDto.goodsPrice}}</s>
-                <span class="numberSpan3">佣金:<span class="numberSpan4">{{item.rtgGoodsDto.commissionRate}}%</span></span>
+                <span class="numberSpan1">¥{{item.goodsDiscountsPrice}}</span>
+                <s class="numberSpan2">¥{{item.goodsPrice}}</s>
+                <span class="numberSpan3">佣金:<span class="numberSpan4">{{item.commissionRate}}%</span></span>
               </p>
               <p class="shopname">
-                {{item.rtgGoodsDto.goodsName}}
+                {{item.goodsName}}
               </p>
               <div class="shopquan">
-                <div class="shopquankuang">{{item.rtgGoodsDto.marketPlatform === 1 ? '淘宝' : (item.rtgGoodsDto.marketPlatform === 2 ? '天猫' : (item.rtgGoodsDto.marketPlatform === 4 ? '京东' : (item.rtgGoodsDto.marketPlatform===3 ? '拼多多' : '供应商')))}}</div>
-                <div class="shopquan1">券 ¥ {{item.rtgGoodsDto.discountsCoupon || '0'}}</div>
-                <span>商品有效期：{{item.rtgGoodsDto.goodsValidity | datafilter}}</span>
+                <div class="shopquankuang">{{item.marketPlatform === 1 ? '淘宝' : (item.marketPlatform === 2 ? '天猫' : (item.marketPlatform === 4 ? '京东' : (item.marketPlatform===3 ? '拼多多' : '供应商')))}}</div>
+                <div class="shopquan1">券 ¥ {{item.discountsCoupon || '0'}}</div>
+                <span>商品有效期：{{item.goodsValidity | datafilter}}</span>
               </div>
             </div>
           </div>
@@ -73,19 +73,19 @@
           <img class="Goodproductrecommendation" :src="this.rexiao_shop2" alt="">
           <div class="Homehaopindiv" @mouseenter="showDialog" @mouseleave="hideDialog" v-for="item in rexiaoList2" :key="item.id">
             <div class="shopImg">
-              <img :src="item.rtgGoodsDto.goodsDrawingUrl" alt="" @click="handleGoodsItem(item)">
+              <img :src="item.goodsDrawingUrl" alt="" @click="handleGoodsItem(item.goodsId)">
               <p class="Homehaopinnumber">
-                <span class="numberSpan1">¥{{item.rtgGoodsDto.goodsDiscountsPrice}}</span>
-                <s class="numberSpan2">¥{{item.rtgGoodsDto.goodsPrice}}</s>
-                <span class="numberSpan3">佣金:<span class="numberSpan4">{{item.rtgGoodsDto.commissionRate}}%</span></span>
+                <span class="numberSpan1">¥{{item.goodsDiscountsPrice}}</span>
+                <s class="numberSpan2">¥{{item.goodsPrice}}</s>
+                <span class="numberSpan3">佣金:<span class="numberSpan4">{{item.commissionRate}}%</span></span>
               </p>
               <p class="shopname">
-                {{item.rtgGoodsDto.goodsName}}
+                {{item.goodsName}}
               </p>
               <div class="shopquan">
-                <div class="shopquankuang">{{item.rtgGoodsDto.marketPlatform === 1 ? '淘宝' : (item.rtgGoodsDto.marketPlatform === 2 ? '天猫' : (item.rtgGoodsDto.marketPlatform === 4 ? '京东' : (item.rtgGoodsDto.marketPlatform===3 ? '拼多多' : '供应商')))}}</div>
-                <div class="shopquan1">券 ¥ {{item.rtgGoodsDto.discountsCoupon || '0'}}</div>
-                <span>商品有效期：{{item.rtgGoodsDto.goodsValidity | datafilter}}</span>
+                <div class="shopquankuang">{{item.marketPlatform === 1 ? '淘宝' : (item.marketPlatform === 2 ? '天猫' : (item.marketPlatform === 4 ? '京东' : (item.marketPlatform===3 ? '拼多多' : '供应商')))}}</div>
+                <div class="shopquan1">券 ¥ {{item.discountsCoupon || '0'}}</div>
+                <span>商品有效期：{{item.goodsValidity | datafilter}}</span>
               </div>
             </div>
           </div>
@@ -241,10 +241,17 @@ export default {
       haohuoList_shop: [],
       haopinimg: '',
       rexiao_shop1: '',
-      rexiao_shop2: ''
+      rexiao_shop2: '',
+      token: sessionStorage.getItem('token'),
+      type: sessionStorage.getItem('type')
 
       // ----------------------new------------------------
     }
+  },
+  mounted () {
+    this.honrS(1)
+    this.getbannerList()
+    this.git_home_shop_list()
   },
   methods: {
     // ----------------------new------------------------
@@ -258,17 +265,11 @@ export default {
 
     },
     // 跳转商品详情页
-    handleGoodsItem (item) {
-      this.$router.push({ name: 'newshop', query: { item: item.rtgGoodsDto } })
+    handleGoodsItem (id) {
+      this.$router.push({ name: 'newshop', query: { id: id } })
     },
-    // // 申请取样
-    // shenqingquyang (item) {
-    //   this.$router.push({ name: 'applicationSample', query: { item: item } })
-    // },
-    // 点击红人头像跳转
     hongren (id) {
-      console.log('5555555555555')
-      this.$router.push({ name: 'hongrenshuju', params: { redskinsId: id } })
+      this.$router.push({ name: 'hongrenshuju', query: { redskinsId: id } })
     },
     honrS (type) {
       this.honrLIS = []
@@ -287,11 +288,13 @@ export default {
     git_home_shop_list () {
       // 商品首页推荐
       Homeshoplist({}).then(data => {
-        // console.log( data)
         this.haohuoList = data.hpRecommendList
         this.haohuoList.forEach(item => {
           if (item.locationColumns !== 1) {
-            this.haohuoList_shop.push(item)
+            this.haohuoList_shop.push(item.rtgGoodsDto)
+            this.haohuoList_shop.sort(function (x, y) {
+              return x.locationColumns > y.locationColumns ? 1 : -1
+            })
           } else {
             this.haopinimg = item.recommendPictureUrl
           }
@@ -302,26 +305,30 @@ export default {
         this.rexiaoList.forEach(item => {
           if (item.locationRows === 1) {
             rexiaolist1.push(item)
-          } else {
+          } else if (item.locationRows === 2) {
             rexiaolist2.push(item)
           }
         })
         rexiaolist1.forEach(item => {
           if (item.locationColumns !== 1) {
-            this.rexiaoList1.push(item)
+            this.rexiaoList1.push(item.rtgGoodsDto)
+            this.rexiaoList1.sort(function (x, y) {
+              return x.locationColumns > y.locationColumns ? 1 : -1
+            })
           } else {
             this.rexiao_shop1 = item.recommendPictureUrl
           }
         })
         rexiaolist2.forEach(item => {
           if (item.locationColumns !== 1) {
-            this.rexiaoList2.push(item)
+            this.rexiaoList2.push(item.rtgGoodsDto)
+            this.rexiaoList2.sort(function (x, y) {
+              return x.locationColumns > y.locationColumns ? 1 : -1
+            })
           } else {
             this.rexiao_shop2 = item.recommendPictureUrl
           }
         })
-        console.log('热销榜单1', this.rexiaoList1, this.rexiao_shop1)
-        console.log('热销榜单2', this.rexiaoList2, this.rexiao_shop2)
       })
     },
     // banner
@@ -329,6 +336,7 @@ export default {
       fetchBanners({
         bannerLocation: bannerLocation
       }).then(data => {
+        console.log('666', data)
         data.forEach(item => {
           if (item.bannerLocation === 1) {
             this.bannerimg1 = item.bannerUrl
@@ -349,11 +357,6 @@ export default {
     // 首页红人推荐
 
     // ----------------------new-----------------------
-  },
-  mounted () {
-    this.honrS(1)
-    this.getbannerList()
-    this.git_home_shop_list()
   }
 }
 </script>

@@ -43,9 +43,9 @@
         </div>
         <div class="goods-item__ft clearfix" v-if="item.auditStatus === 1">
         </div>
-        <!-- <div class="goods-item__ft remark" v-else-if="item.auditStatus === 2"> -->
-        <div class="goods-item__ft remark" v-else>
-          <span class="label remark">备注：</span><span class="value remark">{{item.remarks || '--'}}</span>
+        <!-- <div class="goods-item__ft pxark" v-else-if="item.auditStatus === 2"> -->
+        <div class="goods-item__ft pxark" v-else>
+          <span class="label pxark">备注：</span><span class="value pxark">{{item.pxarks || '--'}}</span>
         </div>
       </li>
     </ul>
@@ -252,7 +252,7 @@ export default {
     }
   },
   destroyed () {
-    window.removeEventListener('scroll', this.debunceWrapHandleScroll)
+    window.pxoveEventListener('scroll', this.debunceWrapHandleScroll)
   },
   methods: {
     // 跳转导航栏的宽度
@@ -728,7 +728,7 @@ text-overflow:ellipsis; /*超出则...代替*/
       text-align: justify;
       text-align-last:justify;
       color: #888;
-      &.remark {
+      &.pxark {
         margin-top: 6px;
         width: 60px;
         font-weight: 800;
@@ -737,7 +737,7 @@ text-overflow:ellipsis; /*超出则...代替*/
     .value {
       letter-spacing: 2px;
       color: #888;
-      &.remark {
+      &.pxark {
         letter-spacing: 1px;
         text-align: justify;
       }
@@ -747,7 +747,7 @@ text-overflow:ellipsis; /*超出则...代替*/
     }
     .goods-item__ft {
       margin-top: 2px;
-      &.remark {
+      &.pxark {
         margin-top: 5px;
         border-top: 1px solid #f7f6f6;
         padding-left: 10px;

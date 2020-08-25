@@ -74,9 +74,7 @@ export default {
       contentCategoryStoreData,
       platformshangjia,
       goodsList: [],
-
       sortType: '',
-      goodsType: '',
       marketPlatform: '',
       rows: '20',
       page: '1',
@@ -96,11 +94,10 @@ export default {
       newshoplist({
         filters: {
           sortType: this.sortType,
-          goodsType: this.goodsType,
-          marketPlatform: this.marketPlatform
+          goodsType: this.$route.query.value,
+          marketPlatform: this.marketPlatform,
+          searchContent: this.$route.query.sousuo
         },
-        // page: '1',
-        // rows: '10'
         page: this.page,
         rows: this.rows
       }).then(data => {

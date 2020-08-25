@@ -1,7 +1,7 @@
 <template>
   <div class="honrXx">
     <div class="honr_touxiang">
-      <img src="../../assets/new/测试.png" alt="">
+      <img :src="data.imageUrl" alt="">
       <img class="img1" src="../../assets/new/组 247.png" alt="">
     </div>
     <div class="content">
@@ -11,14 +11,14 @@
       </p>
       <div class="fenxian"></div>
       <p class="p1">红人姓名：</p>
-      <p v-if="show" class="p2">张银攀</p>
+      <p v-if="show" class="p2">{{data.redskinsName || '--'}}</p>
       <el-input v-else v-model="this.from.redskinsName" placeholder="请输入内容"></el-input>
 
       <p class="p1">所属平台：</p>
       <p v-if="show" class="p2">
         <ul class="ul1">
-          <li>淘宝</li>
-          <li>拼多多</li>
+          <li v-for="item in pintai" :key="item.id">{{item | platformFilter}}</li>
+          <!-- <li>拼多多</li> -->
         </ul>
       </p>
       <el-select v-else v-model="this.from.redskinsPlatform" multiple placeholder="请选择">
@@ -33,13 +33,12 @@
       <p class="p1">内容分类：</p>
       <p v-if="show" class="p2">
         <ul class="ul2">
-          <li>淘宝</li>
-          <li>拼多多</li>
+          <li v-for="item in neirong" :key="item.id">{{item | contentCategoryFilter}}</li>
         </ul>
       </p>
-      <el-select v-else v-model="this.from.contentType" multiple placeholder="请选择">
+      <el-select v-else v-model="this.from.contentType" multiple :placeholder="请选择">
         <el-option
-          v-for="item in contentCategoryData"
+          v-for="item in contentCategoryData1"
           :key="item.value"
           :label="item.label"
           :value="item.value">
@@ -47,7 +46,7 @@
       </el-select>
 
       <p class="p1">粉丝偏向：</p>
-      <p v-if="show" class="p2">男粉多</p>
+      <p v-if="show" class="p2">{{data.fansType.toString() | fansFavoriteFilter}}</p>
       <el-select v-else v-model="this.from.fansType" multiple placeholder="请选择">
         <el-option
           v-for="item in fansFavoriteData"
@@ -58,71 +57,71 @@
       </el-select>
 
       <p class="p1">粉丝数量：</p>
-      <p v-if="show" class="p2">59846万+</p>
+      <p v-if="show" class="p2">{{data.fansAmount || '--'}}万+</p>
       <el-input v-else v-model="this.from.fansAmount" placeholder="请输入内容"></el-input>
 
       <p class="p1">最高获赞数量：</p>
-      <p v-if="show" class="p2">59846万+</p>
+      <p v-if="show" class="p2">{{data.highestLikes || '--'}}万+</p>
       <el-input v-else v-model="this.from.highestLikes" placeholder="请输入内容"></el-input>
 
       <p class="p1">直播观看数量：</p>
-      <p v-if="show" class="p2">59846万+</p>
+      <p v-if="show" class="p2">{{data.liveStreamingAmount || '--'}}万+</p>
       <el-input v-else v-model="this.from.liveStreamingAmount" placeholder="请输入内容"></el-input>
 
       <p class="p1">图文浏览数量：</p>
-      <p v-if="show" class="p2">59846万+</p>
+      <p v-if="show" class="p2">{{data.imageTextView || '--'}}万+</p>
       <el-input v-else v-model="this.from.imageTextView" placeholder="请输入内容"></el-input>
 
       <p class="p1">短视频观看数量：</p>
-      <p v-if="show" class="p2">59846万+</p>
+      <p v-if="show" class="p2">{{data.videosWatchedAmount || '--'}}万+</p>
       <el-input v-else v-model="this.from.videosWatchedAmount" placeholder="请输入内容"></el-input>
 
       <p class="p1">视频发布数量：</p>
-      <p v-if="show" class="p2">59846万+</p>
+      <p v-if="show" class="p2">{{data.monitorRelease || '--'}}万+</p>
       <el-input v-else v-model="this.from.monitorRelease" placeholder="请输入内容"></el-input>
 
       <p class="p1">引导进店数量：</p>
-      <p v-if="show" class="p2">59846万+</p>
+      <p v-if="show" class="p2">{{data.guidanceShop || '--'}}万+</p>
       <el-input v-else v-model="this.from.guidanceShop" placeholder="请输入内容"></el-input>
 
       <p class="p1">总销售额：</p>
-      <p v-if="show" class="p2">59846万+</p>
+      <p v-if="show" class="p2">{{data.totalSales}}万+</p>
       <el-input v-else v-model="this.from.totalSales" placeholder="请输入内容"></el-input>
 
       <p class="p1">总客单量：</p>
-      <p v-if="show" class="p2">59846万+</p>
+      <p v-if="show" class="p2">{{data.totalSales || '--'}}万+</p>
       <el-input v-else v-model="this.from.totalCustomerOrders" placeholder="请输入内容"></el-input>
 
       <p class="p1">均客单价：</p>
-      <p v-if="show" class="p2">59846万+</p>
+      <p v-if="show" class="p2">{{data.averageCustomerUnitprice || '--'}}万+</p>
       <el-input v-else v-model="this.from.averageCustomerUnitprice" placeholder="请输入内容"></el-input>
 
       <p class="p1">身高：</p>
-      <p v-if="show" class="p2">59846万+</p>
+      <p v-if="show" class="p2">{{data.redskinsStature || '--'}}CM</p>
       <el-input v-else v-model="this.from.redskinsStature" placeholder="请输入内容"></el-input>
 
       <p class="p1">体重：</p>
-      <p v-if="show" class="p2">59846万+</p>
+      <p v-if="show" class="p2">{{data.redskinsWeight || '--'}}KG</p>
       <el-input v-else v-model="this.from.redskinsWeight" placeholder="请输入内容"></el-input>
 
       <p class="p1">鞋码：</p>
-      <p v-if="show" class="p2">59846万+</p>
+      <p v-if="show" class="p2">{{data.redskinsShoes || '--'}}</p>
       <el-input v-else v-model="this.from.redskinsShoes" placeholder="请输入内容"></el-input>
 
       <p class="p1">尺寸：</p>
-      <p v-if="show" class="p2">59846万+</p>
+      <p v-if="show" class="p2">{{data.codeSize || '--'}}</p>
       <el-input v-else v-model="this.from.codeSize" placeholder="请输入内容"></el-input>
 
       <p class="p1">收货人姓名：</p>
-      <p v-if="show" class="p2">59846万+</p>
+      <p v-if="show" class="p2">{{data.deliveryAddressName || '--'}}</p>
       <el-input v-else v-model="this.from.deliveryAddressName" placeholder="请输入内容"></el-input>
 
       <p class="p1">收货人电话：</p>
-      <p v-if="show" class="p2">59846万+</p>
+      <p v-if="show" class="p2">{{data.deliveryAddressPhone || '--'}}</p>
       <el-input v-else v-model="this.from.deliveryAddressPhone" placeholder="请输入内容"></el-input>
 
       <p class="p1">收货地址：</p>
-      <p v-if="show" class="p2">59846万+</p>
+      <p v-if="show" class="p2">{{data.deliveryAddressProvince || '--'}} {{data.city || '--'}} {{data.district || '--'}}</p>
       <el-input
         v-else
         type="textarea"
@@ -132,7 +131,7 @@
       </el-input>
 
       <p class="p1">每天开播时间：</p>
-      <p v-if="show" class="p2">59846万+</p>
+      <p v-if="show" class="p2">{{data.dailyBroadcastStart || '--'}} - {{data.dailyBroadcastEn || '--'}}</p>
       <!-- <el-input v-else v-model="this.from.dailyBroadcastStart" placeholder="请输入内容"></el-input> -->
       <p v-else>
         <el-time-picker
@@ -152,13 +151,14 @@
 </template>
 
 <script>
-import { platformData, contentCategoryData, fansFavoriteData } from '../../data/common'
+import { platformData, contentCategoryData1, fansFavoriteData } from '../../data/common'
+import { honrMymessage, honrMymessageModify } from '../../api/newhonrList'
 export default {
   data () {
     return {
       show: true,
       platformData,
-      contentCategoryData,
+      contentCategoryData1,
       fansFavoriteData,
       from: {
         redskinsName: '', // 红人姓名
@@ -184,15 +184,43 @@ export default {
         deliveryAddressDetails: '', // 收货地址：
         dailyBroadcastStart: '', // 每天开播时间：
         dailyBroadcastEnd: '' // 每天结束时间：
-      }
+      },
+      data: {},
+      pintai: [], // 平台
+      neirong: [] // 内容
     }
   },
+  mounted () {
+    this.getlist()
+  },
   methods: {
+    // 点击修改按钮
     getsshow () {
       this.show = !this.show
+      this.from = this.data
     },
+    // 修改保存按钮
     baocun () {
       this.show = !this.show
+      const token = sessionStorage.getItem('token')
+      honrMymessageModify({ sessionId: token }, this.from).then(data => {
+        console.log(data)
+      })
+    },
+    // 获取信息
+    getlist () {
+      const token = sessionStorage.getItem('token')
+      honrMymessage({
+        sessionId: token,
+        redskinsId: ''
+      }).then(data => {
+        console.log(data)
+        console.log(data.fansType)
+        this.data = data
+        this.pintai = data.redskinsPlatform.split(',')
+        this.neirong = data.contentType.split(',')
+        console.log('所属平台2', this.pintai)
+      })
     }
   }
 }

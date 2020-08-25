@@ -18,7 +18,7 @@
           <div class="div-1">{{ item.risetype ===1 ? '专用发票' : '普通发票'}}</div>
           <div class="div-2">{{item.rise}}</div>
           <div class="div-3">{{item.dutyParagraph}}</div>
-          <div class="div-4">{{item.invoiceremark}}</div>
+          <div class="div-4">{{item.invoicepxark}}</div>
           <div class="div-5">
             <p>{{item.kuaidi || '--'}}</p>
             <p>{{item.courierNumber || '--'}}</p>

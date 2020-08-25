@@ -6,6 +6,8 @@ import Goods from '@/views/Goods.vue'
 import SelectionRank from '@/components/SelectionRank.vue'
 import GoodsSample from '@/components/application-sample/GoodsSample.vue'
 import Index from '@/views/Index.vue'
+import changepassword from '@/views/passeord.vue'
+import registered from '@/components/Registered.vue'
 // import fuwuxieyi from '../components/register/fuwutiaokuan.vue'
 // import Test from '@/views/Test.vue'
 
@@ -183,12 +185,12 @@ const indexChildrenRouter = [
         meta: { auth: true },
         component: () => import('@/components/store-user/mb/storeOrder.vue')
       },
-      {
-        path: 'shangjiamima',
-        name: 'shangjiamimaMb',
-        meta: { auth: true },
-        component: () => import('@/components/store-user/mb/storeMima.vue')
-      },
+      // {
+      //   path: 'shangjiamima',
+      //   name: 'shangjiamimaMb',
+      //   meta: { auth: true },
+      //   component: () => import('@/components/store-user/mb/shangjiamima.vue')
+      // },
       {
         path: 'shangjiashengqing',
         name: 'shangjiashengqingMb',
@@ -310,12 +312,6 @@ const indexChildrenRouter = [
       }
     ]
   },
-  // 注册页
-  {
-    path: 'registered',
-    name: 'registered',
-    component: () => import('@/components/Registered.vue')
-  },
   // 账号转让 出售-购买
   {
     path: 'account',
@@ -363,7 +359,14 @@ const routes = [
     children: indexChildrenRouter
   },
   { path: '/personal', name: 'personal', component: Personal },
+  { path: '/changepassword', name: 'changepassword', component: changepassword },
   { path: '/login', name: 'login', component: Login },
+  // 注册页
+  {
+    path: '/registered',
+    name: 'registered',
+    component: registered
+  },
   {
     path: '/goods',
     component: Goods,

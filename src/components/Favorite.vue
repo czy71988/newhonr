@@ -91,9 +91,9 @@ export default {
       form: {
         row: 20,
         page: 1,
-        redskinsPlatform: '',
+        redskinsPlatform: this.$route.query.value2,
         contentType: '',
-        fansAmountType: '',
+        fansAmountType: this.$route.query.value,
         province: ''
       }
     }
@@ -111,7 +111,8 @@ export default {
           redskinsPlatform: this.form.redskinsPlatform,
           contentType: this.form.contentType,
           fansAmountType: this.form.fansAmountType,
-          province: this.form.province
+          province: this.form.province,
+          fansType: this.$route.query.value1
         }
       }).then(data => {
         console.log('=====v=====', data)
@@ -150,7 +151,7 @@ export default {
     }
   },
   destroyed () {
-    window.removeEventListener('scroll', this.debunceWrapHandleScroll)
+    window.pxoveEventListener('scroll', this.debunceWrapHandleScroll)
   }
 }
 </script>

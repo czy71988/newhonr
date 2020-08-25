@@ -359,8 +359,8 @@
       <!--  -->
       <el-dialog title="请填写拒绝寄样理由" :visible.sync="shouhuo1">
         <el-form :model="form"  :rules="rules" ref="formReject">
-          <el-form-item :label-width="formLabelWidth" prop="remarks">
-            <el-input type="textarea" v-model="form.remarks" autocomplete="off" placeholder="*必填"></el-input>
+          <el-form-item :label-width="formLabelWidth" prop="pxarks">
+            <el-input type="textarea" v-model="form.pxarks" autocomplete="off" placeholder="*必填"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -388,7 +388,7 @@ export default {
       form: {
         kuaidi: '',
         courierNumber: '',
-        remarks: '',
+        pxarks: '',
         date2: '',
         delivery: false,
         type: [],
@@ -421,7 +421,7 @@ export default {
         deliveryStatus: ''
       },
       rules: {
-        remarks: [
+        pxarks: [
           { required: true, message: '请输入拒绝理由', trigger: 'blur' }
         ],
         kuaidi: [
@@ -492,7 +492,7 @@ export default {
         console.log('我拉去到了数据')
         const id = data.list
         this.total = data.total
-        this.remarks = data.remarks
+        this.pxarks = data.pxarks
         console.log(id)
         console.log(data)
       })
@@ -524,7 +524,7 @@ export default {
         if (valid) {
           addDeliveryOrder({
             id: id,
-            remarks: this.form.remarks,
+            pxarks: this.form.pxarks,
             deliveryStatus: 2
           }).then(data => {
             console.log('拒绝寄样')

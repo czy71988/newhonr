@@ -2,7 +2,7 @@
 <template>
   <li class="cpt-goods-list-item item">
     <div @mouseenter="show1Dialog" @mouseleave="hide1Dialog">
-      <img class="dfdbhvbeimg" @click="handleGoodsItem(item)" src="@/assets/load-err.png" v-real-src="item.goodsDrawingUrl" alt="">
+      <img class="dfdbhvbeimg" @click="handleGoodsItem(item.goodsId)" src="@/assets/load-err.png" v-real-src="item.goodsDrawingUrl" alt="">
       <!-- 鼠标移入显示申请取样 -->
       <div class="skjfhbvsb" v-if="show">
         <div class="shopTan">
@@ -77,8 +77,8 @@ export default {
         this.$router.push({ name: 'applicationSample', query: { item: item } })
       }
     },
-    handleGoodsItem (item) { // 点击商品榜列表项
-      this.$router.push({ name: 'newshop', query: { item: item } })
+    handleGoodsItem (id) { // 点击商品榜列表项
+      this.$router.push({ name: 'newshop', query: { id: id } })
     }
   }
 }

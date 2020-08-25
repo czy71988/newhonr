@@ -3,26 +3,120 @@
     <p class="Video_p1">种草视频</p>
     <p class="Video_p">红人视频：</p>
     <ul>
-      <li>
-        <img src="../../assets/new/测试.png" alt="" class="Video_ul">
+      <li v-for="item in goodslist" :key="item.id">
+        <!-- <video :src="goodslist.recordUrl" alt="" class="Video_ul"></video> -->
+
+            <video
+            class="Video_ul"
+              :src="item.recordUrl"
+              controls>
+            </video>
+            <!-- <p>{{item.recordUrl}}</p> -->
+            <img src="../../assets/new/组 666.png" alt="" class="img_icon" @click="shanchu(item.recordId)">
       </li>
     </ul>
     <p class="Video_p">新增种草视频：</p>
     <el-upload
       class="avatar-uploader"
-      action="https://jsonplaceholder.typicode.com/posts/"
+      :action="actions.UploadWithoutPermission + '?type=4'"
       :show-file-list="false"
       :on-success="handleAvatarSuccess"
       :before-upload="beforeAvatarUpload">
-      <img v-if="imageUrl" :src="imageUrl" class="avatar">
+      <video v-if="imageUrl" :src="imageUrl" class="avatar" controls></video>
       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
     </el-upload>
-    <div class="Video_btn">完成</div>
+    <div class="Video_btn" @click="wancheng">完成</div>
   </div>
 </template>
 
 <script>
+import { honrMymessage, honrMyshuju, honrMyshujuNew, honrMyOut } from '../../api/newhonrList'
+import actions from '../../data/actions'
 export default {
+  name: 'TestTwo',
+  data () {
+    return {
+      actions,
+      goodslist: '', // 近期直播商品
+      page: '1',
+      row: '10',
+      imageUrl: ''
+    }
+  },
+  mounted () {
+    this.getlist1()
+  },
+  methods: {
+    handleAvatarSuccess (response, file, fileList) {
+      this.imageUrl = response.data.fullPath
+      alert(this.imageUrl)
+    },
+    beforeAvatarUpload (file) {
+      // const isJPG = file.type === 'image/jpeg'
+      // const isLt2M = file.size / 1024 / 1024 < 2
+
+      // if (!isJPG) {
+      //   this.$message.error('上传头像图片只能是 JPG 格式!')
+      // }
+      // if (!isLt2M) {
+      //   this.$message.error('上传头像图片大小不能超过 2MB!')
+      // }
+      // return isJPG && isLt2M
+    },
+    // 获取红人主键ID
+    getlist1 () {
+      const token = sessionStorage.getItem('token')
+      honrMymessage({
+        sessionId: token,
+        redskinsId: ''
+      }).then(data => {
+        const id = data.redskinsId
+        honrMyshuju({
+          filters: {
+            recordType: 3,
+            redskinsId: id
+          },
+          page: this.page,
+          rows: this.row
+        }).then(data => {
+          console.log('获取的红人详情数据3', data)
+          this.goodslist = data.result
+        })
+      })
+    },
+    // 新增操作
+    wancheng () {
+      const token = sessionStorage.getItem('token')
+      honrMyshujuNew({
+        recordType: 3,
+        urlType: 2,
+        recordUrl: this.imageUrl,
+        sessionId: token
+      }).then(data => {
+        this.imageUrl = ''
+        this.$message({
+          message: '添加成功',
+          type: 'success'
+        })
+        this.getlist1()
+      })
+    },
+    // 删除操作
+    shanchu (id) {
+      const ids = id.split()
+      const token = sessionStorage.getItem('token')
+      honrMyOut({
+        sessionId: token,
+        recordIdList: ids
+      }).then(data => {
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        })
+        this.getlist1()
+      })
+    }
+  }
 
 }
 </script>
@@ -53,8 +147,8 @@ export default {
       text-align: center;
     }
     .avatar {
-      width: 178px;
-      height: 178px;
+        width: 240px;
+        height: 333px;
       display: block;
     }
   }
@@ -94,12 +188,20 @@ export default {
       box-sizing: border-box;
       li {
         display: inline-block;
+        position: relative;
         width: 240px;
         height: 333px;
         margin-right: 20px;
         .Video_ul {
           width: 240px;
           height: 333px;
+        }
+        .img_icon {
+          width: 16px;
+          height: 16px;
+          position: absolute;
+          top: 8px;
+          right: 8px;
         }
       }
     }

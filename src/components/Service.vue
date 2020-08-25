@@ -175,7 +175,7 @@ export default {
     padding: 80px 375px;
     box-sizing: border-box;
     .sdfhjge {
-      height: 465PX;
+      height: 465px;
     }
     .content_1 {
       width: 50%;

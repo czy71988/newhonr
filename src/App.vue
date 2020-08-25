@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { getWxJsTicket } from '@/api/common'
+// import { getWxJsTicket } from '@/api/common'
 export default {
   name: 'app',
   provide () {
@@ -19,7 +19,7 @@ export default {
     }
   },
   created () {
-    this.getWxJsTicketAndAuth()
+    // this.getWxJsTicketAndAuth()
   },
   watch: {
     $route () {
@@ -27,21 +27,21 @@ export default {
     }
   },
   methods: {
-    getWxJsTicketAndAuth () {
-      let index = 0
-      getWxJsTicket({}, false).then(data => {
-        console.group('获取js ticket')
-        console.log(data)
-        console.groupEnd()
-        this.authWxConfig(data)
-      }).catch(() => {
-        if (index > 5) return
-        const timeId = setTimeout(() => {
-          this.getWxJsTicketAndAuth()
-          clearTimeout(timeId)
-        }, 1000 * 60 * ++index)
-      })
-    },
+    // getWxJsTicketAndAuth () {
+    //   let index = 0
+    //   getWxJsTicket({}, false).then(data => {
+    //     // console.group('获取js ticket')
+    //     // console.log(data)
+    //     // console.groupEnd()
+    //     this.authWxConfig(data)
+    //   }).catch(() => {
+    //     if (index > 5) return
+    //     const timeId = setTimeout(() => {
+    //       this.getWxJsTicketAndAuth()
+    //       clearTimeout(timeId)
+    //     }, 1000 * 60 * ++index)
+    //   })
+    // },
     reload () {
       this.isRouterAlive = false
       this.$nextTick(function () {
@@ -63,6 +63,9 @@ export default {
 
 <!-- common css -->
 <style lang="less">
+// #app {
+//   font-size: calc(100vw/7.5);
+// }
 .overflow-hiden {
   position: fixed;
   overflow: hidden;
@@ -170,30 +173,30 @@ export default {
 }
 
 // 分页
-.pagination {
-  &.el-pagination.is-background{
-    .el-pager li {
-      background-color: #ffffff;
-      margin: 0 1px;
-      &:not(.disabled):hover {
-        color: rgba(253,48,105,1);
-        &.active {
-          background:linear-gradient(90deg,#e12039 0%,#e12039 100%);
-          color: #ffffff;
-        }
-      }
-    }
-    .btn-next, .btn-prev {
-      background-color: #ffffff;
-      padding: 0 3px;
-    }
-  }
-  .el-pager li {
-    &.active {
-      background:linear-gradient(90deg,rgba(253,48,105,1) 0%,rgba(255,68,89,1) 100%);
-    }
-  }
-}
+// .pagination {
+//   &.el-pagination.is-background{
+//     .el-pager li {
+//       background-color: #ffffff;
+//       margin: 0 1px;
+//       &:not(.disabled):hover {
+//         color: rgba(253,48,105,1);
+//         &.active {
+//           background:linear-gradient(90deg,#e12039 0%,#e12039 100%);
+//           color: #ffffff;
+//         }
+//       }
+//     }
+//     .btn-next, .btn-prev {
+//       background-color: #ffffff;
+//       padding: 0 3px;
+//     }
+//   }
+//   .el-pager li {
+//     &.active {
+//       background:linear-gradient(90deg,rgba(253,48,105,1) 0%,rgba(255,68,89,1) 100%);
+//     }
+//   }
+// }
 
 // 其他筛选
 #otherCondition {

@@ -90,7 +90,7 @@
     width="95%"
     center>
     <div v-if="form.state === 2 && !innerVisible">
-      <p>{{form.remarks}}</p>
+      <p>{{form.pxarks}}</p>
       <div @click="innerVisible=true" class="skdbvisbdiv">前往修改</div>
     </div>
     <div v-if="form.state !== 2 || (innerVisible && form.state === 2)">

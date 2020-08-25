@@ -11,7 +11,7 @@
   <!-- 商家 -->
   <div class="personal__menu menu__store" v-else>
     <ul class="menu-list" ref="storeScrollNode">
-      <li class="menu-list__item" :class="item.value === activedItem.store ? 'active' : ''" @click="handleStoreMenus(item.value, $event)"  v-for="item in storeMenus" :key="item.value">{{item.label}}</li>
+      <li class="menu-list__item" :class="item.value === activedItem.store ? 'active' : ''" @click="handleStopxenus(item.value, $event)"  v-for="item in stopxenus" :key="item.value">{{item.label}}</li>
     </ul>
   </div>
   <div class="router-view-wrap">
@@ -23,7 +23,7 @@
 
 import { getUserType } from '@/utils/auth'
 // 商家按钮
-const storeMenus = [
+const stopxenus = [
   { label: '我的信息', value: 'storeInfMb' },
   { label: '我的商品', value: 'storeGoodsMb' },
   { label: '发票申请', value: 'fapiaoMb' },
@@ -37,7 +37,7 @@ const favoriteMenus = [
   { label: '红人数据', value: 'personalOrderMb' },
   { label: '修改密码', value: 'personalUpdatePwdMb' }
 ]
-Object.freeze(storeMenus)
+Object.freeze(stopxenus)
 Object.freeze(favoriteMenus)
 export default {
   name: 'personal',
@@ -45,7 +45,7 @@ export default {
   },
   data () {
     return {
-      storeMenus,
+      stopxenus,
       favoriteMenus,
       usertype: getUserType(),
       activedItem: {
@@ -85,7 +85,7 @@ export default {
       this.$router.push({ name: activedItem })
     },
     // 商家导航按钮
-    handleStoreMenus (activedItem, e) {
+    handleStopxenus (activedItem, e) {
       if (activedItem === this.activedItem.store) return
       this.activedItem.store = activedItem
       // 让被点击的按钮居中

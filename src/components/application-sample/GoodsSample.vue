@@ -11,7 +11,7 @@
         {{item.title}}
       </p>
       <div class="goods-sample-amount">
-        <span class="goods-sample__amount-discount">¥{{item.discountedAmount}}</span>
+        <span class="goods-sample__amount-discount">¥{{item.discountedAmount}}111111</span>
         <span class="goods-sample__amount">¥{{item.amount}}</span>
       </div>
       <div class="goods-sample__commission">
@@ -20,12 +20,13 @@
     </div>
     <div class="goods-sample-col last-col">
       <div class="goods-sample-row">
-        <span>销量</span><span>优惠券数量</span><span>优惠券金额</span>
+        <!-- <span>销量</span> -->
+        <span>优惠券数量</span><span>优惠券金额</span>
       </div>
       <div class="goods-sample-row">
-          <span>{{item.salesVolume}}</span>
-          <span>{{item.couponCount}}</span>
-          <span>{{item.coupon}}</span>
+          <span>{{item.salesVolume || '--'}}</span>
+          <span>{{item.couponCount || '--'}}</span>
+          <span>{{item.coupon || '--'}}</span>
       </div>
     </div>
   </div>

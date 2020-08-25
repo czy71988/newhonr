@@ -217,7 +217,7 @@ export default {
         this.scrollTop = document.documentElement.scrollTop || document.body.scrollTop
         document.body.classList.add('overflow-hiden')
       } else {
-        document.body.classList.remove('overflow-hiden')
+        document.body.classList.pxove('overflow-hiden')
         window.scrollTo(0, this.scrollTop)
       }
     }
@@ -330,7 +330,7 @@ export default {
     }
   },
   destroyed () {
-    window.removeEventListener('scroll', this.debunceWrapHandleScroll)
+    window.pxoveEventListener('scroll', this.debunceWrapHandleScroll)
   }
 }
 </script>

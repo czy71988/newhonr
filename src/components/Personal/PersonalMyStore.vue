@@ -3,46 +3,147 @@
     <p class="sgre_shop">近期合作商家</p>
     <p class="sgre_shop1">近期合作商家：</p>
     <ul>
-      <li>
-        <img src="../../assets/new/组 666.png" alt="" class="img_icon">
-        <img src="../../assets/new/测试.png" alt="" class="img_touxiang">
+      <li v-for="item in goodslist" :key="item.id">
+        <img src="../../assets/new/组 666.png" alt="" class="img_icon" @click="shanchu(item.recordId)">
+        <img :src="item.recordUrl" alt="" class="img_touxiang">
         <p class="store_p1">
           <span>合作商家：</span>
-          <span>旺仔牛奶</span>
+          <span>{{item.recordName}}</span>
         </p>
         <p class="store_p2">
           <span>销售额：</span>
-          <span>200000</span>
+          <span>{{item.orderSale}}</span>
         </p>
         <p class="store_p3">
           <span>单量：</span>
-          <span>200000</span>
+          <span>{{item.orderCount}}</span>
         </p>
       </li>
     </ul>
     <p class="sgre_shop1">新增合作商家：</p>
     <el-upload
       class="avatar-uploader"
-      action="https://jsonplaceholder.typicode.com/posts/"
+      :action="actions.UploadWithoutPermission + '?type=4'"
       :show-file-list="false"
       :on-success="handleAvatarSuccess"
       :before-upload="beforeAvatarUpload">
-      <img v-if="imageUrl" :src="imageUrl" class="avatar">
+      <img v-if="from.imageUrl" :src="from.imageUrl" class="avatar">
       <i v-else class="el-icon-plus avatar-uploader-icon"></i>
     </el-upload>
     <p class="sgre_shop1">商品名称：</p>
-    <el-input v-model="shop_name" placeholder="请输入内容"></el-input>
+    <el-input v-model="from.shop_name" placeholder="请输入内容"></el-input>
     <p class="sgre_shop1">销售额：</p>
-    <el-input v-model="shop_number" placeholder="请输入内容"></el-input>
+    <el-input v-model="from.shop_number" placeholder="请输入内容"></el-input>
     <p class="sgre_shop1">单量：</p>
-    <el-input v-model="shop_number" placeholder="请输入内容"></el-input>
-    <div class="over_btn">完成</div>
+    <el-input v-model="from.shop_number1" placeholder="请输入内容"></el-input>
+    <div class="over_btn" @click="wancheng">完成</div>
   </div>
 </template>
 
 <script>
+import { honrMymessage, honrMyshuju, honrMyshujuNew, honrMyOut } from '../../api/newhonrList'
+import actions from '../../data/actions'
 export default {
+  data () {
+    return {
+      actions,
+      imageUrl: '',
+      goodslist: [], // 近期直播商品
+      page: '1',
+      row: '10',
+      from: {
+        shop_name: '',
+        shop_number: '',
+        shop_number1: '',
+        imageUrl: ''
+      },
+      ids: []
+    }
+  },
+  mounted () {
+    this.getlist1()
+  },
+  methods: {
+    // 获取红人主键ID
+    getlist1 () {
+      const token = sessionStorage.getItem('token')
+      honrMymessage({
+        sessionId: token,
+        redskinsId: ''
+      }).then(data => {
+        const id = data.redskinsId
+        honrMyshuju({
+          filters: {
+            recordType: 2,
+            redskinsId: id
+          },
+          page: this.page,
+          rows: this.row
+        }).then(data => {
+          console.log('获取的红人详情数据2', data)
+          this.goodslist = data.result
+        })
+      })
+    },
 
+    handleAvatarSuccess (response, file, fileList) {
+      this.from.imageUrl = response.data.fullPath
+    },
+    beforeAvatarUpload (file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
+    },
+    // 新增操作
+    wancheng () {
+      const token = sessionStorage.getItem('token')
+      honrMyshujuNew({
+        recordType: 2,
+        recordName: this.from.shop_name,
+        orderSale: this.from.shop_number,
+        orderCount: this.from.shop_number1,
+        urlType: 1,
+        recordUrl: this.from.imageUrl,
+        sessionId: token
+      }).then(data => {
+        this.from = {
+          shop_name: '',
+          shop_number: '',
+          shop_number1: '',
+          imageUrl: ''
+        }
+        this.$message({
+          message: '添加成功',
+          type: 'success'
+        })
+        this.getlist1()
+      })
+    },
+    // 删除操作
+    shanchu (id) {
+      // return arr
+      // this.ids[0].push(id)
+      const ids = id.split()
+      const token = sessionStorage.getItem('token')
+      honrMyOut({
+        sessionId: token,
+        recordIdList: ids
+      }).then(data => {
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        })
+        this.getlist1()
+      })
+    }
+  }
 }
 </script>
 
