@@ -16,6 +16,7 @@ import device from '@/utils/device'
 import config from '@/config/zt-service-config'
 import wx from 'wx'
 import './utils/wx.js'
+import 'lib-flexible'
 window.thirdClient = window.thirdClient || {}
 window.thirdClient.config = config
 console.log(window.thirdClient.config)

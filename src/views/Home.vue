@@ -33,7 +33,7 @@
             <div class="shopquan">
               <div class="shopquankuang"> {{item.marketPlatform === 1 ? '淘宝' : (item.marketPlatform === 2 ? '天猫' : (item.marketPlatform === 4 ? '京东' : (item.marketPlatform===3 ? '拼多多' : '供应商')))}}</div>
               <div class="shopquan1">券 ¥ {{item.discountsCoupon || '0'}}</div>
-              <span>商品有效期：{{item.goodsValidity | datafilter}}</span>
+              <span class="dnfigeni">商品有效期：{{item.goodsValidity | datafilter}}</span>
             </div>
           </div>
         </div>
@@ -177,16 +177,19 @@
             <p>
               <span>近期直播商品</span>
             </p>
-            <div class="honrboshop">
-              <img :src="item.goodslist[0].recordUrl" alt="">
-              <p>{{item.goodslist[0].recordName}}</p>
+            <div class="honrboshop" v-if="item.goodslist.length !== 0">
+              <img :src="item.goodslist[0].recordUrl || '--'" alt="">
+              <p>{{item.goodslist[0].recordName || '--'}}</p>
               <p class="dfdf">
                 <span>销售额</span>
-                <span>{{item.goodslist[0].orderSale}}</span>
+                <span>{{item.goodslist[0].orderSale || '--'}}</span>
               </p>
               <p class="dfdbgnse">
-                <span>{{item.goodslist[0].recordName}}</span>
+                <span>{{item.goodslist[0].recordName || '--'}}</span>
               </p>
+            </div>
+            <div class="honrboshop" v-else>
+              暂无
             </div>
           </div>
         </div>
@@ -278,9 +281,11 @@ export default {
       }).then(data => {
         this.contList = data.srrList
         const LIST = data.mrrList
+        console.log('56789', data)
         LIST.forEach(item => {
           if (type === item.recommendType) {
             this.honrLIS.push(item.rtgRedskinsUserPublicDto)
+            console.log('56789', this.honrLIS)
           }
         })
       })
@@ -389,7 +394,7 @@ export default {
         float: left;
         margin-right: 30px;
         .TopbannerImg1 {
-          width: 375px;
+          width: 100%;
           height: 350px;
           float: left;
           margin-bottom: 30px;
@@ -785,6 +790,9 @@ export default {
           .honrboshop {
             height: 177px;
             margin-top: 25px;
+            font-size: 30px;
+            color: #666666;
+            text-align: center;
             img {
               float: left;
               background:rgba(243,243,243,1);
@@ -915,4 +923,170 @@ export default {
       }
     }
   }
+
+// 适配屏幕为1366px
+@media (max-width: 1366px) {
+  .honrHome {
+    width: 1200px;
+    .Topbanner {
+      height: 550px;
+      .TopbannerImgdiv1 {
+        width: 260px;
+        height: 550px;
+        .TopbannerImg1 {
+          width: 100%;
+          height: 260px;
+        }
+        .TopbannerImg2 {
+          width: 100%;
+          height: 260px;
+        }
+      }
+      .TopbannerImg3 {
+        width: 620px;
+        height: 550px;
+      }
+      .TopbannerImgdiv2 {
+        width: 260px;
+        height: 550px;
+        .TopbannerImg4 {
+          width: 100%;
+          height: 260px;
+        }
+        .TopbannerImg5 {
+          width: 100%;
+          height: 260px;
+        }
+      }
+    }
+    @width: 224px;
+    @height:390px;
+    .Homehaopin {
+      height:@height ;
+      .Goodproductrecommendation {
+        width: @width;
+        height: @height;
+      }
+      .Homehaopindiv {
+        width: @width;
+        height: @height;
+        margin-left: 20px;
+        .shopImg {
+          width: @width;
+          height: @width;
+          img {
+            width: @width;
+            height: @width;
+          }
+          .shopquan {
+            .dnfigeni {
+              margin-top: 5px;
+              text-align: left;
+            }
+          }
+        }
+      }
+    }
+  }
+  .honrHOMEh {
+    .honrconcent {
+      padding: 0 45px;
+      box-sizing: border-box;
+      @width: 625px;
+      .honrcontent1 {
+        width: @width;
+      }
+    }
+    .honrQita {
+      padding: 0 45px;
+      box-sizing: border-box;
+      .honrQitas {
+        width: 295px;
+      }
+    }
+  }
+}
+// 适配屏幕为1600px
+@media (max-width: 1600px) {
+  .honrHome {
+    width: 1200px;
+    .Topbanner {
+      height: 550px;
+      .TopbannerImgdiv1 {
+        width: 260px;
+        height: 550px;
+        .TopbannerImg1 {
+          width: 100%;
+          height: 260px;
+        }
+        .TopbannerImg2 {
+          width: 100%;
+          height: 260px;
+        }
+      }
+      .TopbannerImg3 {
+        width: 620px;
+        height: 550px;
+      }
+      .TopbannerImgdiv2 {
+        width: 260px;
+        height: 550px;
+        .TopbannerImg4 {
+          width: 100%;
+          height: 260px;
+        }
+        .TopbannerImg5 {
+          width: 100%;
+          height: 260px;
+        }
+      }
+    }
+    @width: 224px;
+    @height:390px;
+    .Homehaopin {
+      height:@height ;
+      .Goodproductrecommendation {
+        width: @width;
+        height: @height;
+      }
+      .Homehaopindiv {
+        width: @width;
+        height: @height;
+        margin-left: 20px;
+        .shopImg {
+          width: @width;
+          height: @width;
+          img {
+            width: @width;
+            height: @width;
+          }
+          .shopquan {
+            .dnfigeni {
+              margin-top: 5px;
+              text-align: left;
+            }
+          }
+        }
+      }
+    }
+  }
+  .honrHOMEh {
+    .honrconcent {
+      padding: 0 45px;
+      box-sizing: border-box;
+      @width: 625px;
+      .honrcontent1 {
+        width: @width;
+      }
+    }
+    .honrQita {
+      padding: 0 45px;
+      box-sizing: border-box;
+      .honrQitas {
+        width: 295px;
+      }
+    }
+  }
+}
+
 </style>

@@ -21,23 +21,9 @@
         </el-form-item>
 
         <div class="dizhixuanze">
-          <el-form-item label="地址">
-            <el-select v-model="from.province" placeholder="省" @focus="handleProvinceChange">
-              <el-option
-                v-for="item in provinceMap"
-                :key="item[0]"
-                :label="item[1]"
-                :value="item[1]">
-              </el-option>
-            </el-select>
-            <el-select v-model="from.city" placeholder="市" @focus="handleCitySelect" @change="handleCityChange">
-              <el-option v-for="item in cityMap" :key="item[0]" :label="item[1]" :value="item[1]">
-              </el-option>
-            </el-select>
-
-            <!-- 测试 -->
+          <el-form-item label="地址" >
+            <!-- 省市区 -->
             <v-distpicker @selected="selected"></v-distpicker>
-            <!--  -->
           </el-form-item>
         </div>
 
@@ -71,6 +57,18 @@
 
         <el-form-item label="目前拥有粉丝最高数量" prop="fansAmount">
           <el-input v-model="from.fansAmount" placeholder="请输入粉丝最高数量"></el-input>
+        </el-form-item>
+
+        <el-form-item label="粉丝偏向" prop="fansType">
+          <el-select v-model="from.fansType" placeholder="请选择粉丝偏向">
+            <el-option
+              v-for="item in fansFavoriteData"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+              :disabled="item.disabled">
+            </el-option>
+          </el-select>
         </el-form-item>
 
         <el-form-item label="最高获赞量" prop="highestLikes">
@@ -121,7 +119,7 @@
     <div class="three" v-if="index === 3">
       <el-form ref="form" :model="from" :rules="rules">
         <el-form-item label="手机号" prop="username">
-          <el-input v-model="from.username"></el-input>
+          <el-input v-model="from.username" @change="jiance"></el-input>
         </el-form-item>
         <el-form-item prop="captcha">
           <el-input placeholder="请输入验证码" v-model="from.captcha" class="input-with-select">
@@ -140,18 +138,17 @@
 
   </div>
 </template>
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="./template/v-distpicker.js"></script>
 <script>
-// import { zhuceHR } from '../../api/login'
-import { platformData, contentCategoryData } from '../../data/common'
+import { zhuceHR, zhucePhone } from '../../api/login'
+import { encryptionPW } from '@/utils/auth'
+import { platformData, contentCategoryData, fansFavoriteData } from '../../data/common'
 import actions from '@/data/actions'
-// import VDistpicker from 'v-distpicker' // 引入省市区三级联动插件
+import VDistpicker from 'v-distpicker' // 引入省市区三级联动插件
 
 export default {
-  // components: {
-  //   VDistpicker // 注册省市区三级联动组件
-  // },
+  components: {
+    VDistpicker // 注册省市区三级联动组件
+  },
   data () {
     let reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,12}$/
     var validateNewPwd = (rule, value, callback) => {
@@ -173,6 +170,7 @@ export default {
       // provinceMap: getProvinceMap(),
       platformData,
       contentCategoryData,
+      fansFavoriteData,
       index: 1,
       from: {
         redskinsName: '', // 红人姓名
@@ -227,26 +225,26 @@ export default {
         contentType: [
           { required: true, message: '请选择内容分类', trigger: 'blur' }
         ],
-        deviationstate: [
+        fansType: [
           { required: true, message: '请选择粉丝偏向', trigger: 'blur' }
         ],
         fansAmount: [
-          { required: true, message: '请输入粉丝数量', trigger: 'blur' },
-          {
-            required: true,
-            pattern: /^\d+$/,
-            message: '只能填写数字',
-            trigger: 'blur'
-          }
+          { required: true, message: '请输入粉丝数量', trigger: 'blur' }
+          // {
+          //   required: true,
+          //   pattern: /^\d+$/,
+          //   message: '只能填写数字',
+          //   trigger: 'blur'
+          // }
         ],
         highestLikes: [
-          { required: true, message: '请输入最高获赞数量', trigger: 'blur' },
-          {
-            required: true,
-            pattern: /^\d+$/,
-            message: '只能填写数字',
-            trigger: 'blur'
-          }
+          { required: true, message: '请输入最高获赞数量', trigger: 'blur' }
+          // {
+          //   required: true,
+          //   pattern: /^\d+$/,
+          //   message: '只能填写数字',
+          //   trigger: 'blur'
+          // }
         ],
         username: [
           { required: true, message: '请输入手机号码', trigger: 'blur' }
@@ -290,33 +288,7 @@ export default {
       totalTime: 60, // 记录具体倒计时时间
       canClick: true,
       cityMap: '',
-      password1: '',
-      ruleForm: {
-        province: '', // 省
-        city: '', // 市
-        area: '', // 区
-        schoolName: '', // 学校名称
-        addr: '', // 地址
-        concatUser: '', // 联系人
-        concatUserPhone: '', // 联系人电话
-        list: [
-          {
-            disapperSort: 1,
-            disapperName: '',
-            disapperPwd: ''
-          },
-          {
-            disapperSort: 2,
-            disapperName: '',
-            disapperPwd: ''
-          },
-          {
-            disapperSort: 3,
-            disapperName: '',
-            disapperPwd: ''
-          }
-        ] // 校区销核用户
-      } // 表单内容
+      password1: ''
     }
   },
   methods: {
@@ -328,6 +300,7 @@ export default {
       console.log(this.from.province)
       console.log(this.from.city)
       console.log(this.from.district)
+      // console.log()
     },
     countDown () {
       this.$axios.get('/zkurtg-red-api/public/captchaImageByPhone?phone=' + this.from.username).then((response) => {
@@ -352,17 +325,19 @@ export default {
         }
       }, 1000)
     },
-    zhuce () {
-      // zhuceHR(this.fromOnw).then(data => {
-      //   console.log(data)
-      // })
-    },
     btn1 () {
       this.index = this.index + 1
     },
     // 完成注册
     btn2 () {
-      console.log('完成注册')
+      this.from.password = encryptionPW(this.from.password)
+      zhuceHR(this.from).then(data => {
+        this.$message({
+          message: '注册成功',
+          type: 'success'
+        })
+        this.$router.push({ name: 'login' })
+      })
     },
     btn () {
       this.index = this.index - 1
@@ -379,6 +354,14 @@ export default {
     handleAvatarSuccess2 (response, file, fileList) {
       this.from.cardHandheldUrl = response.data.fullPath
       this.from.chPath = response.data.path
+    },
+    // 检查手机号是否注册过
+    jiance () {
+      zhucePhone({
+        loginName: this.from.username
+      }).then(data => {
+        console.log(data)
+      })
     }
   }
 }
@@ -456,6 +439,35 @@ export default {
         margin-top: 60px;
       }
   }
+
+  @media (max-width: 1366px) {
+    .zhuce_hr{
+      .fanhui {
+        position: absolute;
+        top: 200px;
+        left: 260px;
+        font-size: 18px;
+        font-family: PingFang SC;
+        font-weight: 400;
+        color: #e8251d;
+        opacity: 1;
+      }
+    }
+  }
+  @media (max-width: 1600px) {
+    .zhuce_hr{
+      .fanhui {
+        position: absolute;
+        top: 200px;
+        left: 420px;
+        font-size: 18px;
+        font-family: PingFang SC;
+        font-weight: 400;
+        color: #e8251d;
+        opacity: 1;
+      }
+    }
+  }
 </style>
 
 <style lang="less">
@@ -490,14 +502,14 @@ export default {
     .avatar-uploader-icon {
       font-size: 28px;
       color: #8c939d;
-      width: 178px;
-      height: 178px;
-      line-height: 178px;
+      width: 175px;
+      height: 175px;
+      line-height: 175px;
       text-align: center;
     }
     .avatar {
-      width: 178px;
-      height: 178px;
+      width: 175px;
+      height: 175px;
       display: block;
     }
   }
@@ -505,6 +517,13 @@ export default {
     .el-select {
       width: 30%;
       margin-right: 13px;
+    }
+    .distpicker-address-wrapper select {
+      font-size: 16px;
+      height: 44px;
+      width: 130px;
+      border-radius: 5px;
+      padding: 5px;
     }
   }
 </style>

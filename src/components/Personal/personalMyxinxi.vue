@@ -1,8 +1,16 @@
 <template>
   <div class="honrXx">
     <div class="honr_touxiang">
-      <img :src="data.imageUrl" alt="">
-      <img class="img1" src="../../assets/new/组 247.png" alt="">
+      <el-upload
+        class="avatar-uploader"
+        :action="actions.UploadWithoutPermission + '?type=3'"
+        :show-file-list="false"
+        :headers='{"sessionId": token}'
+        :on-success="handleAvatarSuccess"
+        :before-upload="beforeAvatarUpload">
+        <img :src="data.imageUrl" alt="">
+        <img class="img1" src="../../assets/new/组 247.png" alt="">
+      </el-upload>
     </div>
     <div class="content">
       <p>
@@ -12,7 +20,7 @@
       <div class="fenxian"></div>
       <p class="p1">红人姓名：</p>
       <p v-if="show" class="p2">{{data.redskinsName || '--'}}</p>
-      <el-input v-else v-model="this.from.redskinsName" placeholder="请输入内容"></el-input>
+      <el-input v-else v-model="from.redskinsName" placeholder="请输入内容"></el-input>
 
       <p class="p1">所属平台：</p>
       <p v-if="show" class="p2">
@@ -21,7 +29,7 @@
           <!-- <li>拼多多</li> -->
         </ul>
       </p>
-      <el-select v-else v-model="this.from.redskinsPlatform" multiple placeholder="请选择">
+      <el-select v-else v-model="from.redskinsPlatform" placeholder="请选择所属平台">
         <el-option
           v-for="item in platformData"
           :key="item.value"
@@ -36,7 +44,7 @@
           <li v-for="item in neirong" :key="item.id">{{item | contentCategoryFilter}}</li>
         </ul>
       </p>
-      <el-select v-else v-model="this.from.contentType" multiple :placeholder="请选择">
+      <el-select v-else v-model="from.contentType" multiple placeholder="请选择内容分类">
         <el-option
           v-for="item in contentCategoryData1"
           :key="item.value"
@@ -47,7 +55,7 @@
 
       <p class="p1">粉丝偏向：</p>
       <p v-if="show" class="p2">{{data.fansType.toString() | fansFavoriteFilter}}</p>
-      <el-select v-else v-model="this.from.fansType" multiple placeholder="请选择">
+      <el-select v-else v-model="from.fansType" placeholder="请选择粉丝偏向">
         <el-option
           v-for="item in fansFavoriteData"
           :key="item.value"
@@ -58,67 +66,67 @@
 
       <p class="p1">粉丝数量：</p>
       <p v-if="show" class="p2">{{data.fansAmount || '--'}}万+</p>
-      <el-input v-else v-model="this.from.fansAmount" placeholder="请输入内容"></el-input>
+      <el-input v-else v-model="from.fansAmount" placeholder="请输入内容"></el-input>
 
       <p class="p1">最高获赞数量：</p>
       <p v-if="show" class="p2">{{data.highestLikes || '--'}}万+</p>
-      <el-input v-else v-model="this.from.highestLikes" placeholder="请输入内容"></el-input>
+      <el-input v-else v-model="from.highestLikes" placeholder="请输入内容"></el-input>
 
       <p class="p1">直播观看数量：</p>
       <p v-if="show" class="p2">{{data.liveStreamingAmount || '--'}}万+</p>
-      <el-input v-else v-model="this.from.liveStreamingAmount" placeholder="请输入内容"></el-input>
+      <el-input v-else v-model="from.liveStreamingAmount" placeholder="请输入内容"></el-input>
 
       <p class="p1">图文浏览数量：</p>
       <p v-if="show" class="p2">{{data.imageTextView || '--'}}万+</p>
-      <el-input v-else v-model="this.from.imageTextView" placeholder="请输入内容"></el-input>
+      <el-input v-else v-model="from.imageTextView" placeholder="请输入内容"></el-input>
 
       <p class="p1">短视频观看数量：</p>
       <p v-if="show" class="p2">{{data.videosWatchedAmount || '--'}}万+</p>
-      <el-input v-else v-model="this.from.videosWatchedAmount" placeholder="请输入内容"></el-input>
+      <el-input v-else v-model="from.videosWatchedAmount" placeholder="请输入内容"></el-input>
 
       <p class="p1">视频发布数量：</p>
       <p v-if="show" class="p2">{{data.monitorRelease || '--'}}万+</p>
-      <el-input v-else v-model="this.from.monitorRelease" placeholder="请输入内容"></el-input>
+      <el-input v-else v-model="from.monitorRelease" placeholder="请输入内容"></el-input>
 
       <p class="p1">引导进店数量：</p>
       <p v-if="show" class="p2">{{data.guidanceShop || '--'}}万+</p>
-      <el-input v-else v-model="this.from.guidanceShop" placeholder="请输入内容"></el-input>
+      <el-input v-else v-model="from.guidanceShop" placeholder="请输入内容"></el-input>
 
       <p class="p1">总销售额：</p>
       <p v-if="show" class="p2">{{data.totalSales}}万+</p>
-      <el-input v-else v-model="this.from.totalSales" placeholder="请输入内容"></el-input>
+      <el-input v-else v-model="from.totalSales" placeholder="请输入内容"></el-input>
 
       <p class="p1">总客单量：</p>
       <p v-if="show" class="p2">{{data.totalSales || '--'}}万+</p>
-      <el-input v-else v-model="this.from.totalCustomerOrders" placeholder="请输入内容"></el-input>
+      <el-input v-else v-model="from.totalCustomerOrders" placeholder="请输入内容"></el-input>
 
       <p class="p1">均客单价：</p>
       <p v-if="show" class="p2">{{data.averageCustomerUnitprice || '--'}}万+</p>
-      <el-input v-else v-model="this.from.averageCustomerUnitprice" placeholder="请输入内容"></el-input>
+      <el-input v-else v-model="from.averageCustomerUnitprice" placeholder="请输入内容"></el-input>
 
       <p class="p1">身高：</p>
       <p v-if="show" class="p2">{{data.redskinsStature || '--'}}CM</p>
-      <el-input v-else v-model="this.from.redskinsStature" placeholder="请输入内容"></el-input>
+      <el-input v-else v-model="from.redskinsStature" placeholder="请输入内容"></el-input>
 
       <p class="p1">体重：</p>
       <p v-if="show" class="p2">{{data.redskinsWeight || '--'}}KG</p>
-      <el-input v-else v-model="this.from.redskinsWeight" placeholder="请输入内容"></el-input>
+      <el-input v-else v-model="from.redskinsWeight" placeholder="请输入内容"></el-input>
 
       <p class="p1">鞋码：</p>
       <p v-if="show" class="p2">{{data.redskinsShoes || '--'}}</p>
-      <el-input v-else v-model="this.from.redskinsShoes" placeholder="请输入内容"></el-input>
+      <el-input v-else v-model="from.redskinsShoes" placeholder="请输入内容"></el-input>
 
       <p class="p1">尺寸：</p>
       <p v-if="show" class="p2">{{data.codeSize || '--'}}</p>
-      <el-input v-else v-model="this.from.codeSize" placeholder="请输入内容"></el-input>
+      <el-input v-else v-model="from.codeSize" placeholder="请输入内容"></el-input>
 
       <p class="p1">收货人姓名：</p>
       <p v-if="show" class="p2">{{data.deliveryAddressName || '--'}}</p>
-      <el-input v-else v-model="this.from.deliveryAddressName" placeholder="请输入内容"></el-input>
+      <el-input v-else v-model="from.deliveryAddressName" placeholder="请输入内容"></el-input>
 
       <p class="p1">收货人电话：</p>
       <p v-if="show" class="p2">{{data.deliveryAddressPhone || '--'}}</p>
-      <el-input v-else v-model="this.from.deliveryAddressPhone" placeholder="请输入内容"></el-input>
+      <el-input v-else v-model="from.deliveryAddressPhone" placeholder="请输入内容"></el-input>
 
       <p class="p1">收货地址：</p>
       <p v-if="show" class="p2">{{data.deliveryAddressProvince || '--'}} {{data.city || '--'}} {{data.district || '--'}}</p>
@@ -127,22 +135,41 @@
         type="textarea"
         :rows="2"
         placeholder="请输入内容"
-        v-model="this.from.deliveryAddressDetails">
+        v-model="from.deliveryAddressDetails">
       </el-input>
 
       <p class="p1">每天开播时间：</p>
-      <p v-if="show" class="p2">{{data.dailyBroadcastStart || '--'}} - {{data.dailyBroadcastEn || '--'}}</p>
+      <p v-if="show" class="p2">{{data.dailyBroadcastStart | timefilter}} - {{data.dailyBroadcastEn | timefilter}}</p>
       <!-- <el-input v-else v-model="this.from.dailyBroadcastStart" placeholder="请输入内容"></el-input> -->
       <p v-else>
-        <el-time-picker
-          v-model="this.from.dailyBroadcastStart"
+        <!-- <el-time-picker
+          v-model="from.dailyBroadcastStart"
           placeholder="开始时间">
         </el-time-picker>
         <el-time-picker
           arrow-control
-          v-model="this.from.dailyBroadcastEnd"
+          v-model="from.dailyBroadcastEnd"
           placeholder="结束时间">
-        </el-time-picker>
+        </el-time-picker> -->
+        <el-time-select
+          placeholder="起始时间"
+          v-model="from.dailyBroadcastStart"
+          :picker-options="{
+            start: '08:30',
+            step: '00:15',
+            end: '18:30'
+          }">
+        </el-time-select>
+        <el-time-select
+          placeholder="结束时间"
+          v-model="from.dailyBroadcastEnd"
+          :picker-options="{
+            start: '08:30',
+            step: '00:15',
+            end: '18:30',
+            minTime: startTime
+          }">
+        </el-time-select>
       </p>
 
     </div>
@@ -153,9 +180,11 @@
 <script>
 import { platformData, contentCategoryData1, fansFavoriteData } from '../../data/common'
 import { honrMymessage, honrMymessageModify } from '../../api/newhonrList'
+import actions from '../../data/actions'
 export default {
   data () {
     return {
+      actions,
       show: true,
       platformData,
       contentCategoryData1,
@@ -163,7 +192,7 @@ export default {
       from: {
         redskinsName: '', // 红人姓名
         redskinsPlatform: [], // 所属平台：
-        contentType: [], // 内容分类：
+        contentType: '', // 内容分类：
         fansType: '', // 粉丝偏向：
         fansAmount: '', // 粉丝数量：
         highestLikes: '', // 最高获赞数量：
@@ -187,7 +216,11 @@ export default {
       },
       data: {},
       pintai: [], // 平台
-      neirong: [] // 内容
+      neirong: [], // 内容
+      id: '',
+      token: sessionStorage.getItem('token'),
+      imgPath: '',
+      imgUrl: ''
     }
   },
   mounted () {
@@ -203,8 +236,33 @@ export default {
     baocun () {
       this.show = !this.show
       const token = sessionStorage.getItem('token')
-      honrMymessageModify({ sessionId: token }, this.from).then(data => {
-        console.log(data)
+      honrMymessageModify({
+        sessionId: token,
+        redskinsName: this.from.redskinsName, // 红人姓名
+        redskinsPlatform: this.from.redskinsPlatform + '', // 所属平台：
+        contentType: this.from.contentType + '', // 内容分类：
+        fansType: this.from.fansType, // 粉丝偏向：
+        fansAmount: this.from.fansAmount, // 粉丝数量：
+        highestLikes: this.from.highestLikes, // 最高获赞数量：
+        liveStreamingAmount: this.from.liveStreamingAmount, // 直播观看数量：
+        imageTextView: this.from.imageTextView, // 图文浏览数量：
+        videosWatchedAmount: this.from.videosWatchedAmount, // 短视频观看数量：
+        monitorRelease: this.from.monitorRelease, // 视频发布数量：
+        guidanceShop: this.from.guidanceShop, // 引导进店数量：
+        totalSales: this.from.totalSales, // 总销售额：
+        totalCustomerOrders: this.from.totalCustomerOrders, // 总客单量：
+        averageCustomerUnitprice: this.from.averageCustomerUnitprice, // 均客单价：
+        redskinsStature: this.from.redskinsStature, // 身高：
+        redskinsWeight: this.from.redskinsWeight, // 体重：
+        redskinsShoes: this.from.redskinsShoes, // 鞋码：
+        codeSize: this.from.codeSize, // 尺寸
+        deliveryAddressName: this.from.deliveryAddressName, // 收货人姓名：
+        deliveryAddressPhone: this.from.deliveryAddressPhone, // 收货人电话：
+        deliveryAddressDetails: this.from.deliveryAddressDetails, // 收货地址：
+        dailyBroadcastStart: this.from.dailyBroadcastStart, // 每天开播时间：
+        dailyBroadcastEnd: this.from.dailyBroadcastEnd // 每天结束时间：
+      }).then(data => {
+        this.getlist()
       })
     },
     // 获取信息
@@ -214,13 +272,39 @@ export default {
         sessionId: token,
         redskinsId: ''
       }).then(data => {
-        console.log(data)
+        console.log('oooo', data)
         console.log(data.fansType)
         this.data = data
+        this.id = data.redskinsId
         this.pintai = data.redskinsPlatform.split(',')
         this.neirong = data.contentType.split(',')
         console.log('所属平台2', this.pintai)
       })
+    },
+    // 上传头像
+    handleAvatarSuccess (response, res, file) {
+      this.imgPath = response.data.path
+      this.imgUrl = response.data.fullPath
+      this.data.imageUrl = response.data.fullPath
+      honrMymessageModify({
+        imagePath: this.imgPath,
+        redskinsId: this.id,
+        imageUrl: this.imgUrl
+      }).then(data => {
+
+      })
+    },
+    beforeAvatarUpload (file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
     }
   }
 }

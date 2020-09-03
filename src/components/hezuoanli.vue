@@ -9,55 +9,46 @@
 
       <div class="transition-box1 animate__animated animate__backInDown">
         <div>
-          <img src="../assets/new/测试.png" alt="">
+          <img :src="list1[0].informationPictureUrl" alt="">
         </div>
         <div>
-          <p class="pp1">明星、书记助阵，中通仓播2分钟卖出价值百万元“扶贫干红”</p>
-          <p class="pp2">6月16日晚7点，中通快递开启第二场“仓播”带货，“国民舅舅”王耀庆、宁夏吴忠市红寺堡区委书记丁建成亮相淘宝直播间，与中通主播一起推荐助农优选好物。</p>
-          <div class="btn2" @click="hcakan">查看资讯</div>
+          <p class="pp1">{{list1[0].informationTitle}}</p>
+          <p class="pp2">{{list1[0].informationDetails}}</p>
+          <div class="btn2" @click="hcakan(list1[0].informationUrl)">查看资讯</div>
         </div>
       </div>
       <div class="transition-box2 animate__animated animate__backInLeft">
-        <p class="ppp1">3分钟售空超90000单|红人带货携手直播女王薇娅与您一起“涨芝士啦”！</p>
-        <p class="ppp2">3月16日晚，中快传媒旗下红人带货平台联合品牌商家君乐宝亮相薇娅直播间。君乐宝酸奶一经上架就将直播间气氛推向高潮，瞬间引发了粉丝的疯狂抢购。</p>
-        <div class="btn3" @click="hcakan">查看资讯</div>
+        <p class="ppp1">{{list2[0].informationTitle}}</p>
+        <p class="ppp2">{{list2[0].informationDetails}}</p>
+        <div class="btn3" @click="hcakan(list2[0].informationUrl)">查看资讯</div>
         <ul>
-          <li>
-            <img src="../assets/new/测试.png" alt="">
-          </li>
-          <li>
-            <img src="../assets/new/测试.png" alt="">
-          </li>
-          <li>
-            <img src="../assets/new/测试.png" alt="">
-          </li>
-          <li>
-            <img src="../assets/new/测试.png" alt="">
+          <li v-for="item in list2_list" :key="item.id">
+            <img :src="item.url" alt="">
           </li>
         </ul>
       </div>
       <div class="transition-box3 animate__animated animate__backInRight">
         <div class="hgf">
           <div>
-            <img src="../assets/new/测试.png" alt="">
+            <img :src="list3[0].informationPictureUrl" alt="">
           </div>
           <div class="skdbgir">
-            <p class="ppp1">直播助农|携手“通”心 锦上“田”花——崇明生态田播带货节圆满落幕。</p>
-            <p class="ppp2">7月13日以携手“通”心，锦上“田”花为主题的崇明生态田播带货节，在上海崇明上实东滩低碳农业园正式开播。</p>
-            <span @click="hcakan">查看资讯</span>
+            <p class="ppp1">{{list3[0].informationDetails}}</p>
+            <p class="ppp2">{{list3[0].informationDetails}}</p>
+            <span @click="hcakan(list3[0].informationUrl)">查看资讯</span>
           </div>
         </div>
         <div class="hgf sdfgerbvcv">
           <div class="skdbgir">
-            <p class="ppp1">直播助农|携手“通”心 锦上“田”花——崇明生态田播带货节圆满落幕。</p>
-            <p class="ppp2">7月13日以携手“通”心，锦上“田”花为主题的崇明生态田播带货节，在上海崇明上实东滩低碳农业园正式开播。</p>
-            <span @click="hcakan">查看资讯</span>
+            <p class="ppp1">{{list4[0].informationDetails}}</p>
+            <p class="ppp2">{{list4[0].informationDetails}}</p>
+            <span @click="hcakan(list4[0].informationUrl)">查看资讯</span>
           </div>
           <div>
-            <img src="../assets/new/测试.png" alt="">
+            <img :src="list4[0].informationPictureUrl" alt="">
           </div>
         </div>
-        <div class="ooter" @click="hcakan">
+        <div class="ooter" @click="hcakan1">
           点击查看更多
         </div>
       </div>
@@ -84,11 +75,20 @@ export default {
     return {
       show1: 0,
       total: 0,
-      list: []
+      list: [],
+      list1: [],
+      list2: [],
+      list3: [],
+      list4: [],
+      list2_list: []
     }
   },
   mounted () {
     this.getlist()
+    this.getlist1()
+    this.getlist2()
+    this.getlist3()
+    this.getlist4()
   },
   methods: {
     jjjj () {
@@ -98,18 +98,78 @@ export default {
         element.classList.add('animate__animated', 'animate__lightSpeedInLeft')
       }, 1000)
     },
-    hcakan () {
+    hcakan (a) {
+      window.open(a)
+    },
+    hcakan1 () {
       this.show1 = 2
     },
     getlist () {
       honrZX({
-        filters: {},
+        filters: {
+          informationLocation: '',
+          informationType: ''
+        },
         page: '1',
         rows: '10'
       }).then(data => {
         console.log('资讯', data)
         this.total = data.totalCount
         this.list = data.result
+      })
+    },
+    getlist1 () {
+      honrZX({
+        filters: {
+          informationLocation: '1',
+          informationType: ''
+        },
+        page: '1',
+        rows: '10'
+      }).then(data => {
+        this.list1 = data.result
+        console.log('资讯1', this.list1)
+      })
+    },
+    getlist2 () {
+      honrZX({
+        filters: {
+          informationLocation: '2',
+          informationType: ''
+        },
+        page: '1',
+        rows: '10'
+      }).then(data => {
+        this.list2 = data.result
+        this.list2_list = JSON.parse(data.result[0].detailsPictures)
+        console.log('资讯2', this.list2)
+        console.log('资讯256789', this.list2_list)
+      })
+    },
+    getlist3 () {
+      honrZX({
+        filters: {
+          informationLocation: '3',
+          informationType: ''
+        },
+        page: '1',
+        rows: '10'
+      }).then(data => {
+        this.list3 = data.result
+        console.log('资讯3', this.list3)
+      })
+    },
+    getlist4 () {
+      honrZX({
+        filters: {
+          informationLocation: '4',
+          informationType: ''
+        },
+        page: '1',
+        rows: '10'
+      }).then(data => {
+        this.list4 = data.result
+        console.log('资讯3', this.list4)
       })
     }
   }
@@ -118,11 +178,11 @@ export default {
 
 <style lang="less" scoped>
   .hezuo {
-      width: 100vw;
-      height: calc(100vh - 200px);
+      width: calc(100vw - 45px);
+      // height: calc(100vh - 200px);
     .transition-box {
-      width: 100vw;
-      height: calc(100vh - 200px);
+      width: calc(100vw - 45px);
+      // height: calc(100vh - 200px);
       background: url('../assets/new/iocn/组 687.png') no-repeat center center;
       background-size: cover;
       background-attachment: fixed;
@@ -164,13 +224,16 @@ export default {
       }
     }
     .transition-box1 {
-      width: 100vw;
-      height: calc(100vh - 200px);
+      width: calc(100vw - 45px);
+      margin-bottom: 30px;
+      // height: calc(100vh - 200px);
       display: flex;
       div {
         position: relative;
         flex: 1;
         img {
+          width: 100%;
+          height: 100%;
           position: absolute;
           left: 50%;
           top: 50%;
@@ -224,8 +287,10 @@ export default {
       }
     }
     .transition-box2 {
-      width: 100vw;
-      height: calc(100vh - 200px);text-align: center;
+      width: calc(100vw - 45px);
+      // height: calc(100vh - 200px);
+      text-align: center;
+      margin-bottom: 30px;
       .ppp1 {
         font-size:28px;
         font-family:PingFang SC;
@@ -278,7 +343,8 @@ export default {
       }
     }
     .transition-box3 {
-      width: 100vw;
+
+      width: calc(100vw - 45px);
       height: calc(100vh - 200px);
       .hgf {
         padding: 0 165px;
@@ -322,13 +388,13 @@ export default {
         }
         div {
           display: inline-block;
-          width: 785px;
+          width: 760px;
           height: 326px;
           background:rgba(252,252,252,1);
           vertical-align:top;
           margin-bottom: 20px;
           img {
-            width: 785px;
+            width: 760px;
             height: 326px;
           }
         }
@@ -363,7 +429,7 @@ export default {
       }
     }
     .transition-box4 {
-      width: 100vw;
+      width: calc(100vw - 45px);
       // height: calc(100vh - 200px);
       height: 100%;
       // text-align: center;
@@ -431,10 +497,86 @@ export default {
     }
   }
 
-        .pp3 {
-          text-align: center;
-          font-size: 18px;
-          font-weight: 700;
-          margin-top: 10px;
+  .pp3 {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 10px;
+  }
+// 适配屏幕为1366px
+@media (max-width: 1366px) {
+  .hezuo {
+    .transition-box1 {
+      div {
+        p {
+          padding: 0 50px;
         }
+      }
+    }
+    @width: 300px;
+    @height: 300px;
+    .transition-box2 {
+      ul {
+        li {
+          width: @width;
+          height: @height;
+          img {
+            width: @width;
+            height: @height;
+          }
+        }
+      }
+    }
+    .transition-box3 {
+      .hgf {
+        div{
+          margin: auto;
+        }
+      }
+    }
+    .transition-box4 {
+      padding: 60px 200px;
+    }
+  }
+}
+// 适配屏幕为1600px
+@media (max-width: 1600px) {
+  .hezuo {
+    .transition-box1 {
+      div {
+        p {
+          padding: 0 50px;
+        }
+      }
+    }
+    @width: 300px;
+    @height: 300px;
+    .transition-box2 {
+      ul {
+        li {
+          width: @width;
+          height: @height;
+          img {
+            width: @width;
+            height: @height;
+          }
+        }
+      }
+    }
+    .transition-box3 {
+      .hgf {
+        div{
+          width: 600px;
+          margin: auto;
+          img {
+            width: 600px;
+          }
+        }
+      }
+    }
+    .transition-box4 {
+      padding: 60px 200px;
+    }
+  }
+}
 </style>

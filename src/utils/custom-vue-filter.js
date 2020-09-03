@@ -150,6 +150,7 @@ Vue.filter('numMoreThanTensOfThousandsFilter', val => {
   return val
 })
 
+// 日期过滤器
 Vue.filter('datafilter', value => {
   if (!value) {
     return '--'
@@ -161,4 +162,14 @@ Vue.filter('datafilter', value => {
   let d = date.getDate()
   d = d < 10 ? ('0' + d) : d
   return y + '-' + MM + '-' + d + ' '
+})
+
+// 时间过滤器
+Vue.filter('timefilter', value => {
+  if (!value) {
+    return '--'
+  } var date = new Date(value) // 时间戳为10位需*1000，时间戳为13位的话不需乘1000
+  var h = date.getHours() + ':'
+  var m = date.getMinutes()
+  return h + m
 })

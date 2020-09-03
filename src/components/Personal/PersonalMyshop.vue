@@ -18,6 +18,7 @@
       class="avatar-uploader"
       :action="actions.UploadWithoutPermission + '?type=4'"
       :show-file-list="false"
+      :headers='{"sessionId": token}'
       :on-success="handleAvatarSuccess"
       :before-upload="beforeAvatarUpload">
       <img v-if="from.imageUrl" :src="from.imageUrl" class="avatar">
@@ -46,7 +47,8 @@ export default {
       },
       goodslist: '', // 近期直播商品
       page: '1',
-      row: '10'
+      row: '10',
+      token: sessionStorage.getItem('token')
     }
   },
   mounted () {

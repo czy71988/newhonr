@@ -3,45 +3,20 @@
 
     <div class="fanhui" @click="btn" v-if="index !==1"><i class="el-icon-arrow-left"></i>上一步</div>
     <div class="onw" v-if="index === 1">
-      <el-form ref="form" :model="form" :rules="rules">
+      <el-form ref="form" :model="from">
         <el-form-item label="姓名" prop="redskinsName">
           <el-input v-model="from.vendorName" placeholder="请输入商家姓名"></el-input>
         </el-form-item>
 
         <div class="dizhixuanze">
-          <!-- <el-form-item label="地址">
-            <el-select v-model="from.province" placeholder="省" @focus="handleProvinceChange">
-              <el-option
-                v-for="item in provinceMap"
-                :key="item[0]"
-                :label="item[1]"
-                :value="item[1]">
-              </el-option>
-            </el-select>
-            <el-select v-model="from.city" placeholder="市" @focus="handleCitySelect" @change="handleCityChange">
-              <el-option v-for="item in cityMap" :key="item[0]" :label="item[1]" :value="item[1]">
-              </el-option>
-            </el-select> -->
-            <!-- <el-select v-model="from.district" placeholder="区">
-              <el-option
-                v-for="item in options"
-                :key="item.value"
-                :label="item.label"
-                :value="item.value"
-                :disabled="item.disabled">
-              </el-option>
-            </el-select> -->
-          <!-- </el-form-item> -->
-          <!--省市三级联动-->
-          <el-cascader
-            placeholder="请选择"
-            v-model="location"
-            :options="china" :props="{value:'label'}"
-          ></el-cascader>
+          <el-form-item label="地址" prop="platform">
+              <!-- 省市区 -->
+              <v-distpicker @selected="selected"></v-distpicker>
+          </el-form-item>
         </div>
 
         <el-form-item label="请选择所属平台" prop="platform">
-          <el-select v-model="from.redskinsPlatform" placeholder="请选择平台">
+          <el-select v-model="from.shopPlatform" placeholder="请选择平台">
             <el-option
               v-for="item in platformshangjia"
               :key="item.value"
@@ -84,9 +59,8 @@
             class="avatar-uploader"
             :action="actions.uploadBusinessLicense + '?type=0'"
             :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            :on-success="handleAvatarSuccess">
+            <img v-if="from.enterpriseBusinessLicense" :src="from.enterpriseBusinessLicense" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
@@ -95,18 +69,16 @@
             class="avatar-uploader"
             :action="actions.uploadBusinessLicense + '?type=0'"
             :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            :on-success="handleAvatarSuccess1">
+            <img v-if="from.cardFrontUrl" :src="from.cardFrontUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
           <el-upload
             class="avatar-uploader"
             :action="actions.uploadBusinessLicense + '?type=0'"
             :show-file-list="false"
-            :on-success="handleAvatarSuccess"
-            :before-upload="beforeAvatarUpload">
-            <img v-if="imageUrl" :src="imageUrl" class="avatar">
+            :on-success="handleAvatarSuccess2">
+            <img v-if="from.cardReverseUrl" :src="from.cardReverseUrl" class="avatar">
             <i v-else class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-form-item>
@@ -116,9 +88,9 @@
     </div>
 
     <div class="three" v-if="index === 3">
-      <el-form ref="form" :model="from" :rules="rules">
+      <el-form ref="form" :model="from">
         <el-form-item label="手机号" prop="phone">
-          <el-input v-model="from.username"></el-input>
+          <el-input v-model="from.username" @change="jiance"></el-input>
         </el-form-item>
         <el-form-item prop="code">
           <el-input placeholder="请输入验证码" v-model="from.captcha" class="input-with-select">
@@ -126,20 +98,20 @@
           </el-input>
         </el-form-item>
         <el-form-item label="微信号" prop="pwdagain">
-          <el-input v-model="from.username"></el-input>
+          <el-input v-model="from.wechatAccount"></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="pwdagain">
-          <el-input v-model="from.username"></el-input>
+          <el-input v-model="password1"></el-input>
         </el-form-item>
         <el-form-item label="再次输入密码">
-          <el-input v-model="from.password"></el-input>
+          <el-input v-model="password2"></el-input>
         </el-form-item>
       </el-form>
       <div class="btn" @click="btn2">完成注册</div>
     </div>
 
     <!-- 会员开通提示 -->
-    <el-dialog
+    <!-- <el-dialog
       title="提示"
       :visible.sync="centerDialogVisible"
       width="30%"
@@ -149,10 +121,10 @@
         <el-button @click="Nokaitong">暂 不</el-button>
         <el-button type="primary" @click="Yeskaitong">查 看</el-button>
       </span>
-    </el-dialog>
+    </el-dialog> -->
 
     <!-- 会员开通页面 -->
-    <div class="huiyuan_kaitong" v-if="index === 4">
+    <!-- <div class="huiyuan_kaitong" v-if="index === 4">
       <p class="xufei_p">选择会员金额</p>
       <div class="uanzejinr">
         <div class="snfnrfe" :class="active === 1 ? 'jine1' : ''">
@@ -231,17 +203,20 @@
         <p>5、红人带货专业的平台产品发布及相关问题的咨询服务；</p>
         <p>6、平台定制化数据分析及应用服务。</p>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-// import { zhuceHR } from '../../api/login'
+import { encryptionPW } from '@/utils/auth'
 import { platformshangjia, contentCategoryData1 } from '../../data/common'
-// import { getProvinceMap, getCityMap } from '@/utils/china-location'
-import { china } from '../../data/ChinaLocation'
+import { zhuceHR, zhucePhone } from '../../api/login'
 import actions from '@/data/actions'
+import VDistpicker from 'v-distpicker' // 引入省市区三级联动插件
 export default {
+  components: {
+    VDistpicker // 注册省市区三级联动组件
+  },
   data () {
     // let reg = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,12}$/
     // var validateNewPwd = (rule, value, callback) => {
@@ -261,7 +236,6 @@ export default {
     return {
       actions,
       platformshangjia,
-      china,
       location: '',
       contentCategoryData1,
       centerDialogVisible: false,
@@ -274,7 +248,7 @@ export default {
         type: 2,
         vendorName: '', // 商家姓名
         shopName: '', // 店铺名称
-        contentType: '', // 内容分类
+        contentType: [], // 内容分类
         enterpriseName: '', // 企业名称
         enterpriseUnifiedsocialCreditcode: '', // 信用代码
         wechatAccount: '', // 微信号
@@ -283,18 +257,30 @@ export default {
         cardFrontUrl: '', // 法人身份证正面URL
         cfPath: '', // 法人身份证正面PATH
         cardReverseUrl: '', // 法人身份证反面URL
-        crPath: '' // 法人身份证反面PATH
+        crPath: '', // 法人身份证反面PATH
+        province: '', // 省
+        city: '', // 市
+        district: '', // 区
+        shopPlatform: [] // 所属平台
+
       },
-      options: [
-        { value: '1', label: '男' },
-        { value: '2', label: '女' }
-      ],
+      password1: '',
+      password2: '',
       content: '发送验证码', // 按钮里显示的内容
       totalTime: 60, // 记录具体倒计时时间
       canClick: true
     }
   },
   methods: {
+    // 省市区选择最后一项触发
+    selected (data) {
+      this.from.province = data.province.value
+      this.from.city = data.city.value
+      this.from.district = data.area.value
+      console.log(this.from.province)
+      console.log(this.from.city)
+      console.log(this.from.district)
+    },
     countDown () {
       this.$axios.get('/zkurtg-red-api/public/captchaImageByPhone?phone=' + this.from.username).then((response) => {
         console.log(response.data)
@@ -318,45 +304,54 @@ export default {
         }
       }, 1000)
     },
-    zhuce () {
-      // zhuceHR(this.fromOnw).then(data => {
-      //   console.log(data)
-      // })
-    },
     btn1 () {
       this.index = this.index + 1
     },
     btn () {
       this.index = this.index - 1
     },
-    // 完成注册
-    btn2 () {
-      this.centerDialogVisible = true
-    },
     // 不开通会员
     Nokaitong () {
       this.centerDialogVisible = false
+      this.$router.push({ name: 'index' })
     },
     // 开通会员
     Yeskaitong () {
       this.centerDialogVisible = false
       this.index = this.index + 1
     },
-    // 处理省份改变
-    handleProvinceChange () {
-      this.from.city = null
-      this.from.district = null
+    // 检查手机号是否注册过
+    jiance () {
+      zhucePhone({
+        loginName: this.from.username
+      }).then(data => {
+        console.log(data)
+      })
     },
-    // 处理城市改变
-    handleCityChange () {
-      this.from.district = null
+    // 完成注册
+    btn2 () {
+      const words = encryptionPW(this.password1)
+      this.from.password = words
+      zhuceHR(this.from).then(data => {
+        this.$message({
+          message: '注册成功',
+          type: 'success'
+        })
+        this.router.push({ name: 'login' })
+      })
     },
-    // 处理城市选择
-    handleCitySelect () {
-      if (this.from.province) {
-        console.log(this.from.province)
-        // this.cityMap = getCityMap(this.from.province)
-      }
+    // 上传图片获取url和path
+    handleAvatarSuccess (response, file, fileList) {
+      this.from.enterpriseBusinessLicense = response.data.fullPath
+      this.from.eblPath = response.data.path
+    },
+    handleAvatarSuccess1 (response, file, fileList) {
+      this.from.cardFrontUrl = response.data.fullPath
+      this.from.cfPath = response.data.path
+    },
+    handleAvatarSuccess2 (response, file, fileList) {
+      this.from.cardReverseUrl = response.data.fullPath
+      this.from.crPath = response.data.path
     }
   }
 }
@@ -579,6 +574,35 @@ export default {
       margin-top: 60px;
     }
   }
+
+  @media (max-width: 1366px) {
+    .zhuce_hr{
+      .fanhui {
+        position: absolute;
+        top: 200px;
+        left: 260px;
+        font-size: 18px;
+        font-family: PingFang SC;
+        font-weight: 400;
+        color: #e8251d;
+        opacity: 1;
+      }
+    }
+  }
+  @media (max-width: 1600px) {
+    .zhuce_hr{
+      .fanhui {
+        position: absolute;
+        top: 200px;
+        left: 420px;
+        font-size: 18px;
+        font-family: PingFang SC;
+        font-weight: 400;
+        color: #e8251d;
+        opacity: 1;
+      }
+    }
+  }
 </style>
 
 <style lang="less">
@@ -632,14 +656,14 @@ export default {
     .avatar-uploader-icon {
       font-size: 28px;
       color: #8c939d;
-      width: 178px;
-      height: 178px;
-      line-height: 178px;
+      width: 175px;
+      height: 175px;
+      line-height: 175px;
       text-align: center;
     }
     .avatar {
-      width: 178px;
-      height: 178px;
+      width: 175px;
+      height: 175px;
       display: block;
     }
   }

@@ -10,7 +10,7 @@
         <img src="../assets/new/91596006188_.pic_hd@2x.png" alt="" class="img4">
         <img src="../assets/new/资源 1@4x@2x(1).png" alt="" class="img5">
         <p>
-          中通快递创建于2002年5月8日，是一家以快递为核心业务，集跨境、快运、商业、云仓、航空、金融、智能、传媒等生态版块于一体的综合物流服务企业，2016年10月27日在美国纽交所上市，向全世界打开了一扇了解中国快递发展的窗口。
+          111中通快递创建于2002年5月8日，是一家以快递为核心业务，集跨境、快运、商业、云仓、航空、金融、智能、传媒等生态版块于一体的综合物流服务企业，2016年10月27日在美国纽交所上市，向全世界打开了一扇了解中国快递发展的窗口。
         </p>
         <p>
           自创建以来，中通快递紧抓邮政体制改革、经济转型升级、产业结构调整、电商蓬勃发展等政策和市场机遇，从“利己”、“利他”到“利社会”，帮助更多人创业就业，实现美好新生活；帮助客户削减成本，提升效益，创造价值；帮助社会解决问题，降低物流成本，实现“工厂到用户”、“田头到餐桌”的全链路管理。
@@ -75,10 +75,10 @@ export default {
     clear: both;
   }
   .about {
-    width: 100vw;
-      height: calc(100vh - 200px);
+    width: calc(100vw - 45px);
+    height: calc(100vh - 200px);
     .k1 {
-      width: 100vw;
+      width: calc(100vw - 45px);
       height: calc(100vh - 200px);
       float: left;
       text-align: center;
@@ -152,4 +152,51 @@ export default {
     }
   }
   // ======
+
+  @media (max-width: 1366px) {
+    .about {
+      .img3 {
+      width: 52px;
+      height: 52px;
+      position: absolute;
+      top: 50%;
+      right: 15px;
+      -webkit-transform: translateY(-50%);
+      transform: translateY(-50%);
+      }
+
+    .img2 {
+      width: 52px;
+      height: 52px;
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      transform: translateY(-50%);
+    }
+    }
+  }
+  // ======
+
+  @media (max-width: 1600px) {
+    .about {
+      .img3 {
+      width: 52px;
+      height: 52px;
+      position: absolute;
+      top: 50%;
+      right: 50px;
+      -webkit-transform: translateY(-50%);
+      transform: translateY(-50%);
+      }
+
+    .img2 {
+      width: 52px;
+      height: 52px;
+      position: absolute;
+      top: 50%;
+      left: 50px;
+      transform: translateY(-50%);
+    }
+    }
+  }
 </style>

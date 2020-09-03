@@ -326,6 +326,27 @@ export default {
   }
 }
 
+@media (max-width:1366px) {
+  .about {
+    width: calc(100vw - 45px);
+    .fjgbeirger {
+      .jiaceng {
+        width: 1200px;
+      }
+    }
+  }
+}
+@media (max-width:1600px) {
+  .about {
+    width: calc(100vw - 45px);
+    .fjgbeirger {
+      .jiaceng {
+        width: 1400px;
+      }
+    }
+  }
+}
+
 .clearfix::after, .clearfix::before {
   display: block;
   content: ' ';

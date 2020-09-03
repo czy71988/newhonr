@@ -45,7 +45,6 @@ export default {
 
 <style lang="less" scoped>
   .re_zhuce {
-    // height: 100vh;
     width: 100vw;
     .re_zhuce_top {
       img {
@@ -70,10 +69,10 @@ export default {
       }
     }
     .tab-panel {
-        padding: 20px 760px;
-        box-sizing: border-box;
+      width: 398px;
+      margin: auto;
       .p_xuanze {
-        padding-top: 30px;
+        padding: 10px 40px;
         box-sizing: border-box;
         line-height: 65px;
         font-size:18px;
@@ -81,6 +80,8 @@ export default {
         font-weight:400;
         color:rgba(126,126,126,1);
         opacity:1;
+        border-bottom: 1px solid #DCDFE6;
+        margin-bottom: 20px;
         .span1 {
           color:rgba(232,37,29,1);
         }
@@ -90,15 +91,9 @@ export default {
           width: 50%;
         }
         span:nth-child(1) {
-          // display: inline-block;
-          // height: 65px;
-          // width: 50%;
           text-align: left;
         }
         span:nth-child(2) {
-          // display: inline-block;
-          // width: 50%;
-          // height: 65px;
           text-align: right;
         }
       }

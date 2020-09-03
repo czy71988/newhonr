@@ -115,8 +115,9 @@ export default {
           fansType: this.$route.query.value1
         }
       }).then(data => {
-        console.log('=====v=====', data)
         this.favoriteList = data.result
+        this.favoriteList.contentType = this.favoriteList.contentType.split(',')
+        console.log('=====v=====', this.favoriteList)
         this.total = data.totalCount
       }).catch(err => {
         console.log(err)
@@ -193,6 +194,22 @@ export default {
   }
   .favorite-box {
     background-color: #fff;
+  }
+}
+@media (max-width: 1366px) {
+  .favorite {
+    background-color: #fff;
+    .com-section__bd {
+      width: 1300px;
+    }
+  }
+}
+@media (max-width: 1600px) {
+  .favorite {
+    background-color: #fff;
+    .com-section__bd {
+      width: 1300px;
+    }
   }
 }
 </style>

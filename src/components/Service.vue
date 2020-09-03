@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { fuwushangbiaodan } from '../api/fuwushang'
+import { fuwushangApi } from '../api/newshopList'
 import { contentCategoryData1 } from '@/data/common'
 
 export default {
@@ -105,21 +105,14 @@ export default {
   },
   methods: {
     addProvider () {
-      if (!this.form) {
-        fuwushangbiaodan(this.form).then(data => {
-          this.$message({
-            showClose: true,
-            message: '提交成功',
-            type: 'success'
-          })
-          this.form = {}
-        })
-      } else {
+      fuwushangApi(this.form).then(data => {
         this.$message({
           showClose: true,
-          message: '提交的信息不能有空值'
+          message: '提交成功',
+          type: 'success'
         })
-      }
+        this.form = {}
+      })
     }
   }
 }
@@ -243,6 +236,16 @@ export default {
       color:rgba(255,255,255,1);
       opacity:1;
     }
+  }
+}
+@media (max-width: 1366px) {
+  .service {
+    padding: 0 45px;
+    box-sizing: border-box;
+
+  .service_content {
+    padding: 80px 45px;
+    box-sizing: border-box;}
   }
 }
 

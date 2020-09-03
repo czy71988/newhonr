@@ -123,8 +123,6 @@ export default {
   created () {
     this.setDialogWidth()
     this.getTime()
-    // console.log(accountLogin)
-    // console.log(CodeLogin)
   },
   mounted () {
     this.generateImgCode()

@@ -24,8 +24,10 @@
 
         <p class="p1">会员状态：</p>
         <p class="p2 p4">
-          <span>{{data.vipStatus === '0' ?'非会员' : (data.vipStatus === '1' ?'正常' : '已过期')}} （{{data.vipValidityStart}}到期）</span>
-          <span class="sotre_span2" @click="div_show1">续费</span>
+          <span>{{data.vipStatus === '0' || data.vipStatus === null ?'非会员' : (data.vipStatus === '1' ?'正常' : '已过期')}}</span>
+          <span v-if="data.vipStatus !== null || data.vipStatus !== '0'">（{{data.vipValidityStart}}到期）</span>
+          <span v-if="data.vipStatus !== null || data.vipStatus !== '0'" class="sotre_span2" @click="div_show1">开通</span>
+          <span v-else class="sotre_span2" @click="div_show1">开通</span>
         </p>
 
         <p class="p1">所属平台：</p>
@@ -155,7 +157,7 @@
 
 <script>
 import { provinceData } from '../../data/common'
-import { storeContent, storeContentXiugai } from '@/api/newshopList'
+import { Shop, ShopXiugai } from '@/api/newshopList'
 export default {
   data () {
     return {
@@ -182,7 +184,8 @@ export default {
       this.show = !this.show
     },
     baocun () {
-      storeContentXiugai(this.from).then(data => {
+      this.show = !this.show
+      ShopXiugai(this.from).then(data => {
         console.log(data)
         this.$message({
           showClose: true,
@@ -196,23 +199,15 @@ export default {
     // 获取信息
     getlist () {
       const token = sessionStorage.getItem('token')
-      storeContent({
+      Shop({
         sessionId: token
       }).then(data => {
         this.data = data.rbud
+        console.log('kkk', this.data)
         this.from = this.data
-        var l = this.data.shopPlatform
-        // var arr = [] // 定义数组
-        // for (var i in l) {
-        //   arr.push(l[i])
-        // }
-        // var obj = l // 定义对象
+        this.arr = this.data.shopPlatform.split(',')
 
-        for (var i in l) {
-          this.arr.push(l[i])
-        }
-
-        console.log('pppp1', this.arr)
+        console.log('pppp1', this.data.vipStatus)
         console.log('pppp', this.data)
       })
     },

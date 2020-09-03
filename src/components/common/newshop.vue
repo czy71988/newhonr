@@ -594,4 +594,25 @@ export default {
       }
     }
   }
+  @media (max-width: 1366px) {
+    .newshop {
+      .top {
+        padding: 0 100px;
+      }
+      .LLLL {
+        padding: 0 100px;
+      }
+    }
+  }
+
+  @media (max-width: 1600px) {
+    .newshop {
+      .top {
+        padding: 0 230px;
+      }
+      .LLLL {
+        padding: 0 230px;
+      }
+    }
+  }
 </style>

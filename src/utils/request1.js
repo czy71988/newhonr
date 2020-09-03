@@ -3,25 +3,14 @@ import baseURL from '../config/request.config.js'
 import { Message, MessageBox, Loading } from 'element-ui'
 import router from '@/router/index'
 import Qs from 'qs'
-let token = localStorage.getItem('token')
 // 创建axios实例
 const service = axios.create({
   timeout: 60000,
-  // headers: {
-  //   'Content-Type': 'application/x-www-form-urlencoded'
-  // },
   transformRequest: [function (data) {
-  // 对 data 进行任意转换处理
+    // 对 data 进行任意转换处理
     return Qs.stringify(data)
   }]
 })
-
-service.setToken = (val) => { // 设置token
-  console.log(val)
-  localStorage.setItem('token', val)
-  token = val
-}
-service.getToken = () => token // 获取token
 
 // 请求拦截器
 let loading
@@ -90,6 +79,7 @@ service.interceptors.response.use(res => {
       confirmButtonText: '去登录'
     }).then(() => {
       router.push({ name: 'login' })
+      sessionStorage.clear()
     })
     return
   }
@@ -108,6 +98,12 @@ const request = (config = {}, catchConfig) => {
   if (IS_DEVLOPMENT_ENV && config.url.indexOf('api/') < 0 && config.url.indexOf('temp/') < 0) {
     config.url = 'temp/' + config.url
   }
+  // config = Object.assign({
+  //   method: 'post',
+  //   header: {
+  //     'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+  //   }
+  // }, config)
 
   const promise = new Promise((resolve, reject) => {
     service(config).then(data => {

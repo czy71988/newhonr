@@ -209,4 +209,19 @@ export default {
       // width: 960px;
     }
   }
+
+  @media (max-width: 1366px) {
+    .personal {
+      padding: 80px;
+      box-sizing: border-box;
+      background:rgba(247,247,247,1);
+    }
+  }
+  @media (max-width: 1600px) {
+    .personal {
+      padding: 80px 170px;
+      box-sizing: border-box;
+      background:rgba(247,247,247,1);
+    }
+  }
 </style>

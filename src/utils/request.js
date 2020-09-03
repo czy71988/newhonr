@@ -3,15 +3,16 @@ import baseURL from '../config/request.config.js'
 import { Message, MessageBox, Loading } from 'element-ui'
 import router from '@/router/index'
 
-let token = localStorage.getItem('token')
+let token = sessionStorage.getItem('token')
 // 创建axios实例
+// axios.defaults.headers.common['sessionId'] = token
 const service = axios.create({
   timeout: 60000
 })
 
 service.setToken = (val) => { // 设置token
   console.log(val)
-  localStorage.setItem('token', val)
+  sessionStorage.setItem('token', val)
   token = val
 }
 service.getToken = () => token // 获取token
@@ -83,6 +84,7 @@ service.interceptors.response.use(res => {
       confirmButtonText: '去登录'
     }).then(() => {
       router.push({ name: 'login' })
+      sessionStorage.clear()
     })
     return
   }

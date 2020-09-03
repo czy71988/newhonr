@@ -28,7 +28,7 @@ export function Shop (data, catchConfig) {
   const req = request({
     method: 'post',
     // url: 'goodsStoreAjax/queryAllfen',
-    url: '/zkurtg-red-api/rtg/RtgUserLogin/getPublicDetails',
+    url: '',
     data
   }, catchConfig)
   return req
@@ -85,6 +85,18 @@ export function storeShopContent (data, catchConfig) {
     method: 'post',
     // url: 'goodsStoreAjax/queryAllfen',
     url: '/zkurtg-red-api/rtg/RtgGoods/getDetails',
+    data
+  }, catchConfig)
+  return req
+}
+
+// 服务商接口
+
+export function fuwushangApi (data, catchConfig) {
+  const req = request({
+    method: 'post',
+    // url: 'goodsStoreAjax/queryAllfen',
+    url: '/zkurtg-red-api/public/rtg/RtgServiceProvider/addRtgServiceProvider',
     data
   }, catchConfig)
   return req

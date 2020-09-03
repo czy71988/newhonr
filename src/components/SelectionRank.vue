@@ -142,7 +142,7 @@ export default {
   clear: both;
   overflow: hidden;
   width: 100%;
-  position: relative;
+  // position: relative;
   .goods-list__item {
     box-sizing: border-box;
     float: left;
@@ -214,7 +214,6 @@ export default {
      padding: 0 165px;
      box-sizing: border-box;
      width: 100%;
-     height: 120px;
      background:rgba(247,247,247,1);
     p {
       span {
@@ -278,4 +277,27 @@ export default {
     text-align: center;
     margin: 20px 0;
   }
+
+@media (max-width: 1366px) {
+  .GoodProductList {
+    .Top {
+      padding: 0 60px;
+      box-sizing: border-box;
+    }
+    .shauix {
+      padding: 0 60px;
+      box-sizing: border-box;
+    }
+    .com-section {
+      padding: 0 60px;
+      box-sizing: border-box;
+      .goods-list {
+        margin: 0px;
+        .goods-list__item {
+          margin: 8px;
+        }
+      }
+    }
+  }
+}
 </style>

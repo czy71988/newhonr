@@ -102,7 +102,7 @@ export default {
     border:1px solid rgba(237,237,237,1);
   }
   div {
-    position: relative;
+    // position: relative;
     .dfdbhvbeimg {
       width: 270px;
       height: 270px;

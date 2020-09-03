@@ -63,6 +63,13 @@ export default {
 
 <!-- common css -->
 <style lang="less">
+// 隐藏滚动条
+::-webkit-scrollbar {
+  width: 0 !important;
+}
+::-webkit-scrollbar {
+  width: 0 !important;height: 0;
+}
 // #app {
 //   font-size: calc(100vw/7.5);
 // }
@@ -82,7 +89,7 @@ export default {
     // width: @bdW;
     margin: 0 auto;
     overflow: hidden;
-    position: relative;
+    // position: relative;
   }
 }
 

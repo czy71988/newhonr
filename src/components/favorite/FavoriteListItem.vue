@@ -9,7 +9,7 @@
       <span class="leibieIcon">{{item.redskinsPlatform === '1' ? '淘宝' : (item.redskinsPlatform === '2' ? '抖音' : (item.redskinsPlatform === '3' ? '快手' : (item.redskinsPlatform === '4' ? '微视' : (item.redskinsPlatform === '5' ? '小红书' : '其他'))))}}</span>
       <p class="Pmingcheng">{{item.redskinsName}}</p>
       <p class="Pneirong">
-        <span>{{item.contentType | contentCategoryFilter}}</span>
+        <span>{{item.contentType[0] | contentCategoryFilter}}</span>
         <span class="neirongDiv">
           内容分类
         </span>
@@ -45,6 +45,9 @@ export default {
       uuu: {},
       ishow: true
     }
+  },
+  mounted () {
+    // console.log(item)
   },
   methods: {
     hongrenshuju (id) {

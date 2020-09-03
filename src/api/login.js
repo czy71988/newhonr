@@ -2,6 +2,8 @@
 import request from '../utils/request.js'
 import request1 from '../utils/request1.js'
 
+// let token = sessionStorage.getItem('token')
+
 // 获取图形验证码
 export function tuxingyanzhengma (data, catchConfig) {
   const req = request({
@@ -56,13 +58,36 @@ export function changepasswordApi (data, catchConfig) {
   return req
 }
 
-// 红人注册页
+// 注册页
 
 export function zhuceHR (data, catchConfig) {
   const req = request1({
     method: 'post',
     url: '/zkurtg-red-api/rtg/register',
     data
+  }, catchConfig)
+  return req
+}
+
+// 手机号监测
+
+export function zhucePhone (data, catchConfig) {
+  const req = request({
+    method: 'post',
+    url: '/zkurtg-red-api/public/rtg/RtgUserLogin/getRegistrationStatus',
+    data
+  }, catchConfig)
+  return req
+}
+
+// 首页用户信息
+
+export function HOmApi (data, catchConfig) {
+  const req = request({
+    method: 'post',
+    url: '/zkurtg-red-api/rtg/RtgUserLogin/getPublicDetails',
+    data
+    // headers: { 'sessionId': token }
   }, catchConfig)
   return req
 }

@@ -115,13 +115,6 @@ const indexChildrenRouter = [
     component: () => import('@/components/hezuoanli.vue'),
     meta: { title: '合作案例' }
   },
-  // 合作案例详情
-  {
-    path: 'newhezuoanli',
-    name: 'newhezuoanli',
-    component: () => import('@/components/newhezuoanli.vue'),
-    meta: { title: '合作案例' }
-  },
   // 合作案例
   {
     path: 'phoneMe',

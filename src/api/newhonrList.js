@@ -1,6 +1,8 @@
 // 红人api
 import request from '../utils/request.js'
 
+var token = sessionStorage.getItem('token')
+
 // 红人榜 粉丝排行榜 top
 export function newNohonrlist (data, catchConfig) {
   const req = request({
@@ -56,7 +58,8 @@ export function honrMymessageModify (data, catchConfig) {
   const req = request({
     method: 'post',
     url: '/zkurtg-red-api/rtg/RtgRedskinsUser/updRtgRedskinsUser',
-    data
+    data,
+    headers: { 'sessionId': token }
   }, catchConfig)
   return req
 }
